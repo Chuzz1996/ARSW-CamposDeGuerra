@@ -10,12 +10,10 @@ import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
 import edu.eci.arsw.camposdeguerra.services.CamposDeGuerraServices;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static org.apache.tomcat.jni.Lock.name;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

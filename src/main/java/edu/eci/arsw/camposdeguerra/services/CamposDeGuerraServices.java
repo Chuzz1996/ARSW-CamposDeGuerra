@@ -19,11 +19,9 @@ import org.springframework.stereotype.Service;
 public class CamposDeGuerraServices {
    
     @Autowired
-    CamposDeGuerraPersistence cdg;
+    private CamposDeGuerraPersistence cdg;
    
     
-    public CamposDeGuerraServices(){
-    }
     
     public void addNewUsuario(Usuario u) throws CamposDeGuerraPersistenceException{
             cdg.saveUsuario(u);

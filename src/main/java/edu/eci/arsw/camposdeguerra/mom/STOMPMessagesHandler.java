@@ -10,8 +10,8 @@ package edu.eci.arsw.camposdeguerra.mom;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
+//import org.springframework.messaging.handler.annotation.DestinationVariable;
+//import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
@@ -23,8 +23,8 @@ import org.springframework.stereotype.Controller;
 public class STOMPMessagesHandler {
 
     @Autowired
-    SimpMessagingTemplate msgt;
-    ConcurrentHashMap<String, ConcurrentLinkedQueue<?>> test = new ConcurrentHashMap<>();
+    private SimpMessagingTemplate msgt;
+    private ConcurrentHashMap<String, ConcurrentLinkedQueue<?>> test = new ConcurrentHashMap<>();
 	
 	
     /*

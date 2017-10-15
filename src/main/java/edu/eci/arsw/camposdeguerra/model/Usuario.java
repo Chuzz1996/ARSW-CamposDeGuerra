@@ -18,9 +18,9 @@ package edu.eci.arsw.camposdeguerra.model;
 
 
 public class Usuario {
-    String tipoMaquina="";
-    String userName="";
-    String puntaje="";
+    private String tipoMaquina="";
+    private String userName="";
+    private String puntaje="";
 
     public Usuario() {
     }
