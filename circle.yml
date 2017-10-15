@@ -1,0 +1,17 @@
+machine:
+  java:
+    version: oraclejdk8
+
+deployment:
+  staging:
+    branch: master
+    heroku: 
+      appname: camposdeguerra
+
+test:
+  post:
+    - mvn site
+    - mkdir $CIRCLE_ARTIFACTS/reports
+    - exec cp -R target/site/* $CIRCLE_ARTIFACTS/reports
+    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+    - find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
