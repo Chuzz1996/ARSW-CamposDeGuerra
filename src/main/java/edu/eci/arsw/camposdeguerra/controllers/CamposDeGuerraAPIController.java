@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CamposDeGuerraAPIController {
 
     @Autowired
-    CamposDeGuerraServices cdg;
+    private CamposDeGuerraServices cdg;
     
     
     
