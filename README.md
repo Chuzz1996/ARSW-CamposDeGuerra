@@ -3,4 +3,4 @@
 #
 [![CircleCI](https://circleci.com/gh/Chuzz1996/ARSW-CamposDeGuerra.svg?style=svg)](https://circleci.com/gh/Chuzz1996/ARSW-CamposDeGuerra)
 #
-[![Heroku](https://cdn.iconscout.com/public/images/icon/free/png-128/heroku-company-brand-logo-3973db91061d38cd-128x128.png)](https://camposdeguerra.herokuapp.com/)
+[![Heroku](https://wmpics.pics/di-APBJ.png)](https://camposdeguerra.herokuapp.com/)
