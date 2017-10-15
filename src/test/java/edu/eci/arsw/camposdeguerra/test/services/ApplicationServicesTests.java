@@ -1,6 +1,7 @@
 package edu.eci.arsw.camposdeguerra.test.services;
 
 //import java.util.logging.Level;
+
 //import java.util.logging.Logger;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
@@ -16,16 +17,14 @@ public class ApplicationServicesTests {
     
     //RestaurantOrderServicesStub ros;
 
-    
-    //@Test
     /*
-    *Load the context
-    */
+    @Test
+    
     public void contextLoads() {
         
         
         
         
-    }
+    }*/
 
 }
