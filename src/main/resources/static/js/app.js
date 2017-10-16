@@ -12,11 +12,19 @@ var app = (function () {
             this.puntaje = puntaje;
         }
     };
+    
+    class Maquina{
+        constructor(live, speed, attack){
+            this.live = live;
+            this.speed = speed;
+            this.attack = attack;
+        }
+    }
 
 
     var postUser = function () {
         currentUser =document.getElementById("username").value; 
-        var newUsuario = new Usuario("null", currentUser, "0");
+        var newUsuario = new Usuario(null, currentUser, "0");
         var postPromise = api.postUser(newUsuario);
         postPromise.then(
                 function () {

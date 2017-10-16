@@ -6,6 +6,7 @@
 package edu.eci.arsw.camposdeguerra.controllers;
 
 
+import edu.eci.arsw.camposdeguerra.model.Maquina;
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
@@ -79,6 +80,17 @@ public class CamposDeGuerraAPIController {
             cdg.updateUsuario(u);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (CamposDeGuerraPersistenceException ex) {
+            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+        }
+    }
+    
+    @RequestMapping(path = "/{user}", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateMachine(@PathVariable Usuario user, @RequestBody Maquina machine){
+        try{
+            cdg.updateMaquina(user, machine);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch(CamposDeGuerraPersistenceException ex){
             Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
         }

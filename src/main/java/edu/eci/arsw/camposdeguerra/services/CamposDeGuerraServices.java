@@ -6,6 +6,7 @@
 package edu.eci.arsw.camposdeguerra.services;
 
 
+import edu.eci.arsw.camposdeguerra.model.Maquina;
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistence;
@@ -20,29 +21,77 @@ public class CamposDeGuerraServices {
    
     @Autowired
     private CamposDeGuerraPersistence cdg;
+    
+    /**
+     * 
+     * @return 
+     */
+    public CamposDeGuerraPersistence getCamposDeGuerraPersistence(){
+        return cdg;
+    }
+    
+    /**
+     * 
+     * @param cdg 
+     */
+    public void setCamposDeGuerraPersistence(CamposDeGuerraPersistence cdg){
+        this.cdg = cdg;
+    }
    
     
-    
+    /**
+     * 
+     * @param u
+     * @throws CamposDeGuerraPersistenceException 
+     */
     public void addNewUsuario(Usuario u) throws CamposDeGuerraPersistenceException{
             cdg.saveUsuario(u);
     }
     
+    /**
+     * 
+     * @param u
+     * @throws CamposDeGuerraPersistenceException 
+     */
     public void updateUsuario(Usuario u) throws CamposDeGuerraPersistenceException{
             cdg.updateUsuario(u);
     }
     
+    /**
+     * 
+     * @return
+     * @throws CamposDeGuerraNotFoundException 
+     */
     public Set<Usuario> getAllUsuarios() throws CamposDeGuerraNotFoundException{
         return cdg.getAllUsuarios();
     }
     
-    
+    /**
+     * 
+     * @param user
+     * @return
+     * @throws CamposDeGuerraNotFoundException 
+     */
     public Usuario getUsuario(String user) throws CamposDeGuerraNotFoundException{
         return cdg.getUsuario(user);
     }
   
-
+    /**
+     * 
+     * @param user
+     * @throws CamposDeGuerraPersistenceException 
+     */
     public void deleteUsuario(String user) throws CamposDeGuerraPersistenceException {
         cdg.deleteUsuario(user);
     }
     
+    /**
+     * 
+     * @param user
+     * @param machine
+     * @throws CamposDeGuerraPersistenceException 
+     */
+    public void updateMaquina(Usuario user, Maquina machine)throws CamposDeGuerraPersistenceException{
+        cdg.updateMachine(user, machine);
+    }
 }

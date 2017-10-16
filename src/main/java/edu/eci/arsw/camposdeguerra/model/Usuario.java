@@ -14,28 +14,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package edu.eci.arsw.camposdeguerra.model;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class Usuario {
-    private String tipoMaquina="";
+    
+    @Autowired
+    private Maquina tipoMaquina;
+    
     private String userName="";
     private String puntaje="";
 
     public Usuario() {
     }
     
-    public Usuario(String userName,String tipoMaquina,String puntaje) {
+    public Usuario(String userName,Maquina tipoMaquina,String puntaje) {
         this.userName=userName;
         this.tipoMaquina=tipoMaquina;
         this.puntaje=puntaje;
     }
 
-    public String getTipoMaquina() {
+    public Maquina getTipoMaquina() {
         return tipoMaquina;
     }
 
-    public void setTipoMaquina(String tipoMaquina) {
+    public void setTipoMaquina(Maquina tipoMaquina) {
         this.tipoMaquina = tipoMaquina;
     }
 
@@ -60,8 +67,8 @@ public class Usuario {
     
 
     @Override
-    public String toString() {
-        return "Usuario{" + "Username=" + userName + ", Puntaje=" + puntaje + ", Maquina=" + tipoMaquina + '}';
+    public String toString(){
+        return "Usuario{" + "Username:" + userName + ", Puntaje:" + puntaje + ", Maquina:" + tipoMaquina.describe() + '}';
     }
     
     

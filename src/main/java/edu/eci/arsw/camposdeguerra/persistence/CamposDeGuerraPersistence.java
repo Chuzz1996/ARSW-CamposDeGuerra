@@ -5,24 +5,54 @@
  */
 package edu.eci.arsw.camposdeguerra.persistence;
 
+import edu.eci.arsw.camposdeguerra.model.Maquina;
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import java.util.Set;
 
 
 public interface CamposDeGuerraPersistence {
     
-    
+    /**
+     * 
+     * @param bp
+     * @throws CamposDeGuerraPersistenceException 
+     */
     public void saveUsuario(Usuario bp) throws CamposDeGuerraPersistenceException;
     
-    
+    /**
+     * 
+     * @param user
+     * @return
+     * @throws CamposDeGuerraNotFoundException 
+     */
     public Usuario getUsuario(String user) throws CamposDeGuerraNotFoundException;
     
-    
+    /**
+     * 
+     * @return
+     * @throws CamposDeGuerraNotFoundException 
+     */
     public Set<Usuario> getAllUsuarios() throws CamposDeGuerraNotFoundException;
     
-    
+    /**
+     * 
+     * @param u
+     * @throws CamposDeGuerraPersistenceException 
+     */
     public void updateUsuario(Usuario u) throws CamposDeGuerraPersistenceException;
     
-    
+    /**
+     * 
+     * @param user
+     * @throws CamposDeGuerraPersistenceException 
+     */
     public void deleteUsuario(String user) throws CamposDeGuerraPersistenceException;
+    
+    /**
+     * 
+     * @param user
+     * @param machine
+     * @throws CamposDeGuerraNotFoundException 
+     */
+    public void updateMachine(Usuario user, Maquina machine)throws CamposDeGuerraPersistenceException;
 }
