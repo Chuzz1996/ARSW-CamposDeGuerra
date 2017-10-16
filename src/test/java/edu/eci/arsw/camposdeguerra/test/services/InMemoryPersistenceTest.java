@@ -5,6 +5,8 @@
  */
 package edu.eci.arsw.camposdeguerra.test.services;
 
+import edu.eci.arsw.camposdeguerra.model.Destructora;
+import edu.eci.arsw.camposdeguerra.model.Maquina;
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
@@ -20,7 +22,7 @@ public class InMemoryPersistenceTest {
     public void saveNewAndLoadTest() {
 
         InMemoryCamposDeGuerraPersistence icgp = new InMemoryCamposDeGuerraPersistence();
-        Usuario u = new Usuario("test1", "Destructor", "99999");
+        Usuario u = new Usuario("test1", null, "99999");
         try {
             icgp.saveUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -37,7 +39,7 @@ public class InMemoryPersistenceTest {
     @Test
     public void saveExistingUserTest() {
         InMemoryCamposDeGuerraPersistence icgp = new InMemoryCamposDeGuerraPersistence();
-        Usuario u = new Usuario("test1", "Destructor", "99999");
+        Usuario u = new Usuario("test1", null, "99999");
         try {
             icgp.saveUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -56,7 +58,7 @@ public class InMemoryPersistenceTest {
 
         InMemoryCamposDeGuerraPersistence icgp = new InMemoryCamposDeGuerraPersistence();
 
-        Usuario u = new Usuario("test1", "Destructor", "99999");
+        Usuario u = new Usuario("test1", null, "99999");
         try {
             icgp.saveUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -77,7 +79,7 @@ public class InMemoryPersistenceTest {
 
         InMemoryCamposDeGuerraPersistence icgp = new InMemoryCamposDeGuerraPersistence();
 
-        Usuario u = new Usuario("test1", "Destructor", "99999");
+        Usuario u = new Usuario("test1", null, "99999");
         try {
             icgp.saveUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -104,7 +106,7 @@ public class InMemoryPersistenceTest {
 
         InMemoryCamposDeGuerraPersistence icgp = new InMemoryCamposDeGuerraPersistence();
 
-        Usuario u = new Usuario("test1", "Destructor", "99999");
+        Usuario u = new Usuario("test1", null, "99999");
         try {
             icgp.saveUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -125,5 +127,32 @@ public class InMemoryPersistenceTest {
         }
     }
     
+    @Test
+    public void updateMachine(){
+        InMemoryCamposDeGuerraPersistence icgp = new InMemoryCamposDeGuerraPersistence();
+        
+        Maquina machine = new Destructora();
+        
+        Usuario u = new Usuario("test1", null, "99999");
+        try {
+            icgp.saveUsuario(u);
+        } catch (CamposDeGuerraPersistenceException ex) {
+            Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try{
+            icgp.updateMachine(u, machine);
+        }catch(CamposDeGuerraPersistenceException e){
+            Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+        try{
+            Usuario x = icgp.getUsuario("test1");
+            assertTrue(x.getTipoMaquina().equals(u.getTipoMaquina()));
+        }catch(CamposDeGuerraNotFoundException y){
+            Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, y);
+        }
+        
+    }
     
 }

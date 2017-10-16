@@ -14,15 +14,24 @@ var app = (function () {
     }
     ;
 
+    class Maquina{
+        constructor(live, speed, attack){
+            this.live = live;
+            this.speed = speed;
+            this.attack = attack;
+        }
+    }
+
 
     var postUser = function () {
-        currentUser = document.getElementById("username").value;
-        var newUsuario = new Usuario("null", currentUser, "0");
+        currentUser =document.getElementById("username").value; 
+        var newUsuario = new Usuario(null, currentUser, "0");
         var postPromise = api.postUser(newUsuario);
         postPromise.then(
                 function () {
                     alert("Added user");
-                    window.location.replace("http://localhost:8080/seleccionPartida.html");
+                    var newURL = window.location.protocol + "//" + window.location.host + "/" + "seleccionPartida.html";
+                    window.location.replace(newURL);
                 },
                 function () {
                     alert("This user is already defined");

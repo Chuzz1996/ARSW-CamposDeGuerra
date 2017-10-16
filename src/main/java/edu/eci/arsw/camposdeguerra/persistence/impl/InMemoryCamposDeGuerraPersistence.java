@@ -5,6 +5,7 @@
  */
 package edu.eci.arsw.camposdeguerra.persistence.impl;
 
+import edu.eci.arsw.camposdeguerra.model.Maquina;
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistence;
@@ -23,9 +24,9 @@ public class InMemoryCamposDeGuerraPersistence implements CamposDeGuerraPersiste
     
     
     public InMemoryCamposDeGuerraPersistence() {
-        Usuario u1 = new Usuario("martin", "Destructor", "99999");
-        Usuario u2= new Usuario("cristian", "Destructor", "0");
-        Usuario u3 = new Usuario("felipe", "Destructor", "123");
+        Usuario u1 = new Usuario("martin", null, "99999");
+        Usuario u2= new Usuario("cristian", null, "0");
+        Usuario u3 = new Usuario("felipe", null, "123");
         users.putIfAbsent("martin", u1);
         users.putIfAbsent("cristian", u2);
         users.putIfAbsent("felipe", u3);
@@ -58,6 +59,11 @@ public class InMemoryCamposDeGuerraPersistence implements CamposDeGuerraPersiste
     public void deleteUsuario(String user) throws CamposDeGuerraPersistenceException {
         if(users.containsKey(user)){users.remove(user);}
         else{throw new CamposDeGuerraPersistenceException("El usuario "+user+" no puede ser borrado porque no existe.");}
+    }
+
+    @Override
+    public void updateMachine(Usuario user, Maquina machine) throws CamposDeGuerraPersistenceException{
+        user.setTipoMaquina(machine);
     }
     
 }
