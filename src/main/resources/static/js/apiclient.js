@@ -17,5 +17,5 @@ apiclient = (function () {
         }
     };
     
-})();
+}());
 

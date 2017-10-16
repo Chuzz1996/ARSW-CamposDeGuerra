@@ -1,3 +1,5 @@
+/* global postUser, apiclient */
+
 var app = (function () {
 
     var api = apiclient;
@@ -13,7 +15,7 @@ var app = (function () {
 
     var postUser = function () {
         var newUsuario = new Usuario("null", document.getElementById('username').value, "0");
-        var postPromise = api.postUser();
+        var postPromise = api.postUser(newUsuario);
         postPromise.then(
                 function () {
                     alert("Add user");
@@ -22,6 +24,7 @@ var app = (function () {
                     alert("This user is already defined");
                 }
         );
+        return postPromise;
     };
 
     return {
