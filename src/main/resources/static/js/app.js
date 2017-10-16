@@ -16,14 +16,12 @@ var app = (function () {
         var postPromise = api.postUser();
         postPromise.then(
                 function () {
-                    console.info("OK");
-                }
-        ,
+                    alert("Add user");
+                },
                 function () {
-                    console.info("ERROR");
+                    alert("This user is already defined");
                 }
         );
-        return postPromise;
     };
 
     return {

@@ -9,8 +9,13 @@ apiclient = (function () {
 
     return {
         postUser: function (user) {
-            return $.ajax({url: "/CamposDeGuerra", type: "POST", data: JSON.stringify(user), contentType: "application/json"});
+            return $.ajax({
+                url: "/CamposDeGuerra", 
+                type: "POST", 
+                data: JSON.stringify(user), 
+                contentType: "application/json"});
         }
     };
     
 })();
+

@@ -78,11 +78,11 @@
 /* Header */
 
 	#header {
-		background-image: url("../../images/header.jpg") !important;
-		background-size: cover !important;
-		background-position: scroll !important;
+		background-image: url("../../images/header.jpg");
+		background-size: cover ;
+		background-position: scroll;
 		-ms-behavior: url("assets/js/ie/backgroundsize.min.htc");
-		padding: 8em 0 !important;
+		padding: 8em 0 ;
 		color: #ffffff;
 	}
 
@@ -114,9 +114,9 @@
 /* Footer */
 
 	#footer {
-		background-image: none !important;
-		margin-top: 0 !important;
-		padding: 4em 0 !important;
+		background-image: none ;
+		margin-top: 0 ;
+		padding: 4em 0;
 		color: #ffffff;
 	}
 
