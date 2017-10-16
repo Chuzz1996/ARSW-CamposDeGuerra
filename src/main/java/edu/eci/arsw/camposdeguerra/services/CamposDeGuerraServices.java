@@ -85,13 +85,4 @@ public class CamposDeGuerraServices {
         cdg.deleteUsuario(user);
     }
     
-    /**
-     * 
-     * @param user
-     * @param machine
-     * @throws CamposDeGuerraPersistenceException 
-     */
-    public void updateMaquina(Usuario user, Maquina machine)throws CamposDeGuerraPersistenceException{
-        cdg.updateMachine(user, machine);
-    }
 }

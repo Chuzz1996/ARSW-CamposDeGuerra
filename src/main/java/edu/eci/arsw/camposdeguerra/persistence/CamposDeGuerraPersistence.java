@@ -48,11 +48,5 @@ public interface CamposDeGuerraPersistence {
      */
     public void deleteUsuario(String user) throws CamposDeGuerraPersistenceException;
     
-    /**
-     * 
-     * @param user
-     * @param machine
-     * @throws CamposDeGuerraNotFoundException 
-     */
-    public void updateMachine(Usuario user, Maquina machine)throws CamposDeGuerraPersistenceException;
+    
 }

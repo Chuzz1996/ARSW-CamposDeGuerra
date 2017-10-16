@@ -10,20 +10,19 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="style.css" />
-        <link rel="stylesheet" href="style.css" />
         <script src="js/apiclient.js"></script>
-        <script src="js/app.js"></script>
+        <script src="js/appSeleccion.js"></script>
     </head>
 
-    <body>
+    <body onload="document.getElementById('cuenta').innerHTML = appSeleccion.cuenta()">
 
         <!-- Nav -->
             <nav id="nav">
                 <ul>
                     <li class="dropdown">
-                        <a  class="dropbtn">Current Account</a>
+                        <a id="cuenta" class="dropbtn"></a>
                         <div class="dropdown-content">
-                            <a href="index.html">Logout</a>
+                            <a onclick="appSeleccion.logout()">Logout</a>
                         </div>
                     </li>
                 </ul>

@@ -61,9 +61,5 @@ public class InMemoryCamposDeGuerraPersistence implements CamposDeGuerraPersiste
         else{throw new CamposDeGuerraPersistenceException("El usuario "+user+" no puede ser borrado porque no existe.");}
     }
 
-    @Override
-    public void updateMachine(Usuario user, Maquina machine) throws CamposDeGuerraPersistenceException{
-        user.setTipoMaquina(machine);
-    }
     
 }

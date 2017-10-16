@@ -85,16 +85,6 @@ public class CamposDeGuerraAPIController {
         }
     }
     
-    @RequestMapping(path = "/{user}", method = RequestMethod.PUT)
-    public ResponseEntity<?> updateMachine(@PathVariable Usuario user, @RequestBody Maquina machine){
-        try{
-            cdg.updateMaquina(user, machine);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }catch(CamposDeGuerraPersistenceException ex){
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
-        }
-    }
     
     
     @RequestMapping(path = "/{user}",method = RequestMethod.DELETE)

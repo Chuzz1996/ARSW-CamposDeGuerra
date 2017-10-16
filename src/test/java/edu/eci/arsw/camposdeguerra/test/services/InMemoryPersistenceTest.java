@@ -126,33 +126,5 @@ public class InMemoryPersistenceTest {
             assertEquals(ex.getMessage(), "El usuario test1 no existe.");
         }
     }
-    
-    @Test
-    public void updateMachine(){
-        InMemoryCamposDeGuerraPersistence icgp = new InMemoryCamposDeGuerraPersistence();
-        
-        Maquina machine = new Destructora();
-        
-        Usuario u = new Usuario("test1", null, "99999");
-        try {
-            icgp.saveUsuario(u);
-        } catch (CamposDeGuerraPersistenceException ex) {
-            Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        try{
-            icgp.updateMachine(u, machine);
-        }catch(CamposDeGuerraPersistenceException e){
-            Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, e);
-        }
-        
-        try{
-            Usuario x = icgp.getUsuario("test1");
-            assertTrue(x.getTipoMaquina().equals(u.getTipoMaquina()));
-        }catch(CamposDeGuerraNotFoundException y){
-            Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, y);
-        }
-        
-    }
-    
+
 }

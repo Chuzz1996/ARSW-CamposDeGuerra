@@ -1,9 +1,7 @@
-/* global postUser, apiclient */
 
-var app = (function () {
+var appIndex = (function () {
 
     var api = apiclient;
-    var currentUser = "Predefinido";
 
     class Usuario {
         constructor(tipoMaquina, userName, puntaje) {
@@ -14,8 +12,8 @@ var app = (function () {
     }
     ;
 
-    class Maquina{
-        constructor(live, speed, attack){
+    class Maquina {
+        constructor(live, speed, attack) {
             this.live = live;
             this.speed = speed;
             this.attack = attack;
@@ -24,8 +22,8 @@ var app = (function () {
 
 
     var postUser = function () {
-        currentUser =document.getElementById("username").value; 
-        var newUsuario = new Usuario(null, currentUser, "0");
+        localStorage.setItem("user", document.getElementById("username").value);
+        var newUsuario = new Usuario(null, localStorage.getItem("user"), "0");
         var postPromise = api.postUser(newUsuario);
         postPromise.then(
                 function () {
@@ -40,9 +38,17 @@ var app = (function () {
 
     };
 
+
     return {
         addUser: function () {
-            postUser();
+            var username = document.getElementById("username").value;
+            if (username === "") {
+                alert("Escriba un usuario valido");
+            }
+            else{
+                postUser();
+            }
+            
         },
         getCurrentUser: function () {
             return currentUser;
