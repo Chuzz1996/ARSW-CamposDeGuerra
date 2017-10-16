@@ -20,8 +20,8 @@
 			b.push(
 				'<a ' +
 					'class="link depth-' + indent + '"' +
-					( (typeof target !== 'undefined' && target != '') ? ' target="' + target + '"' : '') +
-					( (typeof href !== 'undefined' && href != '') ? ' href="' + href + '"' : '') +
+					( (typeof target !== 'undefined' && target !== '') ? ' target="' + target + '"' : '') +
+					( (typeof href !== 'undefined' && href !== '') ? ' href="' + href + '"' : '') +
 				'>' +
 					'<span class="indent-' + indent + '"></span>' +
 					$this.text() +
@@ -42,7 +42,7 @@
 	$.fn.panel = function(userConfig) {
 
 		// No elements?
-			if (this.length == 0)
+			if (this.length === 0)
 				return $this;
 
 		// Multiple elements?
@@ -95,7 +95,7 @@
 			}, userConfig);
 
 			// Expand "target" if it's not a jQuery object already.
-				if (typeof config.target != 'jQuery')
+				if (typeof config.target !== 'jQuery')
 					config.target = $(config.target);
 
 		// Panel.
@@ -303,11 +303,11 @@
 	$.fn.placeholder = function() {
 
 		// Browser natively supports placeholders? Bail.
-			if (typeof (document.createElement('input')).placeholder != 'undefined')
+			if (typeof (document.createElement('input')).placeholder !== 'undefined')
 				return $(this);
 
 		// No elements?
-			if (this.length == 0)
+			if (this.length === 0)
 				return $this;
 
 		// Multiple elements?
@@ -377,10 +377,10 @@
 									.replace(/type=password/i, 'type=text')
 					);
 
-					if (i.attr('id') != '')
+					if (i.attr('id') !== '')
 						x.attr('id', i.attr('id') + '-polyfill-field');
 
-					if (i.attr('name') != '')
+					if (i.attr('name') !== '')
 						x.attr('name', i.attr('name') + '-polyfill-field');
 
 					x.addClass('polyfill-placeholder')
@@ -528,7 +528,7 @@
 		var key = '__prioritize';
 
 		// Expand $elements if it's not already a jQuery object.
-			if (typeof $elements != 'jQuery')
+			if (typeof $elements !== 'jQuery')
 				$elements = $($elements);
 
 		// Step through elements.
