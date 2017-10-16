@@ -5,7 +5,7 @@
  */
 
 
-apiclient = (function () {
+var apiclient = (function () {
 
     return {
         postUser: function (user) {

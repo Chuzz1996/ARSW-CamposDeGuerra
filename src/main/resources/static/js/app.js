@@ -14,7 +14,7 @@ var app = (function () {
 
 
     var postUser = function () {
-        var newUsuario = new Usuario("null", document.getElementById('username').value, "0");
+        var newUsuario = new Usuario("null", document.getElementById("username").value, "0");
         var postPromise = api.postUser(newUsuario);
         postPromise.then(
                 function () {
