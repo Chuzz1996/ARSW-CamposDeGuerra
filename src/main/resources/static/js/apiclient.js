@@ -5,16 +5,12 @@
  */
 
 
-var apiclient = (function(){
+apiclient = (function () {
 
-	return {
-            addUser:function(userName){
-            return $.ajax({
-                url:"/CamposDeGuerra",
-                type:"POST",
-                data: JSON.stringify(userName),
-                contentType: "application/json"
-            });
+    return {
+        postUser: function (user) {
+            return $.ajax({url: "/CamposDeGuerra", type: "POST", data: JSON.stringify(user), contentType: "application/json"});
         }
-    }
+    };
+    
 })();
