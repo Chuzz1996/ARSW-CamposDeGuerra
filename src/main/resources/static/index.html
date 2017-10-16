@@ -1,102 +1,99 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <!--
-Copyright (C) 2016 Pivotal Software, Inc.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	Directive by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 <html>
-    <head>
-        <title>War machines</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="/webjars/jquery/jquery.min.js"></script>
-        <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-        <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-        <script src="/app.js"></script>
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="style.css" />
+	<head>
+		<title>Directive by HTML5 UP</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+                <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+                <link rel="stylesheet" href="style.css" />
+                <link rel="stylesheet" href="style.css" />
+                <script src="js/app.js"></script>
+                <script src="js/apiclient.js"></script>
+	</head>
+	
+	<body>
 
-    </head>
+		<!-- Header -->
+			<div id="header">
+                            <div>
+                                <div class="center" style="width:35%">
+                                    <div class="w3-black w3-opacity w3-hover-opacity-off w3-padding-large w3-round-large">
+                                        <h1 class="w3-xlarge">War machine</h1>
+                                        <h1 class="w3-xlarge">Prove that your are the best</h1>
+                                        <hr class="w3-opacity">
+                                        <h1 class="w3-xlarge">User name: </h1>
+                                        <p><input class="w3-input" type="text" id="username"/></p>
+                                        <p><button class="w3-button w3-block w3-white w3-round" onclick="app.addUser()">Play</button></p>
+				    </div>
+                                </div>
+                            </div>
+			</div>
 
-    <body class="w3-content w3-black" style="max-width:1500px;">
+		<!-- Main -->
+			<div id="main">
 
-    <!-- Header with Slideshow -->
-    <header class="w3-display-container w3-center">
-        
-        <!--PLAY-->
-        
-        <div>
-          <img class="w3-image" src="opcion1.jpg" alt="Image 1" style="min-width:300px" width="1400" height="500">
-          <div class="w3-display-left w3-padding w3-hide-small" style="width:35%">
-            <div class="w3-black w3-opacity w3-hover-opacity-off w3-padding-large w3-round-large">
-              <h1 class="w3-xlarge">War machine</h1>
-              <h1 class="w3-xlarge">Prove that your are the best</h1>
-              <hr class="w3-opacity">
-              <label>User name: </label>
-              <p><input class="w3-input" type="text" /></p>
-              <p><button class="w3-button w3-block w3-white w3-round">Play</button></p>
-            </div>
-          </div>
-        </div>
-        
-        <!-- DESCRIPTION -->
-        
-        <div class="w3-padding-64 w3-white">
-            <div class="w3-row-padding">
-              <div class="w3-col l8 m6">
-                <h1 class="w3-jumbo"><b>War machine</b></h1>
-                <p><span class="w3-xlarge w3-center"></span>This game is....</p>
-              </div>
-            </div>
-        </div>
-        
-        <div class="w3-padding-64 w3-light-grey">
-            <div class="w3-row-padding">
-              <div class="w3-col l8 m6">
-                <h1 class="w3-jumbo"><b>Who are we?</b></h1>
-                <p><span class="w3-xlarge w3-center">ECI </span>Martin Hernandez, Felipe Losada, Cristian Pinzon, etc..</p>
-              </div>
-            </div>
-        </div>
-        
-        <div class="w3-padding-64 w3-white">
-            <div class="w3-row-padding">
-              <div class="w3-col l8 m6">
-                <h1 class="w3-jumbo"><b>ECI</b></h1>
-                <p><span class="w3-xlarge w3-center"></span>ECI is...</p>
-              </div>
-            </div>
-        </div>
-        
-    </header>
+				<header class="major container 75%">
+                                    <h2>Martin Hernandez
+                                    <br />Felipe Losada
+                                    <br />Cristian Pinzon
+                                    </h2>
+				</header>
 
+				<div class="box alt container">
+                                    <section class="feature left">
+                                        <a href="#" class="image "><img src="images/pic02.jpg" alt="" /></a>
+					<div class="content">
+                                            <h3>War machine</h3>
+                                            <p>This game is ..</p>
+					</div>
+                                    </section>
+                                    <section class="feature right">
+					<a href="#" class="image"><img src="images/escuela.jpg" alt="" /></a>
+					<div class="content">
+                                            <h3>ECI</h3>
+                                            <p>ECI is ...</p>
+					</div>
+                                    </section>
+                                    <section class="feature left">
+                                        <a href="#" class="image"><img src="images/pic03.jpg" alt="" /></a>
+					<div class="content">
+                                            <h3>Who are we?</h3>
+                                            <p>We are ..</p>
+					</div>
+                                    </section>
+				</div>
+			</div>
 
+		<!-- Footer -->
+			<div id="footer">
+				<div class="container 75%">
+                                    <ul class="icons">
+                                        <li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+					<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+					<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
+					<li><a href="#" class="icon fa-github"><span class="label">Github</span></a></li>
+                                    </ul>
 
-    <!-- Social media -->
-    
-    <footer class="w3-container w3-padding-32 w3-light-grey w3-center w3-xlarge">
-      <div class="w3-section">
-        <i class="fa fa-facebook-official w3-hover-opacity"></i>
-        <i class="fa fa-instagram w3-hover-opacity"></i>
-        <i class="fa fa-twitter w3-hover-opacity"></i>
-      </div>
-      <p class="w3-medium">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank" class="w3-hover-text-green">w3.css</a></p>
-    </footer>
+                                    <ul class="copyright">
+                                        <li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+                                    </ul>
 
+				</div>
+			</div>
 
-    </body>
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
 </html>
-
