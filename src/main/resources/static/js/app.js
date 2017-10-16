@@ -3,6 +3,7 @@
 var app = (function () {
 
     var api = apiclient;
+    var currentUser ="Predefinido";
 
     class Usuario {
         constructor(tipoMaquina, userName, puntaje) {
@@ -14,7 +15,8 @@ var app = (function () {
 
 
     var postUser = function () {
-        var newUsuario = new Usuario("null", document.getElementById("username").value, "0");
+        currentUser =document.getElementById("username").value; 
+        var newUsuario = new Usuario("null", currentUser, "0");
         var postPromise = api.postUser(newUsuario);
         postPromise.then(
                 function () {
@@ -30,6 +32,9 @@ var app = (function () {
     return {
         addUser: function () {
             postUser();
+        },
+        getCurrentUser: function (){
+                return currentUser;
         }
     };
 
