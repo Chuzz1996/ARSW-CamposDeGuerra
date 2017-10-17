@@ -10,35 +10,74 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="style.css" />
         <script src="js/apiclient.js"></script>
-        <script src="js/appSeleccion.js"></script>
+        <script src="js/app.js"></script>
     </head>
 
-    <body onload="document.getElementById('cuenta').innerHTML = appSeleccion.cuenta()">
+    <body>
 
         <!-- Nav -->
-            <nav id="nav">
-                <ul>
-                    <li class="dropdown">
-                        <a id="cuenta" class="dropbtn"></a>
-                        <div class="dropdown-content">
-                            <a onclick="appSeleccion.logout()">Logout</a>
+        <nav id="nav">
+            <ul>
+                <li class="dropdown">
+                    <a  class="dropbtn">Current Account</a>
+                    <div class="dropdown-content">
+                        <a href="index.html">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <section id="headerSelection" style="height: 700px; overflow: hidden;">
+                <div class="dynamicContent currentHolder" style="height: auto; left: 0px; visibility: visible;">
+                    <div class="content">
+                        <div class="container">
+                            <div class="inner2">
+                                <div class="row">
+                                    <div class="span12">
+                                        <div class="names">
+                                            <ul style="position: relative; width: 1170px; height: 1px; overflow: hidden;">
+                                                <li style="position: absolute; top: 160px; left: 0px; display: none; z-index: 4; opacity: 1; width: 1170px; height: 160px;"><p>Random Match</p></li>
+                                                <li style="position: absolute; top: 160px; left: 0px; display: none; z-index: 4; opacity: 1; width: 1170px; height: 160px;"><p>Create new Match</p></li>
+                                                <li style="position: absolute; top: 160px; left: 0px; display: none; z-index: 4; opacity: 1; width: 1170px; height: 160px;"><p>Join Existing Match</p></li>
+                                            </ul>
+                                        </div>
+                                        <div class="thumbnails" id="splash">
+                                            <ul class="row">
+                                                <li class="span3">
+                                                    <a href="http://livedemo00.template-help.com/wt_43597/index-6.html">
+                                                        <img src="images/Rmacth.jpg" class="thumbnail" alt="">
+                                                        <div>
+                                                            <p style="color:#ffffff;">Random Match</p>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li class="span3">
+                                                    <a href="http://livedemo00.template-help.com/wt_43597/index-6.html">
+                                                        <img src="images/Nmacth.jpg" class="thumbnail" alt="">
+                                                        <div>
+                                                            <p style="color:#ffffff;">Create new Match</p>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li class="span3">
+                                                    <a href="http://livedemo00.template-help.com/wt_43597/index-6.html">
+                                                        <img src="images/Emacth.jpg" class="thumbnail" alt="">
+                                                        <div>
+                                                            <p style="color:#ffffff;">Join Existing Match</p>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </li>
-                </ul>
-            </nav>
-        
-        <!-- Header -->
-        <div id="headerSelection">
-            <div class="center" style="width:35%">
-                <div class="w3-black w3-opacity w3-hover-opacity-off w3-padding-large w3-round-large">
-                    <h1 class="w3-xlarge">War camp</h1>
-                    <p><button class="w3-button w3-block w3-white w3-round" onclick="">Random match</button></p>
-                    <p><button class="w3-button w3-block w3-white w3-round" onclick="">New match</button></p>
-                    <p><button class="w3-button w3-block w3-white w3-round" onclick="">Join an existing match</button></p>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </section>
+
 
         <!-- Scripts -->
         <script src="assets/js/jquery.min.js"></script>
