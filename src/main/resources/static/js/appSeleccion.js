@@ -20,7 +20,15 @@ var appSeleccion = (function () {
         }
     }
 
-
+    var connectAndSubscribe = function () {
+        console.info('Connecting to WS...');
+        var socket = new SockJS('/stompendpoint');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            console.log('Connected: ' + frame);
+            
+        });
+    };
     
     var deleteUser = function () {
         var currentUser = localStorage.getItem("user");

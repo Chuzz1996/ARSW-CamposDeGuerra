@@ -1,0 +1,13 @@
+#Game {
+    background-image: url("../../images/header.jpg");
+    background-position: center;
+    background-size: 100% auto;
+    padding: 5em 0 10em 0;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+}
+
+.fondoLetras{
+    color:#ffffff;
+}
