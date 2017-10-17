@@ -13,9 +13,10 @@
         <link rel="stylesheet" href="style.css" />
         <script src="js/apiclient.js"></script>
         <script src="js/app.js"></script>
+        <script src="js/appSeleccion.js"></script>
     </head>
 
-    <body>
+    <body onload="document.getElementById('cuenta').innerHTML = appSeleccion.cuenta()">
 
         <!-- Nav -->
         <nav id="nav">
@@ -23,7 +24,7 @@
                 <li class="dropdown">
                     <a  class="dropbtn">Current Account</a>
                     <div class="dropdown-content">
-                        <a href="index.html">Logout</a>
+                        <a onclick="appSeleccion.logout()">Logout</a>
                     </div>
                 </li>
             </ul>
