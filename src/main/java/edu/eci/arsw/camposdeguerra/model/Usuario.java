@@ -27,48 +27,96 @@ public class Usuario {
     private Maquina tipoMaquina;
     
     private String userName="";
-    private String puntaje="";
+    private int puntaje;
+    private int puntajeAcumulado;
+    private int equipo;
 
+    
     public Usuario() {
     }
     
-    public Usuario(String userName,Maquina tipoMaquina,String puntaje) {
+    /**
+     * 
+     * @param userName
+     * @param tipoMaquina
+     * @param puntaje
+     * @param equipo 
+     */
+    public Usuario(String userName,Maquina tipoMaquina,int puntaje, int equipo) {
         this.userName=userName;
         this.tipoMaquina=tipoMaquina;
         this.puntaje=puntaje;
+        this.equipo = 0;
+       // this.puntajeAcumulado = 0;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    public void setEquipo(int equipo){
+        this.equipo = equipo;
     }
 
+    /**
+     * 
+     * @return 
+     */
+    public int getEquipo(){
+        return equipo;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
     public Maquina getTipoMaquina() {
         return tipoMaquina;
     }
 
+    /**
+     * 
+     * @param tipoMaquina 
+     */
     public void setTipoMaquina(Maquina tipoMaquina) {
         this.tipoMaquina = tipoMaquina;
     }
 
+    /**
+     * 
+     * @return 
+     */
     public String getUserName() {
         return userName;
     }
 
+    /**
+     * 
+     * @param userName 
+     */
     public void setUserName(String userName) {
         this.userName = userName;
     }
 
-    
-
-    public String getPuntaje() {
+    /**
+     * 
+     * @return 
+     */
+    public int getPuntaje() {
         return puntaje;
     }
 
-    public void setPuntaje(String puntaje) {
+    /**
+     * 
+     * @param puntaje 
+     */
+    public void setPuntaje(int puntaje) {
         this.puntaje = puntaje;
     }
 
-    
-
     @Override
     public String toString(){
-        return "Usuario{" + "Username:" + userName + ", Puntaje:" + puntaje + ", Maquina:" + tipoMaquina.describe() + '}';
+        return "Usuario{" + "Username:" + userName + ", Puntaje:" + puntaje + ", Equipo:"+ equipo +", Maquina:" + tipoMaquina.describe() + '}';
     }
     
     

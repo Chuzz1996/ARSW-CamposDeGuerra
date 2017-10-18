@@ -22,7 +22,7 @@ public class InMemoryPersistenceTest {
     public void saveNewAndLoadTest() {
 
         InMemoryCamposDeGuerraPersistence icgp = new InMemoryCamposDeGuerraPersistence();
-        Usuario u = new Usuario("test1", null, "99999");
+        Usuario u = new Usuario("test1", null, 99999,0);
         try {
             icgp.saveUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -39,7 +39,7 @@ public class InMemoryPersistenceTest {
     @Test
     public void saveExistingUserTest() {
         InMemoryCamposDeGuerraPersistence icgp = new InMemoryCamposDeGuerraPersistence();
-        Usuario u = new Usuario("test1", null, "99999");
+        Usuario u = new Usuario("test1", null, 99999,0);
         try {
             icgp.saveUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -58,7 +58,7 @@ public class InMemoryPersistenceTest {
 
         InMemoryCamposDeGuerraPersistence icgp = new InMemoryCamposDeGuerraPersistence();
 
-        Usuario u = new Usuario("test1", null, "99999");
+        Usuario u = new Usuario("test1", null, 99999,0);
         try {
             icgp.saveUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -79,14 +79,14 @@ public class InMemoryPersistenceTest {
 
         InMemoryCamposDeGuerraPersistence icgp = new InMemoryCamposDeGuerraPersistence();
 
-        Usuario u = new Usuario("test1", null, "99999");
+        Usuario u = new Usuario("test1", null, 99999,0);
         try {
             icgp.saveUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
             Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        u.setPuntaje("0");
+        u.setPuntaje(0);
         try {
             icgp.updateUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -106,7 +106,7 @@ public class InMemoryPersistenceTest {
 
         InMemoryCamposDeGuerraPersistence icgp = new InMemoryCamposDeGuerraPersistence();
 
-        Usuario u = new Usuario("test1", null, "99999");
+        Usuario u = new Usuario("test1", null, 99999,0);
         try {
             icgp.saveUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {

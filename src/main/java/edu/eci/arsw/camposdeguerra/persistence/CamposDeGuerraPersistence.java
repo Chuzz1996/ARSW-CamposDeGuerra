@@ -48,5 +48,12 @@ public interface CamposDeGuerraPersistence {
      */
     public void deleteUsuario(String user) throws CamposDeGuerraPersistenceException;
     
+    /**
+     * 
+     * @param user
+     * @param team
+     * @throws CamposDeGuerraPersistenceException 
+     */
+    public void asignedTeam(String user, int team)throws CamposDeGuerraPersistenceException;
     
 }

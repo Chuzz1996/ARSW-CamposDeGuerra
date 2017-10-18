@@ -28,10 +28,7 @@ var apiclient = (function () {
                 contentType: "application/json"});
         },
         getUser: function (user,callback) {
-            return $ajax({
-                url:"/CamposDeGuerra/"+user,
-                type:"GET",
-                success: function(response){callback(response);}});
+            $.get("/CamposDeGuerra"+user,callback);
         }
         
         

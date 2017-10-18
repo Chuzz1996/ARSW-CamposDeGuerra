@@ -4,13 +4,13 @@ var appIndex = (function () {
     var api = apiclient;
 
     class Usuario {
-        constructor(tipoMaquina, userName, puntaje) {
+        constructor(tipoMaquina, userName, puntaje,equipo) {
             this.tipoMaquina = tipoMaquina;
             this.userName = userName;
             this.puntaje = puntaje;
+            this.equipo = equipo;
         }
     }
-    ;
 
     class Maquina {
         constructor(live, speed, attack) {
@@ -23,16 +23,15 @@ var appIndex = (function () {
 
     var postUser = function () {
         localStorage.setItem("user", document.getElementById("username").value);
-        var newUsuario = new Usuario(null, localStorage.getItem("user"), "0");
+        var newUsuario = new Usuario(null, localStorage.getItem("user"), 0, 0);
         var postPromise = api.postUser(newUsuario);
         postPromise.then(
                 function () {
-                    alert("Added user");
                     var newURL = window.location.protocol + "//" + window.location.host + "/" + "seleccionPartida.html";
                     window.location.replace(newURL);
                 },
                 function () {
-                    alert("This user is already defined");
+                    alert("You can't play with this username, it's playing");
                 }
         );
 

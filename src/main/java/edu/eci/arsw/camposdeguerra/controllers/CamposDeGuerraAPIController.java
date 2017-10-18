@@ -34,7 +34,11 @@ public class CamposDeGuerraAPIController {
     
     
     
-    
+    /**
+     * 
+     * @param user
+     * @return 
+     */
     @RequestMapping(path = "/{user}",method = RequestMethod.GET)
     public ResponseEntity<?> getUsuario(@PathVariable String user) {
         try {
@@ -46,7 +50,10 @@ public class CamposDeGuerraAPIController {
         }
     }
     
-	
+    /**
+     * 
+     * @return 
+     */
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<?> getAllUsuarios() {
         try {
@@ -59,7 +66,11 @@ public class CamposDeGuerraAPIController {
     }
     
     
-
+    /**
+     * 
+     * @param u
+     * @return 
+     */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> addUsuario(@RequestBody Usuario u) {
         try {
@@ -73,6 +84,11 @@ public class CamposDeGuerraAPIController {
 
     }
     
+    /**
+     * 
+     * @param u
+     * @return 
+     */
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<?> updateUsuario(@RequestBody Usuario u) {
         try {
@@ -85,8 +101,11 @@ public class CamposDeGuerraAPIController {
         }
     }
     
-    
-    
+    /**
+     * 
+     * @param user
+     * @return 
+     */
     @RequestMapping(path = "/{user}",method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteUsuario(@PathVariable String user) {
         try {

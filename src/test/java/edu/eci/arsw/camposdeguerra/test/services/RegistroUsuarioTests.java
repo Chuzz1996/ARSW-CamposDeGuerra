@@ -18,7 +18,7 @@ public class RegistroUsuarioTests {
     public void saveNewAndLoadTest() {
 
         InMemoryCamposDeGuerraPersistence icgp = new InMemoryCamposDeGuerraPersistence();
-        Usuario u = new Usuario("test", null, "99999");
+        Usuario u = new Usuario("test", null, 99999,0);
         try {
             icgp.saveUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -36,7 +36,7 @@ public class RegistroUsuarioTests {
     public void saveExistingUserTest() {
 
         InMemoryCamposDeGuerraPersistence icgp = new InMemoryCamposDeGuerraPersistence();
-        Usuario u = new Usuario("test", null, "99999");
+        Usuario u = new Usuario("test", null, 99999,0);
         try {
             icgp.saveUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -57,7 +57,7 @@ public class RegistroUsuarioTests {
         ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
         CamposDeGuerraServices cdg = ac.getBean(CamposDeGuerraServices.class);
 
-        Usuario u = new Usuario("test", null, "99999");
+        Usuario u = new Usuario("test", null, 99999,0);
         try {
             cdg.addNewUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -79,14 +79,14 @@ public class RegistroUsuarioTests {
         ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
         CamposDeGuerraServices cdg = ac.getBean(CamposDeGuerraServices.class);
 
-        Usuario u = new Usuario("test", null, "99999");
+        Usuario u = new Usuario("test", null, 99999,0);
         try {
             cdg.addNewUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
             Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        u.setPuntaje("0");
+        u.setPuntaje(0);
         try {
             cdg.updateUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -107,7 +107,7 @@ public class RegistroUsuarioTests {
         ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
         CamposDeGuerraServices cdg = ac.getBean(CamposDeGuerraServices.class);
 
-        Usuario u = new Usuario("test", null, "99999");
+        Usuario u = new Usuario("test", null, 99999,0);
         try {
             cdg.addNewUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
