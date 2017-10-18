@@ -1,4 +1,4 @@
-var juego = function () {
+var juego = (function () {
 
     var myGamePiece;
     var myGameArea;
@@ -7,10 +7,19 @@ var juego = function () {
     var directionImageShoot = "/images/bullet";
     var directionShoot = 4;
     
-    
-    
-    
-    
+     function Bullet(width, height, color, x, y, type, dir) {
+        this.gamearea = myGameArea;
+        if (type === "image") {
+            this.image = new Image();
+            this.image.src = color;
+        }
+        this.dir = dir;
+        this.width = width;
+        this.height = height;
+        this.x = x;
+        this.y = y;
+    }
+
     function updateGameArea() {
         myGameArea.clear();
         myGameArea.context.fillStyle = "#A9A9A9";
@@ -71,31 +80,7 @@ var juego = function () {
         myGamePiece.newPos();
         myGamePiece.update();
     }
-
-    myGameArea = {
-        canvas: document.createElement("canvas"),
-        start: function () {
-            var w = window.innerWidth;
-            var h = window.innerHeight;
-            this.canvas.width = w-200;
-            this.canvas.height = h-200;
-            this.context = this.canvas.getContext("2d");
-            this.context.fillStyle = "blue";
-            this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-            document.getElementById("Game").appendChild(this.canvas);
-            this.interval = setInterval(updateGameArea, 1);
-            window.addEventListener("keydown", function (e) {
-                myGameArea.key = e.keyCode;
-            });
-            window.addEventListener("keyup", function (e) {
-                myGameArea.key = false;
-            });
-        },
-        clear: function () {
-            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        }
-    };
-
+    
     function Component(width, height, color, x, y, type) {
         this.gamearea = myGameArea;
         if (type === "image") {
@@ -137,24 +122,37 @@ var juego = function () {
         };
     }
 
-    function Bullet(width, height, color, x, y, type, dir) {
-        this.gamearea = myGameArea;
-        if (type === "image") {
-            this.image = new Image();
-            this.image.src = color;
+    myGameArea = {
+        canvas: document.createElement("canvas"),
+        start: function () {
+            var w = window.innerWidth;
+            var h = window.innerHeight;
+            this.canvas.width = w-200;
+            this.canvas.height = h-200;
+            this.context = this.canvas.getContext("2d");
+            this.context.fillStyle = "blue";
+            this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            document.getElementById("Game").appendChild(this.canvas);
+            this.interval = setInterval(updateGameArea, 1);
+            window.addEventListener("keydown", function (e) {
+                myGameArea.key = e.keyCode;
+            });
+            window.addEventListener("keyup", function (e) {
+                myGameArea.key = false;
+            });
+        },
+        clear: function () {
+            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         }
-        this.dir = dir;
-        this.width = width;
-        this.height = height;
-        this.x = x;
-        this.y = y;
-    }
+    };
 
- 
+    
     return{
         movimiento: function () {
             myGameArea.start();
             myGamePiece = new Component(30, 30, directionImageTank + "1.png", 10, 120, "image");
         }
     };
-}();
+    
+    
+}());

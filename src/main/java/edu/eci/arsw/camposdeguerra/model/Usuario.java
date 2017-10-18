@@ -25,10 +25,8 @@ public class Usuario {
     
     @Autowired
     private Maquina tipoMaquina;
-    
     private String userName="";
     private int puntaje;
-    private int puntajeAcumulado;
     private int equipo;
 
     
@@ -46,13 +44,13 @@ public class Usuario {
         this.userName=userName;
         this.tipoMaquina=tipoMaquina;
         this.puntaje=puntaje;
-        this.equipo = 0;
-       // this.puntajeAcumulado = 0;
+        this.equipo = equipo;
+       
     }
     
     /**
      * 
-     * @return 
+     * @param equipo
      */
     public void setEquipo(int equipo){
         this.equipo = equipo;

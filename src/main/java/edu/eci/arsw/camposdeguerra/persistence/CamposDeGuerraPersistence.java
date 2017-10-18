@@ -5,7 +5,7 @@
  */
 package edu.eci.arsw.camposdeguerra.persistence;
 
-import edu.eci.arsw.camposdeguerra.model.Maquina;
+
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import java.util.Set;
 

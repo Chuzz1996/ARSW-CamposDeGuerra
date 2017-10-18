@@ -6,7 +6,7 @@
 package edu.eci.arsw.camposdeguerra.services;
 
 
-import edu.eci.arsw.camposdeguerra.model.Maquina;
+
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistence;
