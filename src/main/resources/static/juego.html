@@ -14,9 +14,10 @@
         <script src="js/apiclient.js"></script>
         <script src="js/app.js"></script>
         <script src="js/appSeleccion.js"></script>
+        <script src="js/juego.js"></script>
     </head>
 
-    <body>
+    <body onload="juego.movimiento()">
         <div id="Game">
             <div class="row">
                 <div class="col-sm-4">
@@ -29,7 +30,7 @@
                     <p><strong><span class="fondoLetras" id="time">Tiempo 0:00</span></strong></p>
                 </div>
             </div>
-            <canvas id="canvas" width="500" height="500"style="border:1px solid #000000;"></canvas>
+            <!--<canvas id="canvas" width="500" height="500" style="border:1px solid #000000;"></canvas>-->
             <!-- Scripts -->
             <script src="assets/js/jquery.min.js"></script>
             <script src="assets/js/skel.min.js"></script>
