@@ -2,8 +2,8 @@ var juego = function(){
     
     var myGamePiece;
 
-    var directionImageTank = "/imagenes/tank";
-    var directionImageShoot = "/imagenes/bullet";
+    var directionImageTank = "/images/tank";
+    var directionImageShoot = "/images/bullet";
     var directionShoot = 4; 
     
     var myGameArea = {
