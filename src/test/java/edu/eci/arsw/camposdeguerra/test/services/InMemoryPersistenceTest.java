@@ -98,7 +98,7 @@ public class InMemoryPersistenceTest {
         } catch (CamposDeGuerraNotFoundException ex) {
             Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        assertEquals("0", temp.getPuntaje());
+        assertEquals(0, temp.getPuntaje());
     }
 
     @Test

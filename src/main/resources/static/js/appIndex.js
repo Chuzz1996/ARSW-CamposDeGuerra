@@ -1,4 +1,6 @@
 
+/* global apiclient, postUser */
+
 var appIndex = (function () {
 
     var api = apiclient;
@@ -50,7 +52,7 @@ var appIndex = (function () {
             
         },
         getCurrentUser: function () {
-            return currentUser;
+            return localStorage.getItem("user");
         }
     };
 
