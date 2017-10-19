@@ -19,25 +19,17 @@ import org.springframework.stereotype.Service;
 public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPersistence {
 
     private final ConcurrentHashMap<Integer, Room> rooms = new ConcurrentHashMap<>();
-    boolean datoscargados=false;
 
     public InMemoryCamposDeGuerraRoomPersistence() {
-        
-    }
-
-    public void cargarDatosEstaticos(){
         for (int i = 0; i < 20; i++) {
             rooms.putIfAbsent(i, new Room(i));
         }
     }
+
+
     
     @Override
     public Integer getRoomFree() throws CamposDeGuerraNotFoundException {
-        if(!datoscargados){
-            cargarDatosEstaticos();
-            datoscargados=true;
-            System.out.println("Se Cargaron los datos Estaticos");
-        }
         Integer r = 0;
         for (Room room : rooms.values()) {
             if (room.isFull() == false) {
@@ -50,7 +42,7 @@ public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoom
 
     @Override
     public void addUserToRoom(Usuario us, Integer room) throws CamposDeGuerraPersistenceException {
-        if (rooms.contains(room)) {
+        if (rooms.containsKey(room)) {
             boolean ans = rooms.get(room).addCompetidor(us);
             if(!ans){
                 throw  new CamposDeGuerraPersistenceException("La Room ingresada se encuentre llena, Por favor intente con otra");
@@ -63,7 +55,7 @@ public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoom
     @Override
     public Set<Usuario> getAllUsuariosFromRoom(Integer room) throws CamposDeGuerraNotFoundException {
         HashSet<Usuario> ans = new HashSet<>();
-        if (rooms.contains(room)) {
+        if (rooms.containsKey(room)) {
             ans=rooms.get(room).getAllCompetitors();
         } else {
             throw  new CamposDeGuerraNotFoundException("La Room ingresada no existe!");
@@ -73,7 +65,7 @@ public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoom
 
     @Override
     public void deleteUsuarioFromRoom(Usuario us, Integer room) throws CamposDeGuerraNotFoundException {
-        if (rooms.contains(room)) {
+        if (rooms.containsKey(room)) {
             boolean ans=rooms.get(room).deleteUser(us);
             if(!ans){
                 throw  new CamposDeGuerraNotFoundException("El usuario no existe en la room indicada.");
@@ -85,7 +77,7 @@ public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoom
 
     @Override
     public void deleteAllUsuariosFromRoom(Integer room) throws CamposDeGuerraNotFoundException {
-        if (rooms.contains(room)) {
+        if (rooms.containsKey(room)) {
             rooms.get(room).clear();
         } else {
             throw  new CamposDeGuerraNotFoundException("La Room ingresada no existe!");
@@ -95,7 +87,7 @@ public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoom
     @Override
     public Set<Usuario> getAllUsuariosFromTeamARoom(Integer room) throws CamposDeGuerraNotFoundException {
         HashSet<Usuario> ans = new HashSet<>();
-        if (rooms.contains(room)) {
+        if (rooms.containsKey(room)) {
             ans=rooms.get(room).getAllCompetitorsTeamA();
         } else {
             throw  new CamposDeGuerraNotFoundException("La Room ingresada no existe!");
@@ -106,7 +98,7 @@ public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoom
     @Override
     public Set<Usuario> getAllUsuariosFromTeamBRoom(Integer room) throws CamposDeGuerraNotFoundException {
         HashSet<Usuario> ans = new HashSet<>();
-        if (rooms.contains(room)) {
+        if (rooms.containsKey(room)) {
             ans=rooms.get(room).getAllCompetitorsTeamB();
         } else {
             throw  new CamposDeGuerraNotFoundException("La Room ingresada no existe!");
