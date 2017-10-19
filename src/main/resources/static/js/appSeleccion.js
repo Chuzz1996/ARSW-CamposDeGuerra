@@ -34,7 +34,7 @@ var appSeleccion = (function () {
     }
 
     var deleteUser = function () {
-        var currentUser = localStorage.getItem("user");
+        var currentUser = sessionStorage.getItem("user");
         var deletePromise = api.deleteUser(currentUser);
         deletePromise.then(
                 function () {
@@ -49,7 +49,7 @@ var appSeleccion = (function () {
     };
 
     var getUser = function () {
-        var currentUser = localStorage.getItem("user");
+        var currentUser = sessionStorage.getItem("user");
         var getPromise = api.getUser(currentUser, function (data) {
             myUser = data;
         });
@@ -69,8 +69,8 @@ var appSeleccion = (function () {
         var postPromise = api.postUserRoom(idRoom, tempUser);
         postPromise.then(
                 function () {
-                    localStorage.setItem("idRoom", idRoom);
-                    api.getMyTeam(localStorage.getItem("user"), localStorage.getItem("idRoom"),function(data){localStorage.setItem("myTeam",data);});
+                    sessionStorage.setItem("idRoom", idRoom);
+                    api.getMyTeam(sessionStorage.getItem("user"), sessionStorage.getItem("idRoom"),function(data){sessionStorage.setItem("myTeam",data);});
                     var newURL = window.location.protocol + "//" + window.location.host + "/" + "juego.html";
                     window.location.replace(newURL);
                 },
@@ -104,7 +104,7 @@ var appSeleccion = (function () {
             deleteUser();
         },
         cuenta: function () {
-            return localStorage.getItem("user");
+            return sessionStorage.getItem("user");
         },
         partidaRandom: function () {
             getRamdonRoom().then(getUser).then(postUserRoom);

@@ -3,10 +3,11 @@
 var juego = (function () {
 
     class Usuario {
-        constructor(nombre, maquina, puntaje) {
+        constructor(nombre, maquina, puntaje,equipo) {
             this.nombre = nombre;
             this.maquina = maquina;
             this.puntaje = puntaje;
+            this.equipo = equipo;
         }
         ;
     }
@@ -106,7 +107,7 @@ var juego = (function () {
                 borrar.push(i);
             }
             var temp2 = new Bulletcita(myGamePiece.shoots[i].x, myGamePiece.shoots[i].y, myGamePiece.shoots[i].dir);
-            stompClient.send("/topic/sala." + localStorage.getItem("idRoom") + "/bullets", {}, JSON.stringify(temp2));
+            stompClient.send("/topic/sala." + sessionStorage.getItem("idRoom") + "/bullets", {}, JSON.stringify(temp2));
         }
         for (let i = 0; i < borrar.length; i++) {
             if (i === 0) {
@@ -147,13 +148,14 @@ var juego = (function () {
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
 
-    function Component(width, height, color, x, y, type, bullets, direction, propietario) {
+    function Component(width, height, color, x, y, type, bullets, direction, propietario, equipo) {
         this.gamearea = myGameArea;
         if (type === "image") {
             this.image = new Image();
             this.image.src = color;
         }
         this.propietario = propietario;
+        this.equipo=equipo;
         this.width = width;
         this.height = height;
         this.speedX = 0;
@@ -176,7 +178,7 @@ var juego = (function () {
             console.info("oponentes");
             console.info(oponents);
             for (var i = 0; i < oponents.length; i++) {
-                if (oponents[i].propietario !== localStorage.getItem("user")) {
+                if (oponents[i].propietario !== sessionStorage.getItem("user")) {
                     var temp = new Image();
                     temp.src = directionImageTank + oponents[i].direction + ".png";
                     ctx.drawImage(temp, oponents[i].x, oponents[i].y, 30, 30);
@@ -186,7 +188,7 @@ var juego = (function () {
             console.info("aliados");
             console.info(aliados);
             for (var i = 0; i < aliados.length; i++) {
-                if (aliados[i].propietario !== localStorage.getItem("user")) {
+                if (aliados[i].propietario !== sessionStorage.getItem("user")) {
                     var temp = new Image();
                     temp.src = directionImageTank + aliados[i].direction + ".png";
                     ctx.drawImage(temp, aliados[i].x, aliados[i].y, 30, 30);
@@ -215,15 +217,15 @@ var juego = (function () {
                         bullets.push(new Bulletcita(myGamePiece.shoots[i].x, myGamePiece.shoots[i].y, myGamePiece.shoots[i].dir));
                     }
                     var maquina = new Maquina(myGamePiece.x, myGamePiece.y, myGamePiece.direction, bullets);
-                    var usuario = new Usuario(localStorage.getItem("user"), maquina, puntaje);
+                    var usuario = new Usuario(sessionStorage.getItem("user"), maquina, puntaje,sessionStorage.getItem("myTeam"));
                     var enemyteam = "";
-                    if (localStorage.getItem("idRoom") === "A") {
+                    if (sessionStorage.getItem("idRoom") === "A") {
                         enemyteam = "B";
                     } else {
                         enemyteam = "A";
                     }
-                    stompClient.send("/topic/sala." + localStorage.getItem("idRoom") + "/" + localStorage.getItem("myTeam"), {}, JSON.stringify(usuario));
-                    stompClient.send("/topic/sala." + localStorage.getItem("idRoom") + "/" + enemyteam, {}, JSON.stringify(usuario));
+                    stompClient.send("/topic/sala." + sessionStorage.getItem("idRoom") + "/" + sessionStorage.getItem("myTeam"), {}, JSON.stringify(usuario));
+                    stompClient.send("/topic/sala." + sessionStorage.getItem("idRoom") + "/" + enemyteam, {}, JSON.stringify(usuario));
                 };
 
 
@@ -319,46 +321,46 @@ var juego = (function () {
             stompClient = Stomp.over(socket);
             stompClient.connect({}, function (frame) {
                 var enemyteam = "";
-                if (localStorage.getItem("idRoom") === "A") {
+                if (sessionStorage.getItem("idRoom") === "A") {
                     enemyteam = "B";
                 } else {
                     enemyteam = "A";
                 }
-                stompClient.subscribe('/topic/sala.' + localStorage.getItem("idRoom") + "/" + localStorage.getItem("myTeam"), function (eventbody) {
+                stompClient.subscribe('/topic/sala.' + sessionStorage.getItem("idRoom") + "/" + sessionStorage.getItem("myTeam"), function (eventbody) {
                     var object = JSON.parse(eventbody.body);
                     var bandera = 0;
                     for (var i = 0; i < aliados.length && bandera === 0; i++) {
-                        if (aliados[i].propietario === object.nombre) {
+                        if (aliados[i].propietario === object.nombre ) {
                             bandera = 1;
-                            aliados[i] = new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre);
+                            aliados[i] = new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre,sessionStorage.getItem("myTeam"));
                         }
                     }
-                    if (bandera === 0) {
-                        aliados.push(new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre));
+                    if (bandera === 0 && object.equipo===sessionStorage.getItem("myTeam")) {
+                        aliados.push(new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre,sessionStorage.getItem("myTeam")));
                     }
                     updateGameArea();
                 });
-                stompClient.subscribe('/topic/sala.' + localStorage.getItem("idRoom") + "/" + enemyteam, function (eventbody) {
+                stompClient.subscribe('/topic/sala.' + sessionStorage.getItem("idRoom") + "/" + enemyteam, function (eventbody) {
                     var object = JSON.parse(eventbody.body);
                     var bandera = 0;
                     for (var i = 0; i < oponents.length && bandera === 0; i++) {
                         if (oponents[i].propietario === object.nombre) {
                             bandera = 1;
-                            oponents[i] = new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre);
+                            oponents[i] = new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre,sessionStorage.getItem("myTeam"));
                         }
                     }
-                    if (bandera === 0) {
-                        oponents.push(new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre));
+                    if (bandera === 0 && object.equipo!==sessionStorage.getItem("myTeam")) {
+                        oponents.push(new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre,sessionStorage.getItem("myTeam")));
                     }
                     updateGameArea();
                 });
-                stompClient.subscribe('/topic/sala.' + localStorage.getItem("idRoom") + "/bullets", function (eventbody) {
+                stompClient.subscribe('/topic/sala.' + sessionStorage.getItem("idRoom") + "/bullets", function (eventbody) {
                     var object = JSON.parse(eventbody.body);
                     graficarBala(object);
                 });
             });
             myGameArea.start();
-            myGamePiece = new Component(30, 30, directionImageTank + "1.png", 10, 120, "image", [], 1, localStorage.getItem("user"));
+            myGamePiece = new Component(30, 30, directionImageTank + "1.png", 10, 120, "image", [], 1, sessionStorage.getItem("user"));
             updateGameArea();
         }
     };

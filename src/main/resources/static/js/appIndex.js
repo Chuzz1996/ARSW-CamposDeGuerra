@@ -24,8 +24,8 @@ var appIndex = (function () {
 
 
     var postUser = function () {
-        localStorage.setItem("user", document.getElementById("username").value);
-        var newUsuario = new Usuario(null, localStorage.getItem("user"), 0, 0);
+        sessionStorage.setItem("user", document.getElementById("username").value);
+        var newUsuario = new Usuario(null, sessionStorage.getItem("user"), 0, 0);
         var postPromise = api.postUser(newUsuario);
         postPromise.then(
                 function () {
@@ -52,7 +52,7 @@ var appIndex = (function () {
             
         },
         getCurrentUser: function () {
-            return localStorage.getItem("user");
+            return sessionStorage.getItem("user");
         }
     };
 
