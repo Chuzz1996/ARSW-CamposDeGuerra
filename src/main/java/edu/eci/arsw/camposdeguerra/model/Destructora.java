@@ -6,6 +6,9 @@
 package edu.eci.arsw.camposdeguerra.model;
 
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,29 +16,23 @@ import org.springframework.stereotype.Service;
  * @author pipe
  */
 
-@Service
+
 public class Destructora implements Maquina{
-    
-    public int live;
     
     public int speed;
     
     public int attack;
     
-    public Destructora(){
-        this.live = 100;
-        this.speed = 10;
-        this.attack = 10;
-    }
-
-    @Override
-    public void damage(int resta) throws CamposDeGuerraPersistenceException {
-        this.live -= resta;
-    }
-
-    @Override
-    public void addLive(int vida) throws CamposDeGuerraPersistenceException {
-        this.live += vida;
+    private int x;
+    private int y;
+    private int direction;
+    private LinkedList<Bullet> bullets;
+    
+    public Destructora(int x,int y,int direction,LinkedList<Bullet> bullets){
+        this.x = x;
+        this.y = y;
+        this.direction = direction;
+        this.bullets = bullets;
     }
 
     @Override
@@ -50,7 +47,49 @@ public class Destructora implements Maquina{
 
     @Override
     public String describe(){
-        return "{live:"+live+",velocidad:"+speed+",attack:"+attack+"}";
+        return "{velocidad:"+speed+",attack:"+attack+"}";
     }
     
+    /**
+     * @return the x
+     */
+    public int getX() {
+        return x;
+    }
+
+    /**
+     * @param x the x to set
+     */
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    /**
+     * @return the y
+     */
+    public int getY() {
+        return y;
+    }
+
+    /**
+     * @param y the y to set
+     */
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    @Override
+    public void addBullet(Bullet bullet) throws CamposDeGuerraPersistenceException {
+        bullets.add(bullet);
+    }
+
+    @Override
+    public LinkedList<Bullet> getBullets() throws CamposDeGuerraPersistenceException {
+        return bullets;
+    }
+
+    @Override
+    public void deleteBullet(Bullet bullet) throws CamposDeGuerraPersistenceException {
+        bullets.remove(bullet);
+    }
 }

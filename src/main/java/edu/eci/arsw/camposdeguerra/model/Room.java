@@ -31,11 +31,11 @@ public class Room {
     
     public boolean addCompetidor(Usuario us) {
         boolean agregoUser = true;
-        if (equipoA.size() < 3) {
-            equipoA.add(us);
-        } else if (equipoB.size() < 3) {
+        if(equipoA.size() >= equipoB.size() && equipoB.size()<3){
             equipoB.add(us);
-        } else {
+        }else if(equipoB.size() >= equipoA.size() && equipoA.size()<3){
+            equipoA.add(us);
+        }else {
             agregoUser = false;
         }
         return agregoUser;

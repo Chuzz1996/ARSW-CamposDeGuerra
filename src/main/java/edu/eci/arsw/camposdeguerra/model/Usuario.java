@@ -17,17 +17,13 @@
 
 package edu.eci.arsw.camposdeguerra.model;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service
 public class Usuario {
     
-    @Autowired
     private Maquina tipoMaquina;
+    
     private String userName="";
     private int puntaje;
-    private int equipo;
 
     
     public Usuario() {
@@ -38,30 +34,11 @@ public class Usuario {
      * @param userName
      * @param tipoMaquina
      * @param puntaje
-     * @param equipo 
      */
-    public Usuario(String userName,Maquina tipoMaquina,int puntaje, int equipo) {
+    public Usuario(String userName,Maquina tipoMaquina,int puntaje) {
         this.userName=userName;
         this.tipoMaquina=tipoMaquina;
         this.puntaje=puntaje;
-        this.equipo = equipo;
-       
-    }
-    
-    /**
-     * 
-     * @param equipo
-     */
-    public void setEquipo(int equipo){
-        this.equipo = equipo;
-    }
-
-    /**
-     * 
-     * @return 
-     */
-    public int getEquipo(){
-        return equipo;
     }
     
     /**
@@ -114,7 +91,7 @@ public class Usuario {
 
     @Override
     public String toString(){
-        return "Usuario{" + "Username:" + userName + ", Puntaje:" + puntaje + ", Equipo:"+ equipo +", Maquina:" + tipoMaquina.describe() + '}';
+        return "Usuario{" + "Username:" + userName + ", Puntaje:" + puntaje + ", Maquina:" + tipoMaquina.describe() + '}';
     }
     
     

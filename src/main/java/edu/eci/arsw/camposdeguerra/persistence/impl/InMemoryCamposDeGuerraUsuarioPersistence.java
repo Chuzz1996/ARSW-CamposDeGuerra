@@ -23,9 +23,9 @@ public class InMemoryCamposDeGuerraUsuarioPersistence implements CamposDeGuerraU
     
     
     public InMemoryCamposDeGuerraUsuarioPersistence() {
-        Usuario u1 = new Usuario("martin", null, 99999,0);
-        Usuario u2= new Usuario("cristian", null, 0,0);
-        Usuario u3 = new Usuario("felipe", null, 123,0);
+        Usuario u1 = new Usuario("martin", null, 99999);
+        Usuario u2= new Usuario("cristian", null, 0);
+        Usuario u3 = new Usuario("felipe", null, 123);
         users.putIfAbsent("martin", u1);
         users.putIfAbsent("cristian", u2);
         users.putIfAbsent("felipe", u3);
@@ -59,11 +59,5 @@ public class InMemoryCamposDeGuerraUsuarioPersistence implements CamposDeGuerraU
         if(users.containsKey(user)){users.remove(user);}
         else{throw new CamposDeGuerraPersistenceException("El usuario "+user+" no puede ser borrado porque no existe.");}
     }
-
-    @Override
-    public void asignedTeam(String user,int team) throws CamposDeGuerraPersistenceException {
-        users.get(user).setEquipo(team);
-    }
-
     
 }

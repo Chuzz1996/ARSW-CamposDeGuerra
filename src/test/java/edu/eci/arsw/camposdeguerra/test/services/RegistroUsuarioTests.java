@@ -18,7 +18,7 @@ public class RegistroUsuarioTests {
     public void saveNewAndLoadTest() {
 
         InMemoryCamposDeGuerraUsuarioPersistence icgp = new InMemoryCamposDeGuerraUsuarioPersistence();
-        Usuario u = new Usuario("test", null, 99999,0);
+        Usuario u = new Usuario("test", null, 99999);
         try {
             icgp.saveUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -36,7 +36,7 @@ public class RegistroUsuarioTests {
     public void saveExistingUserTest() {
 
         InMemoryCamposDeGuerraUsuarioPersistence icgp = new InMemoryCamposDeGuerraUsuarioPersistence();
-        Usuario u = new Usuario("test", null, 99999,0);
+        Usuario u = new Usuario("test", null, 99999);
         try {
             icgp.saveUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -57,7 +57,7 @@ public class RegistroUsuarioTests {
         ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
         CamposDeGuerraServices cdg = ac.getBean(CamposDeGuerraServices.class);
 
-        Usuario u = new Usuario("test", null, 99999,0);
+        Usuario u = new Usuario("test", null, 99999);
         try {
             cdg.addNewUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -79,7 +79,7 @@ public class RegistroUsuarioTests {
         ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
         CamposDeGuerraServices cdg = ac.getBean(CamposDeGuerraServices.class);
 
-        Usuario u = new Usuario("test", null, 99999,0);
+        Usuario u = new Usuario("test", null, 99999);
         try {
             cdg.addNewUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -107,7 +107,7 @@ public class RegistroUsuarioTests {
         ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
         CamposDeGuerraServices cdg = ac.getBean(CamposDeGuerraServices.class);
 
-        Usuario u = new Usuario("test", null, 99999,0);
+        Usuario u = new Usuario("test", null, 99999);
         try {
             cdg.addNewUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {

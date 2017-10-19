@@ -1,11 +1,55 @@
 var juego = (function () {
+    
+    class Usuario{
+        constructor(nombre,maquina,puntaje){
+            this.nombre = nombre;
+            this.maquina = maquina;
+            this.puntaje = puntaje;
+        }
+    }
+
+    class Maquina{
+        constructor(x,y,direction,bullets){
+            this.x = x;
+            this.y = y;
+            this.direction = direction;
+            this.bullets = bullets;
+        }
+    }
+
+    class Bullet{
+        constructor(x,y,direction){
+            this.x = x;
+            this.y = y;
+            this.direction = direction;
+        }
+    }
 
     var myGamePiece;
+    var oponents = [];
     var myGameArea;
+    
+    var stompClient;
+
+    var puntaje = 0;
 
     var directionImageTank = "/images/tank";
     var directionImageShoot = "/images/bullet";
     var directionShoot = 4;
+    
+    var connectAndSubscribe = function () {
+        console.info('Connecting to WS...');
+        var socket = new SockJS('/stompendpoint');
+        stompClient = Stomp.over(socket);
+        
+        stompClient.connect({}, function (frame) {
+            stompClient.subscribe('/topic/sala.'+localStorage.getItem("idRoom"), function (eventbody) {
+                var object=JSON.parse(eventbody.body);
+                oponents.add(new Component(30, 30, directionImageTank + object.maquina.direction+"png",object.maquina.x,object.maquina.y,"image",object.maquina.bullets));
+            });
+        });
+
+    };
     
      function Bullet(width, height, color, x, y, type, dir) {
         this.gamearea = myGameArea;
@@ -79,9 +123,22 @@ var juego = (function () {
         }
         myGamePiece.newPos();
         myGamePiece.update();
+        let bullets = [];
+        for(let i = 0; i < myGamePiece.shoots.length; i++){
+            bullets.add(new Bullet(myGamePiece.shoots[i].x,myGamePiece.shoots[i].y,myGamePiece.shoots[i].dir));
+        }
+        let maquina = new Maquina(myGamePiece.x,myGamePiece.y,directionShoot,bullets);
+        let usuario = new Usuario(localStorage.getItem("user"),puntaje,maquina);
+        stompClient.send("/app/sala."+localStorage.getItem("idRoom"),{},
+                JSON.stringify(usuario)
+                );
+        for(let i = 0; i < oponents.length; i++){
+            oponents[i].update();
+        }
+        oponents = [];
     }
     
-    function Component(width, height, color, x, y, type) {
+    function Component(width, height, color, x, y, type,bullets) {
         this.gamearea = myGameArea;
         if (type === "image") {
             this.image = new Image();
@@ -94,7 +151,7 @@ var juego = (function () {
         this.speed = 1;
         this.x = x;
         this.y = y;
-        this.shoots = [];
+        this.shoots = bullets;
         this.update = function () {
             var ctx = myGameArea.context;
             if (type === "image") {
@@ -149,9 +206,10 @@ var juego = (function () {
     
     return{
         movimiento: function () {
+            connectAndSubscribe();
             myGameArea.start();
-            myGamePiece = new Component(30, 30, directionImageTank + "1.png", 10, 120, "image");
-        }
+            myGamePiece = new Component(30, 30, directionImageTank + "1.png", 10, 120, "image",[]);
+        },
     };
     
     

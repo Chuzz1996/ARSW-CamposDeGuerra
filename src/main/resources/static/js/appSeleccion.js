@@ -17,14 +17,21 @@ var appSeleccion = (function () {
     }
 
     class Maquina{
-        constructor(live, speed, attack){
-            this.live = live;
-            this.speed = speed;
-            this.attack = attack;
+        constructor(x,y,direction,bullets){
+            this.x = x;
+            this.y = y;
+            this.direction = direction;
+            this.bullets = bullets;
         }
     }
 
-
+    class Bullet{
+        constructor(x,y,direction){
+            this.x = x;
+            this.y = y;
+            this.direction = direction;
+        }
+    }
     
     var deleteUser = function () {
         var currentUser = localStorage.getItem("user");
@@ -39,23 +46,6 @@ var appSeleccion = (function () {
                     alert("Sorry,there was a problem with logout");
                 }
         );
-    };
-    
-    var connectAndSubscribe = function (room) {
-        console.info('Connecting to WS...');
-        var socket = new SockJS('/stompendpoint');
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, function (frame) {
-            console.log('Connected: ' + frame);
-            stompClient.subscribe('/topic/newpoint.' + id, function (eventbody) {
-                var pointRecived = JSON.parse(eventbody.body);
-                addPointToCanvas(pointRecived);
-            });
-            stompClient.subscribe('/topic/newpolygon.' + id, function (eventbody) {
-                var polygonRecived = JSON.parse(eventbody.body);
-                addPolygonToCanvas(polygonRecived);
-            });
-        });
     };
     
     var getUser= function (){
@@ -79,7 +69,9 @@ var appSeleccion = (function () {
         var postPromise = api.postUserRoom(idRoom,tempUser);
         postPromise.then(
                 function () {
-                    console.info("Log in Room Success");
+                    localStorage.setItem("idRoom",idRoom);
+                    var newURL = window.location.protocol + "//" + window.location.host + "/" + "juego.html";
+                    window.location.replace(newURL);
                 },
                 function () {
                     console.info("Sorry,there was a problem with the Room");

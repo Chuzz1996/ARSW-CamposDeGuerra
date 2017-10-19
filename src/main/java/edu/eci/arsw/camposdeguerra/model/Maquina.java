@@ -6,6 +6,8 @@
 package edu.eci.arsw.camposdeguerra.model;
 
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  *
@@ -13,20 +15,6 @@ import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceExceptio
  */
 
 public interface Maquina {
-    
-    /**
-     * 
-     * @param resta
-     * @throws CamposDeGuerraPersistenceException 
-     */
-    public void damage(int resta)throws CamposDeGuerraPersistenceException;
-    
-    /**
-     * 
-     * @param vida
-     * @throws CamposDeGuerraPersistenceException 
-     */
-    public void addLive(int vida)throws CamposDeGuerraPersistenceException;
     
     /**
      * 
@@ -47,5 +35,25 @@ public interface Maquina {
      * @return
      */
     public String describe();
+    
+    /**
+     * 
+     * @throws CamposDeGuerraPersistenceException 
+     */
+    public void addBullet(Bullet bullet)throws CamposDeGuerraPersistenceException;
+    
+    /**
+     * 
+     * @return
+     * @throws CamposDeGuerraPersistenceException 
+     */
+    public LinkedList<Bullet> getBullets()throws CamposDeGuerraPersistenceException;
+
+    /**
+     * 
+     * @param bullet
+     * @throws CamposDeGuerraPersistenceException 
+     */
+    public void deleteBullet(Bullet bullet)throws CamposDeGuerraPersistenceException;
     
 }
