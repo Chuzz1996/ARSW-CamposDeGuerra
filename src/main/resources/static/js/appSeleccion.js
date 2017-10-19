@@ -16,8 +16,8 @@ var appSeleccion = (function () {
         }
     }
 
-    class Maquina{
-        constructor(x,y,direction,bullets){
+    class Maquina {
+        constructor(x, y, direction, bullets) {
             this.x = x;
             this.y = y;
             this.direction = direction;
@@ -25,14 +25,14 @@ var appSeleccion = (function () {
         }
     }
 
-    class Bullet{
-        constructor(x,y,direction){
+    class Bullet {
+        constructor(x, y, direction) {
             this.x = x;
             this.y = y;
             this.direction = direction;
         }
     }
-    
+
     var deleteUser = function () {
         var currentUser = localStorage.getItem("user");
         var deletePromise = api.deleteUser(currentUser);
@@ -47,11 +47,11 @@ var appSeleccion = (function () {
                 }
         );
     };
-    
-    var getUser= function (){
+
+    var getUser = function () {
         var currentUser = localStorage.getItem("user");
-        var getPromise = api.getUser(currentUser,function (data){
-            myUser=data;
+        var getPromise = api.getUser(currentUser, function (data) {
+            myUser = data;
         });
         getPromise.then(
                 function () {
@@ -63,13 +63,14 @@ var appSeleccion = (function () {
         );
         return getPromise;
     };
-    
+
     var postUserRoom = function () {
         var tempUser = new Usuario(myUser.tipoMaquina, myUser.userName, myUser.puntaje, myUser.equipo)
-        var postPromise = api.postUserRoom(idRoom,tempUser);
+        var postPromise = api.postUserRoom(idRoom, tempUser);
         postPromise.then(
                 function () {
-                    localStorage.setItem("idRoom",idRoom);
+                    localStorage.setItem("idRoom", idRoom);
+                    api.getMyTeam(localStorage.getItem("user"), localStorage.getItem("idRoom"),function(data){localStorage.setItem("myTeam",data);});
                     var newURL = window.location.protocol + "//" + window.location.host + "/" + "juego.html";
                     window.location.replace(newURL);
                 },
@@ -79,38 +80,40 @@ var appSeleccion = (function () {
         );
         return postPromise;
     };
-    
+
+
+
     var getRamdonRoom = function () {
-        var getPromise = api.getFreeRoom(function (data){
-            idRoom=data;
+        var getPromise = api.getFreeRoom(function (data) {
+            idRoom = data;
         });
         getPromise.then(
                 function () {
-                    console.info("Encontro sala libre: "+ idRoom);
+                    console.info("Encontro sala libre: " + idRoom);
                 },
                 function () {
                     alert("Lo sentimos, no hay salas disponibles intente mas tarde");
                 }
         );
-        return getPromise; 
+        return getPromise;
     };
-    
+
 
     return {
-        logout:function(){
+        logout: function () {
             deleteUser();
         },
-        cuenta:function(){
+        cuenta: function () {
             return localStorage.getItem("user");
         },
-        partidaRandom:function(){
+        partidaRandom: function () {
             getRamdonRoom().then(getUser).then(postUserRoom);
         },
-        nuevaPartida:function(){
-            
+        nuevaPartida: function () {
+
         },
-        unirExistente:function(){
-            
+        unirExistente: function () {
+
         },
     };
 

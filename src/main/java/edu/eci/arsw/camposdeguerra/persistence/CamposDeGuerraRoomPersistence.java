@@ -69,6 +69,14 @@ public interface CamposDeGuerraRoomPersistence {
      */
     public void deleteAllUsuariosFromRoom(Integer room) throws CamposDeGuerraNotFoundException;
     
-
+    
+    /**
+     * 
+     * @param user
+     * @param room
+     * @return
+     * @throws CamposDeGuerraNotFoundException 
+     */
+    public String getTeamOfMyRoom(String user,Integer room) throws CamposDeGuerraNotFoundException;
     
 }

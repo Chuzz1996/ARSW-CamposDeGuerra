@@ -61,12 +61,17 @@ public class Room {
         equipoA.clear();equipoB.clear();
     }
     
-    public String TeamOfUser(Usuario us){
+    public String TeamOfUser(String us){
         String team="Ninguno";
-        if (equipoA.contains(us)) {
-            team="A";
-        }else if(equipoB.contains(us)){
-            team= "B";
+        for(Usuario u:equipoA){
+            if(u.getUserName().equals(us)){
+                team="A";
+            }
+        }
+        for(Usuario u:equipoB){
+            if(u.getUserName().equals(us)){
+                team="B";
+            }
         }
         return team;
     }

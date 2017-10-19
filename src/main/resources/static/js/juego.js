@@ -1,4 +1,4 @@
-/* global updateGameArea, updateBullets, graficarBalas, graficarBalaOponente */
+/* global updateGameArea, updateBullets, graficarBalas, graficarBalaOponente, actualizarTrayectoriaBalas */
 
 var juego = (function () {
 
@@ -35,6 +35,7 @@ var juego = (function () {
 
     var myGamePiece;
     var oponents = [];
+    var aliados = [];
     var myGameArea;
 
     var stompClient = null;
@@ -50,79 +51,71 @@ var juego = (function () {
 
 
 
-    var graficarBalaOponente = function (bullet) {
+    var graficarBala = function (bullet) {
         var temp2 = new Image();
         temp2.src = directionImageShoot + bullet.direction + ".png";
-        var h, w, sx, sy;
+        var h, w, sx, sy, deltaX, deltaY;
         if (bullet.direction === 3) {
-            h = 10;
-            w = 30;
-            sx = -5;
-            sy = 10;
-            bullet.x -= 1;
-        } else if (bullet.direction === 4) {
-            h = 10;
-            w = 30;
+            h = 30;
+            w = 10;
             sx = 5;
             sy = 10;
-            bullet.x += 1;
+            dx = 0;
+            dy = -1;
+        } else if (bullet.direction === 4) {
+            h = 30;
+            w = 10;
+            sx = 5;
+            sy = 0;
+            dx = 0;
+            dy = 1;
         } else if (bullet.direction === 2) {
-            h = 30;
-            w = 10;
-            sx = 10;
-            sy = -10;
-            bullet.y -= 1;
+            h = 10;
+            w = 30;
+            sx = 0;
+            sy = 0;
+            dx = 1;
+            dy = 0;
         } else {
-            h = 30;
-            w = 10;
+            h = 10;
+            w = 30;
             sx = 10;
-            sy = 10;
-            bullet.y += 1;
+            sy = 0;
+            dx = -1;
+            dy = 0;
         }
-        myGameArea.context.clearRect(bullet.x,  bullet.y,w,h);
         myGameArea.context.fillStyle = "#A9A9A9";
-        myGameArea.context.fillRect(bullet.x,  bullet.y,w,h);
+        myGameArea.context.fillRect(bullet.x + sx + dx, bullet.y + sy + dy, w, h);
         myGameArea.context.drawImage(temp2, bullet.x + sx, bullet.y + sy, w, h);
     };
 
-    var graficarBalas = function () {
-        for (let i = 0; i < myGamePiece.shoots.length; i++) {
-            var temp = new Image();
-            temp.src = directionImageShoot + myGamePiece.shoots[i].dir + ".png";
-            var h, w, sx, sy;
-            if (myGamePiece.shoots[i].dir === 3) {
-                h = 10;
-                w = 30;
-                sx = -5;
-                sy = 10;
-                myGamePiece.shoots[i].x -= 1;
-            } else if (myGamePiece.shoots[i].dir === 4) {
-                h = 10;
-                w = 30;
-                sx = 5;
-                sy = 10;
-                myGamePiece.shoots[i].x += 1;
-            } else if (myGamePiece.shoots[i].dir === 2) {
-                h = 30;
-                w = 10;
-                sx = 10;
-                sy = -10;
-                myGamePiece.shoots[i].y -= 1;
-            } else {
-                h = 30;
-                w = 10;
-                sx = 10;
-                sy = 10;
+    var actualizarTrayectoriaBalas = function () {
+        var temp = myGamePiece.shoots;
+        var borrar = [];
+        for (let i = 0; i < temp.length; i++) {
+            if (temp[i].dir === 3) {
                 myGamePiece.shoots[i].y += 1;
+            } else if (temp[i].dir === 4) {
+                myGamePiece.shoots[i].y -= 1;
+            } else if (temp[i].dir === 2) {
+                myGamePiece.shoots[i].x -= 1;
+            } else {
+                myGamePiece.shoots[i].x += 1;
             }
-            myGameArea.context.clearRect(myGamePiece.shoots[i].x,  myGamePiece.shoots[i].y,w,h);
-            myGameArea.context.fillStyle = "#A9A9A9";
-            myGameArea.context.fillRect(myGamePiece.shoots[i].x,  myGamePiece.shoots[i].y,w,h);
-            myGameArea.context.drawImage(temp, myGamePiece.shoots[i].x + sx, myGamePiece.shoots[i].y + sy, w, h);
-            var temp=new Bulletcita(myGamePiece.shoots[i].x, myGamePiece.shoots[i].y, myGamePiece.shoots[i].dir);
-            stompClient.send("/topic/sala." + localStorage.getItem("idRoom") + "/bullets", {}, JSON.stringify(temp));
+            if (temp[i].x >= myGameArea.canvas.width || temp[i].x <= -30 || temp[i].y >= myGameArea.canvas.height || temp[i].y <= -30) {
+                borrar.push(i);
+            }
+            var temp2 = new Bulletcita(myGamePiece.shoots[i].x, myGamePiece.shoots[i].y, myGamePiece.shoots[i].dir);
+            stompClient.send("/topic/sala." + localStorage.getItem("idRoom") + "/bullets", {}, JSON.stringify(temp2));
         }
-    }
+        for (let i = 0; i < borrar.length; i++) {
+            if (i === 0) {
+                myGamePiece.shoots.splice(borrar[i], 1);
+            } else {
+                myGamePiece.shoots.splice(borrar[i] - 1, 1);
+            }
+        }
+    };
 
 
     function Bullet(width, height, color, x, y, type, dir) {
@@ -154,12 +147,13 @@ var juego = (function () {
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
 
-    function Component(width, height, color, x, y, type, bullets, direction) {
+    function Component(width, height, color, x, y, type, bullets, direction, propietario) {
         this.gamearea = myGameArea;
         if (type === "image") {
             this.image = new Image();
             this.image.src = color;
         }
+        this.propietario = propietario;
         this.width = width;
         this.height = height;
         this.speedX = 0;
@@ -179,12 +173,25 @@ var juego = (function () {
             var ctx = myGameArea.context;
             ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
             //Dibujar Oponentes
+            console.info("oponentes");
+            console.info(oponents);
             for (var i = 0; i < oponents.length; i++) {
-                var temp = new Image();
-                temp.src = directionImageTank + oponents[i].direction + ".png";
-                ctx.drawImage(temp, oponents[i].x, oponents[i].y, 30, 30);
+                if (oponents[i].propietario !== localStorage.getItem("user")) {
+                    var temp = new Image();
+                    temp.src = directionImageTank + oponents[i].direction + ".png";
+                    ctx.drawImage(temp, oponents[i].x, oponents[i].y, 30, 30);
+                }
             }
-            oponents = [];
+            //Dibujar aliados
+            console.info("aliados");
+            console.info(aliados);
+            for (var i = 0; i < aliados.length; i++) {
+                if (aliados[i].propietario !== localStorage.getItem("user")) {
+                    var temp = new Image();
+                    temp.src = directionImageTank + aliados[i].direction + ".png";
+                    ctx.drawImage(temp, aliados[i].x, aliados[i].y, 30, 30);
+                }
+            }
         };
     }
 
@@ -198,7 +205,7 @@ var juego = (function () {
             this.context = this.canvas.getContext("2d");
             this.context.fillStyle = "#A9A9A9";
             this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-            this.interval = setInterval(graficarBalas, 20);
+            this.interval = setInterval(actualizarTrayectoriaBalas, 20);
             document.getElementById("Game").appendChild(this.canvas);
             window.addEventListener("keydown", function (e) {
 
@@ -209,10 +216,17 @@ var juego = (function () {
                     }
                     var maquina = new Maquina(myGamePiece.x, myGamePiece.y, myGamePiece.direction, bullets);
                     var usuario = new Usuario(localStorage.getItem("user"), maquina, puntaje);
-                    stompClient.send("/topic/sala." + localStorage.getItem("idRoom") + "/mypos", {}, JSON.stringify(usuario));
+                    var enemyteam = "";
+                    if (localStorage.getItem("idRoom") === "A") {
+                        enemyteam = "B";
+                    } else {
+                        enemyteam = "A";
+                    }
+                    stompClient.send("/topic/sala." + localStorage.getItem("idRoom") + "/" + localStorage.getItem("myTeam"), {}, JSON.stringify(usuario));
+                    stompClient.send("/topic/sala." + localStorage.getItem("idRoom") + "/" + enemyteam, {}, JSON.stringify(usuario));
                 };
 
-           
+
 
                 myGameArea.key = e.keyCode;
                 //THE A KEY
@@ -266,26 +280,25 @@ var juego = (function () {
                         h = 30;
                         w = 10;
                         sx = 5;
-                        sy = 10;
+                        sy = 20;
                     } else if (directionShoot === 4) {
                         h = 30;
                         w = 10;
                         sx = 5;
-                        sy = -10;
+                        sy = -30;
                     } else if (directionShoot === 2) {
                         h = 10;
                         w = 30;
-                        sx = -5;
+                        sx = -30;
                         sy = 10;
                     } else {
                         h = 10;
                         w = 30;
-                        sx = 10;
+                        sx = 20;
                         sy = 10;
                     }
-                    var temp = new Bullet(w, h, directionImageShoot + directionShoot + ".png", myGamePiece.x + sx, myGamePiece.y + sy, "image", directionShoot);
+                    var temp = new Bullet(w, h, directionImageShoot + myGamePiece.direction + ".png", myGamePiece.x + sx, myGamePiece.y + sy, "image", myGamePiece.direction);
                     myGamePiece.shoots.push(temp);
-                    //updateGameArea();
                 }
             });
             window.addEventListener("keyup", function (e) {
@@ -305,18 +318,47 @@ var juego = (function () {
             var socket = new SockJS('/stompendpoint');
             stompClient = Stomp.over(socket);
             stompClient.connect({}, function (frame) {
-                stompClient.subscribe('/topic/sala.' + localStorage.getItem("idRoom") + "/mypos", function (eventbody) {
+                var enemyteam = "";
+                if (localStorage.getItem("idRoom") === "A") {
+                    enemyteam = "B";
+                } else {
+                    enemyteam = "A";
+                }
+                stompClient.subscribe('/topic/sala.' + localStorage.getItem("idRoom") + "/" + localStorage.getItem("myTeam"), function (eventbody) {
                     var object = JSON.parse(eventbody.body);
-                    oponents.push(new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction));
+                    var bandera = 0;
+                    for (var i = 0; i < aliados.length && bandera === 0; i++) {
+                        if (aliados[i].propietario === object.nombre) {
+                            bandera = 1;
+                            aliados[i] = new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre);
+                        }
+                    }
+                    if (bandera === 0) {
+                        aliados.push(new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre));
+                    }
+                    updateGameArea();
+                });
+                stompClient.subscribe('/topic/sala.' + localStorage.getItem("idRoom") + "/" + enemyteam, function (eventbody) {
+                    var object = JSON.parse(eventbody.body);
+                    var bandera = 0;
+                    for (var i = 0; i < oponents.length && bandera === 0; i++) {
+                        if (oponents[i].propietario === object.nombre) {
+                            bandera = 1;
+                            oponents[i] = new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre);
+                        }
+                    }
+                    if (bandera === 0) {
+                        oponents.push(new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre));
+                    }
                     updateGameArea();
                 });
                 stompClient.subscribe('/topic/sala.' + localStorage.getItem("idRoom") + "/bullets", function (eventbody) {
                     var object = JSON.parse(eventbody.body);
-                    graficarBalaOponente(object);
+                    graficarBala(object);
                 });
             });
             myGameArea.start();
-            myGamePiece = new Component(30, 30, directionImageTank + "1.png", 10, 120, "image", [], 1);
+            myGamePiece = new Component(30, 30, directionImageTank + "1.png", 10, 120, "image", [], 1, localStorage.getItem("user"));
             updateGameArea();
         }
     };

@@ -176,6 +176,17 @@ public class CamposDeGuerraAPIController {
         }
     }
     
+    @RequestMapping(path = "/Rooms/{room}/Teams/{user}",method = RequestMethod.GET)
+    public ResponseEntity<?> getMyTeam(@PathVariable String user,@PathVariable Integer room) {
+        try {
+            //Obtener datos
+            return new ResponseEntity<>(cdg.getMyTeam(user, room), HttpStatus.ACCEPTED);
+        } catch (CamposDeGuerraNotFoundException ex) {
+            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+    
     @RequestMapping(path = "/Rooms/{room}/user",method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteUsuarioFromRoom(@RequestBody Usuario user,@PathVariable Integer room ) {
         try {

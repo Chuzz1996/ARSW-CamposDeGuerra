@@ -119,7 +119,9 @@ public class CamposDeGuerraServices {
         cdgr.deleteAllUsuariosFromRoom(room);
     }
     
-    
+    public String getMyTeam(String u,Integer r) throws CamposDeGuerraNotFoundException {
+        return cdgr.getTeamOfMyRoom(u,r);
+    }
     
     
 }

@@ -106,4 +106,17 @@ public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoom
         return ans;
     }
 
+    @Override
+    public String getTeamOfMyRoom(String user, Integer room) throws CamposDeGuerraNotFoundException {
+        String ans="";
+        if(rooms.containsKey(room)){
+            ans=rooms.get(room).TeamOfUser(user);
+        }
+        else{
+            throw  new CamposDeGuerraNotFoundException("La Room ingresada no existe!");
+        }
+        if(ans.equals("Ninguno")){throw  new CamposDeGuerraNotFoundException("El usuario ingresado no existe en esta sala!");}
+        return ans;
+    }
+
 }

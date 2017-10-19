@@ -58,6 +58,9 @@ var apiclient = (function () {
         getTeamBRoom: function (room,callback) {
             return $.get("/CamposDeGuerra/Rooms/"+room+"/TeamB",callback);
         },
+        getMyTeam: function (user,room,callback) {
+            return $.get("/CamposDeGuerra/Rooms/"+room+"/Teams/"+user,callback);
+        },
         getFreeRoom: function (callback) {
             return $.get("/CamposDeGuerra/Rooms/free",callback);
         }
