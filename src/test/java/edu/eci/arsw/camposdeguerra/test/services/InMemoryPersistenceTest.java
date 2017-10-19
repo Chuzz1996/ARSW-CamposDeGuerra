@@ -9,7 +9,7 @@ package edu.eci.arsw.camposdeguerra.test.services;
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
-import edu.eci.arsw.camposdeguerra.persistence.impl.InMemoryCamposDeGuerraPersistence;
+import edu.eci.arsw.camposdeguerra.persistence.impl.InMemoryCamposDeGuerraUsuarioPersistence;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Test;
@@ -20,7 +20,7 @@ public class InMemoryPersistenceTest {
     @Test
     public void saveNewAndLoadTest() {
 
-        InMemoryCamposDeGuerraPersistence icgp = new InMemoryCamposDeGuerraPersistence();
+        InMemoryCamposDeGuerraUsuarioPersistence icgp = new InMemoryCamposDeGuerraUsuarioPersistence();
         Usuario u = new Usuario("test1", null, 99999,0);
         try {
             icgp.saveUsuario(u);
@@ -37,7 +37,7 @@ public class InMemoryPersistenceTest {
 
     @Test
     public void saveExistingUserTest() {
-        InMemoryCamposDeGuerraPersistence icgp = new InMemoryCamposDeGuerraPersistence();
+        InMemoryCamposDeGuerraUsuarioPersistence icgp = new InMemoryCamposDeGuerraUsuarioPersistence();
         Usuario u = new Usuario("test1", null, 99999,0);
         try {
             icgp.saveUsuario(u);
@@ -55,7 +55,7 @@ public class InMemoryPersistenceTest {
     @Test
     public void saveAndGetUsuarioTest() {
 
-        InMemoryCamposDeGuerraPersistence icgp = new InMemoryCamposDeGuerraPersistence();
+        InMemoryCamposDeGuerraUsuarioPersistence icgp = new InMemoryCamposDeGuerraUsuarioPersistence();
 
         Usuario u = new Usuario("test1", null, 99999,0);
         try {
@@ -76,7 +76,7 @@ public class InMemoryPersistenceTest {
     @Test
     public void saveAndUpdateAndGetUsuarioTest() {
 
-        InMemoryCamposDeGuerraPersistence icgp = new InMemoryCamposDeGuerraPersistence();
+        InMemoryCamposDeGuerraUsuarioPersistence icgp = new InMemoryCamposDeGuerraUsuarioPersistence();
 
         Usuario u = new Usuario("test1", null, 99999,0);
         try {
@@ -103,7 +103,7 @@ public class InMemoryPersistenceTest {
     @Test
     public void saveAndDeleteUsuarioTest() {
 
-        InMemoryCamposDeGuerraPersistence icgp = new InMemoryCamposDeGuerraPersistence();
+        InMemoryCamposDeGuerraUsuarioPersistence icgp = new InMemoryCamposDeGuerraUsuarioPersistence();
 
         Usuario u = new Usuario("test1", null, 99999,0);
         try {

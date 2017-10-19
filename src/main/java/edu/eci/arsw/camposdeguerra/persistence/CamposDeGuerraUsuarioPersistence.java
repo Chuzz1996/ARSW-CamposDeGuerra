@@ -10,7 +10,7 @@ import edu.eci.arsw.camposdeguerra.model.Usuario;
 import java.util.Set;
 
 
-public interface CamposDeGuerraPersistence {
+public interface CamposDeGuerraUsuarioPersistence {
     
     /**
      * 

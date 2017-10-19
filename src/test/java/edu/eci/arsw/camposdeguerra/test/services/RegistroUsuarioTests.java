@@ -3,7 +3,7 @@ package edu.eci.arsw.camposdeguerra.test.services;
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
-import edu.eci.arsw.camposdeguerra.persistence.impl.InMemoryCamposDeGuerraPersistence;
+import edu.eci.arsw.camposdeguerra.persistence.impl.InMemoryCamposDeGuerraUsuarioPersistence;
 import edu.eci.arsw.camposdeguerra.services.CamposDeGuerraServices;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,7 +17,7 @@ public class RegistroUsuarioTests {
     @Test
     public void saveNewAndLoadTest() {
 
-        InMemoryCamposDeGuerraPersistence icgp = new InMemoryCamposDeGuerraPersistence();
+        InMemoryCamposDeGuerraUsuarioPersistence icgp = new InMemoryCamposDeGuerraUsuarioPersistence();
         Usuario u = new Usuario("test", null, 99999,0);
         try {
             icgp.saveUsuario(u);
@@ -35,7 +35,7 @@ public class RegistroUsuarioTests {
     @Test
     public void saveExistingUserTest() {
 
-        InMemoryCamposDeGuerraPersistence icgp = new InMemoryCamposDeGuerraPersistence();
+        InMemoryCamposDeGuerraUsuarioPersistence icgp = new InMemoryCamposDeGuerraUsuarioPersistence();
         Usuario u = new Usuario("test", null, 99999,0);
         try {
             icgp.saveUsuario(u);

@@ -9,8 +9,9 @@ package edu.eci.arsw.camposdeguerra.services;
 
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
-import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistence;
+import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraUsuarioPersistence;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
+import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraRoomPersistence;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,13 +21,15 @@ import org.springframework.stereotype.Service;
 public class CamposDeGuerraServices {
    
     @Autowired
-    private CamposDeGuerraPersistence cdg;
+    private CamposDeGuerraUsuarioPersistence cdg;
+    @Autowired
+    private CamposDeGuerraRoomPersistence cdgr;
     
     /**
      * 
      * @return 
      */
-    public CamposDeGuerraPersistence getCamposDeGuerraPersistence(){
+    public CamposDeGuerraUsuarioPersistence getCamposDeGuerraUsuarioPersistence(){
         return cdg;
     }
     
@@ -34,7 +37,7 @@ public class CamposDeGuerraServices {
      * 
      * @param cdg 
      */
-    public void setCamposDeGuerraPersistence(CamposDeGuerraPersistence cdg){
+    public void setCamposDeGuerraUsuarioPersistence(CamposDeGuerraUsuarioPersistence cdg){
         this.cdg = cdg;
     }
    
@@ -84,5 +87,39 @@ public class CamposDeGuerraServices {
     public void deleteUsuario(String user) throws CamposDeGuerraPersistenceException {
         cdg.deleteUsuario(user);
     }
+    
+    public Integer getRoomFree() throws CamposDeGuerraNotFoundException {
+        
+        return cdgr.getRoomFree();
+    }
+
+    public void addUserToRoom(Usuario us, Integer room) throws CamposDeGuerraPersistenceException {
+        cdgr.addUserToRoom(us, room);
+    }
+
+
+    public Set<Usuario> getAllUsuariosFromRoom(Integer room) throws CamposDeGuerraNotFoundException {
+        return cdgr.getAllUsuariosFromRoom(room);
+    }
+
+    public Set<Usuario> getAllUsuariosFromTeamARoom(Integer room) throws CamposDeGuerraNotFoundException {
+        return cdgr.getAllUsuariosFromTeamARoom(room);
+    }
+    
+    public Set<Usuario> getAllUsuariosFromTeamBRoom(Integer room) throws CamposDeGuerraNotFoundException {
+        return cdgr.getAllUsuariosFromTeamBRoom(room);
+    }
+
+    public void deleteUsuarioFromRoom(Usuario us, Integer room) throws CamposDeGuerraNotFoundException {
+        cdgr.deleteUsuarioFromRoom(us, room);
+    }
+
+
+    public void deleteAllUsuariosFromRoom(Integer room) throws CamposDeGuerraNotFoundException {
+        cdgr.deleteAllUsuariosFromRoom(room);
+    }
+    
+    
+    
     
 }

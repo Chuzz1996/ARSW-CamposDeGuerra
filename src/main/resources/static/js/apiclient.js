@@ -8,27 +8,58 @@
 var apiclient = (function () {
 
     return {
+        
         postUser: function (user) {
+            console.log(user);
             return $.ajax({
-                url: "/CamposDeGuerra", 
+                url: "/CamposDeGuerra/Usuarios/", 
                 type: "POST", 
                 data: JSON.stringify(user), 
                 contentType: "application/json"});
         },   
         deleteUser: function (user) {
             return $.ajax({
-                url: "/CamposDeGuerra/"+user, 
+                url: "/CamposDeGuerra/Usuarios/"+user, 
                 type: "DELETE"});
         },
         putUser: function (user) {
             return $.ajax({
-                url: "/CamposDeGuerra", 
+                url: "/CamposDeGuerra/Usuarios/", 
                 type: "PUT", 
                 data: JSON.stringify(user), 
                 contentType: "application/json"});
         },
         getUser: function (user,callback) {
-            $.get("/CamposDeGuerra"+user,callback);
+            return $.get("/CamposDeGuerra/Usuarios/"+user, callback);
+        },
+        postUserRoom: function (room,user) {
+            return $.ajax({
+                url: "/CamposDeGuerra/Rooms/"+room, 
+                type: "POST", 
+                data: JSON.stringify(user), 
+                contentType: "application/json"});
+        },   
+        deleteUserRoom: function (room,user) {
+            return $.ajax({
+                url: "/CamposDeGuerra/Rooms/"+room+"/"+user, 
+                type: "DELETE"});
+        },
+        deleteAllUsersRoom: function (room) {
+            return $.ajax({
+                url: "/CamposDeGuerra/Rooms/"+room, 
+                type: "DELETE"});
+        },
+        getRoom: function (room,callback) {
+            return $.get("/CamposDeGuerra/Rooms/"+room,callback);
+        },
+        getTeamARoom: function (room,callback) {
+            return $.get("/CamposDeGuerra/Rooms/"+room+"/TeamA",callback);
+        },
+        getTeamBRoom: function (room,callback) {
+            return $.get("/CamposDeGuerra/Rooms/"+room+"/TeamB",callback);
+        },
+        getFreeRoom: function (callback) {
+            return $.get("/CamposDeGuerra/Rooms/free",callback);
         }
         
         
