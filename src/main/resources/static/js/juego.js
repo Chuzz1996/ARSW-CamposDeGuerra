@@ -29,7 +29,7 @@ var juego = (function () {
     var oponents = [];
     var myGameArea;
 
-    var stompClient;
+    var stompClient=null;
 
     var puntaje = 0;
 
@@ -50,6 +50,8 @@ var juego = (function () {
         this.x = x;
         this.y = y;
     }
+    
+     
 
     function updateGameArea() {
         myGameArea.clear();
@@ -57,7 +59,6 @@ var juego = (function () {
         myGameArea.context.fillRect(0, 0, myGameArea.canvas.width, myGameArea.canvas.height);
         myGamePiece.speedX = 0;
         myGamePiece.speedY = 0;
-
         //THE A KEY
         if (myGameArea.key && myGameArea.key === 65) {
             myGamePiece.speedX = -myGamePiece.speed;
@@ -106,7 +107,7 @@ var juego = (function () {
                 sx = 10;
                 sy = 10;
             }
-            myGamePiece.shoots.push(new Bullet(w, h, directionImageShoot + directionShoot + ".png", myGamePiece.x + sx, myGamePiece.y + sy, "image", directionShoot));
+            myGamePiece.shoots.push(new Bullet(w, h, directionImageShoot+directionShoot+".png", myGamePiece.x + sx, myGamePiece.y + sy, "image", directionShoot));
         }
         myGamePiece.newPos();
         myGamePiece.update();
@@ -116,13 +117,9 @@ var juego = (function () {
         }
         let maquina = new Maquina(myGamePiece.x, myGamePiece.y, directionShoot, bullets);
         let usuario = new Usuario(localStorage.getItem("user"), maquina, puntaje);
-        stompClient.send("/app/sala." + localStorage.getItem("idRoom"), {},
+        stompClient.send("/topic/sala." + localStorage.getItem("idRoom"), {},
                 JSON.stringify(usuario)
                 );
-        for (let i = 0; i < oponents.length; i++) {
-            oponents[i].update();
-        }
-        oponents = [];
     }
 
     function Component(width, height, color, x, y, type, bullets,direction) {
@@ -149,7 +146,31 @@ var juego = (function () {
                 ctx.fillRect(this.x, this.y, this.width, this.height);
             }
             for (let i = 0; i < this.shoots.length; i++) {
-                ctx.drawImage(this.shoots[i].image, this.shoots[i].x, this.shoots[i].y, this.shoots[i].width, this.shoots[i].height);
+                var temp = new Image();
+                temp.src = directionImageShoot+this.shoots[i].dir+".png";
+                var h, w, sx, sy;
+                if (directionShoot === 3) {
+                    h = 10;
+                    w = 30;
+                    sx = -5;
+                    sy = 10;
+                } else if (directionShoot === 4) {
+                    h = 10;
+                    w = 30;
+                    sx = 5;
+                    sy = 10;
+                } else if (directionShoot === 2) {
+                    h = 30;
+                    w = 10;
+                    sx = 10;
+                    sy = -10;
+                } else {
+                    h = 30;
+                    w = 10;
+                    sx = 10;
+                    sy = 10;
+                }
+                ctx.drawImage(temp, this.shoots[i].x+sx, this.shoots[i].y+sy,w ,h);
                 if (this.shoots[i].dir === 4) {
                     this.shoots[i].x += 1;
                 } else if (this.shoots[i].dir === 3) {
@@ -160,6 +181,34 @@ var juego = (function () {
                     this.shoots[i].y += 1;
                 }
             }
+            for (let i = 0; i < oponents.length; i++) {
+                var temp = new Image();
+                temp.src = directionImageShoot+oponents[i].dir+".png";
+                var h, w, sx, sy;
+                if (directionShoot === 3) {
+                    h = 10;
+                    w = 30;
+                    sx = -5;
+                    sy = 10;
+                } else if (directionShoot === 4) {
+                    h = 10;
+                    w = 30;
+                    sx = 5;
+                    sy = 10;
+                } else if (directionShoot === 2) {
+                    h = 30;
+                    w = 10;
+                    sx = 10;
+                    sy = -10;
+                } else {
+                    h = 30;
+                    w = 10;
+                    sx = 10;
+                    sy = 10;
+                }
+                ctx.drawImage(temp, oponents[i].x+sx, oponents[i].y+sy,w ,h);
+        }
+        oponents = [];
         };
         this.newPos = function () {
             this.x += this.speedX;
@@ -178,7 +227,7 @@ var juego = (function () {
             this.context.fillStyle = "blue";
             this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
             document.getElementById("Game").appendChild(this.canvas);
-            this.interval = setInterval(updateGameArea, 1);
+            this.interval = setInterval(updateGameArea, 20);
             window.addEventListener("keydown", function (e) {
                 myGameArea.key = e.keyCode;
             });
@@ -190,7 +239,8 @@ var juego = (function () {
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         }
     };
-
+    
+    
 
     return{
         movimiento: function () {
@@ -200,12 +250,19 @@ var juego = (function () {
             stompClient.connect({}, function (frame) {
                 stompClient.subscribe('/topic/sala.' + localStorage.getItem("idRoom"), function (eventbody) {
                     var object = JSON.parse(eventbody.body);
-                    oponents.add(new Component(30, 30, directionImageTank + object.maquina.direction + "png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction));
+                    console.info("---------------------------");
+                    console.info("---------------------------");
+                    console.info("---------------------------");
+                    console.info(object);
+                    console.info("---------------------------");
+                    console.info("---------------------------");
+                    console.info("---------------------------");
+                    oponents.push(new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction));
                 });
             });
             myGameArea.start();
             myGamePiece = new Component(30, 30, directionImageTank + "1.png", 10, 120, "image", []);
-        },
+        }
     };
 
 

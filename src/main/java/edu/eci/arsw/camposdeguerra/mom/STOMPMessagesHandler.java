@@ -27,7 +27,9 @@ public class STOMPMessagesHandler {
     private SimpMessagingTemplate msgt;
 
     @MessageMapping("/sala.{idSala}")
-    public void handlePointEvent(Usuario usuario,@DestinationVariable String idSala) throws Exception {
+    public void handlePointEvent(Usuario usuario,@DestinationVariable Integer idSala) throws Exception {
+        System.out.print(usuario);
+        System.out.print(idSala);
         msgt.convertAndSend("/topic/sala."+idSala, usuario);
     }
 }
