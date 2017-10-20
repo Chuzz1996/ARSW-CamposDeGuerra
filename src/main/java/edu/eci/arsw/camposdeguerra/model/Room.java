@@ -8,6 +8,7 @@ package edu.eci.arsw.camposdeguerra.model;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,8 @@ public class Room {
     private ConcurrentLinkedQueue<Usuario> equipoA = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Usuario> equipoB = new ConcurrentLinkedQueue<>();
     private Integer id;
+    private String banderaA = "", banderaB = "";
+    private AtomicBoolean banderaATomada = new AtomicBoolean(false), banderaBTomada = new AtomicBoolean(false);
 
     public Room(Integer id) {
         this.id = id;
@@ -28,76 +31,107 @@ public class Room {
     public Integer getId() {
         return id;
     }
-    
+
     public boolean addCompetidor(Usuario us) {
         boolean agregoUser = true;
-        if(equipoA.size() >= equipoB.size() && equipoB.size()<3){
+        if (equipoA.size() >= equipoB.size() && equipoB.size() < 3) {
             equipoB.add(us);
-        }else if(equipoB.size() >= equipoA.size() && equipoA.size()<3){
+        } else if (equipoB.size() >= equipoA.size() && equipoA.size() < 3) {
             equipoA.add(us);
-        }else {
+        } else {
             agregoUser = false;
         }
         return agregoUser;
     }
-    
+
     public boolean isFull() {
         return equipoA.size() + equipoB.size() == 6;
     }
 
     public boolean deleteUser(Usuario us) {
-        boolean borroUser=true;
+        boolean borroUser = true;
         if (equipoA.contains(us)) {
             equipoA.remove(us);
         } else if (equipoB.contains(us)) {
             equipoB.remove(us);
-        }else{
-            borroUser=false;
+        } else {
+            borroUser = false;
         }
         return borroUser;
     }
 
     public void clear() {
-        equipoA.clear();equipoB.clear();
+        equipoA.clear();
+        equipoB.clear();
     }
-    
-    public String TeamOfUser(String us){
-        String team="Ninguno";
-        for(Usuario u:equipoA){
-            if(u.getUserName().equals(us)){
-                team="A";
+
+    public String TeamOfUser(String us) {
+        String team = "Ninguno";
+        for (Usuario u : equipoA) {
+            if (u.getUserName().equals(us)) {
+                team = "A";
             }
         }
-        for(Usuario u:equipoB){
-            if(u.getUserName().equals(us)){
-                team="B";
+        for (Usuario u : equipoB) {
+            if (u.getUserName().equals(us)) {
+                team = "B";
             }
         }
         return team;
     }
-    
-    public HashSet<Usuario> getAllCompetitors(){
+
+    public HashSet<Usuario> getAllCompetitors() {
         HashSet<Usuario> allCompetitors = new HashSet<>();
-        for (Usuario us:equipoA) {
+        for (Usuario us : equipoA) {
             allCompetitors.add(us);
         };
-        for (Usuario us:equipoB) {
+        for (Usuario us : equipoB) {
             allCompetitors.add(us);
         }
         return allCompetitors;
     }
-    public HashSet<Usuario> getAllCompetitorsTeamA(){
+
+    public HashSet<Usuario> getAllCompetitorsTeamA() {
         HashSet<Usuario> allCompetitorsA = new HashSet<>();
-        for (Usuario us:equipoA) {
+        for (Usuario us : equipoA) {
             allCompetitorsA.add(us);
         };
         return allCompetitorsA;
     }
-    public HashSet<Usuario> getAllCompetitorsTeamB(){
+
+    public HashSet<Usuario> getAllCompetitorsTeamB() {
         HashSet<Usuario> allCompetitorsB = new HashSet<>();
-        for (Usuario us:equipoA) {
+        for (Usuario us : equipoA) {
             allCompetitorsB.add(us);
         };
         return allCompetitorsB;
+    }
+
+    public synchronized boolean tomarBanderaA(String user) {
+        String ans=TeamOfUser(user);
+        if (!banderaATomada.get() && ans.equals("A")) {
+            banderaA = user;
+            banderaATomada.getAndSet(true);
+        }
+        return banderaATomada.get();
+    }
+
+    public synchronized boolean tomarBanderaB(String user) {
+        String ans=TeamOfUser(user);
+        if (!banderaBTomada.get() && ans.equals("B")) {
+            banderaB = user;
+            banderaBTomada.getAndSet(true);
+        }
+        return banderaBTomada.get();
+    }
+
+    public void soltarBanderaA() {
+        banderaA = "";
+        banderaATomada.getAndSet(false);
+    }
+
+    public void soltarBanderaB() {
+        banderaB = "";
+        banderaBTomada.getAndSet(false);
     }
 }

@@ -119,4 +119,32 @@ public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoom
         return ans;
     }
 
+    @Override
+    public void setFlagARoom(String user, Integer room) throws CamposDeGuerraNotFoundException {
+        boolean ans;
+        if(rooms.containsKey(room)){
+            ans=rooms.get(room).tomarBanderaA(user);
+            if(!ans){
+                throw  new CamposDeGuerraNotFoundException("La Bandera ya fue tomada o el usuario no existe en la sala!");
+            }
+        }
+        else{
+            throw  new CamposDeGuerraNotFoundException("La Room ingresada no existe!");
+        }
+    }
+
+    @Override
+    public void setFlagBRoom(String user, Integer room) throws CamposDeGuerraNotFoundException {
+        boolean ans;
+        if(rooms.containsKey(room)){
+            ans=rooms.get(room).tomarBanderaB(user);
+            if(!ans){
+                throw  new CamposDeGuerraNotFoundException("La Bandera ya fue tomada o el usuario no existe en la sala!");
+            }
+        }
+        else{
+            throw  new CamposDeGuerraNotFoundException("La Room ingresada no existe!");
+        }
+    }
+
 }

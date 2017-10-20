@@ -70,9 +70,20 @@ var appSeleccion = (function () {
         postPromise.then(
                 function () {
                     sessionStorage.setItem("idRoom", idRoom);
-                    api.getMyTeam(sessionStorage.getItem("user"), sessionStorage.getItem("idRoom"),function(data){sessionStorage.setItem("myTeam",data);});
-                    var newURL = window.location.protocol + "//" + window.location.host + "/" + "juego.html";
-                    window.location.replace(newURL);
+                    api.getMyTeam(sessionStorage.getItem("user"), sessionStorage.getItem("idRoom"), function (data) {
+                        sessionStorage.setItem("myTeam", data);
+
+                    });
+                    console.info('Connecting to WS...');
+                    var socket = new SockJS('/stompendpoint');
+                    stompClient = Stomp.over(socket);
+                    stompClient.connect({}, function (frame) {
+                        stompClient.subscribe('/topic/sala.' + sessionStorage.getItem("idRoom"), function (eventbody) {
+                            var newURL = window.location.protocol + "//" + window.location.host + "/" + "juego.html";
+                            window.location.replace(newURL);
+                        })
+                    })
+                    setTimeout(function (){stompClient.send("/app/sala." + sessionStorage.getItem("idRoom"), {}, 'listo')},4000);
                 },
                 function () {
                     console.info("Sorry,there was a problem with the Room");
@@ -81,7 +92,7 @@ var appSeleccion = (function () {
         return postPromise;
     };
 
-
+    
 
     var getRamdonRoom = function () {
         var getPromise = api.getFreeRoom(function (data) {
@@ -98,6 +109,25 @@ var appSeleccion = (function () {
         return getPromise;
     };
 
+    var counter = 10;
+
+    function Show_Countdown() {
+
+        var countDown_overlay = 'position:absolute;' +
+                'top:50%;' +
+                'left:50%;' +
+                'background-color:white;' +
+                'z-index:1002;' +
+                'overflow:auto;' +
+                'width:400px;' +
+                'text-align:center;' +
+                'height:400px;' +
+                'margin-left:-200px;' +
+                'margin-top:-200px';
+
+        $('body').append('<div id="overLay" style="' + countDown_overlay + '"><span id="time">Esperando más jugadores ... </span></div>');
+    }
+
 
     return {
         logout: function () {
@@ -107,7 +137,7 @@ var appSeleccion = (function () {
             return sessionStorage.getItem("user");
         },
         partidaRandom: function () {
-            getRamdonRoom().then(getUser).then(postUserRoom);
+            getRamdonRoom().then(getUser).then(postUserRoom).then(Show_Countdown);
         },
         nuevaPartida: function () {
 
@@ -120,3 +150,35 @@ var appSeleccion = (function () {
 }());
 
 
+/*
+ function Show_Countdown() {
+ 
+ var countDown_overlay = 'position:absolute;' +
+ 'top:50%;' +
+ 'left:50%;' +
+ 'background-color:white;' +
+ 'z-index:1002;' +
+ 'overflow:auto;' +
+ 'width:400px;' +
+ 'text-align:center;' +
+ 'height:400px;' +
+ 'margin-left:-200px;' +
+ 'margin-top:-200px';
+ 
+ $('body').append('<div id="overLay" style="' + countDown_overlay + '"><span id="time">Esperando más jugadores ... </span></div>');
+ 
+ var timer = setInterval(function () {
+ document.getElementById("time").innerHTML = counter;
+ counter = (counter - 1);
+ 
+ if (counter < 0)
+ {
+ 
+ clearInterval(timer);
+ document.getElementById("overLay").style.display = 'none';
+ var newURL = window.location.protocol + "//" + window.location.host + "/" + "juego.html";
+ window.location.replace(newURL);
+ }
+ }, 1000);
+ }
+ */

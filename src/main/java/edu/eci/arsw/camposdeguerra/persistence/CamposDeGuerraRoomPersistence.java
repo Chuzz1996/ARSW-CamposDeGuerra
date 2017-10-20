@@ -78,5 +78,21 @@ public interface CamposDeGuerraRoomPersistence {
      * @throws CamposDeGuerraNotFoundException 
      */
     public String getTeamOfMyRoom(String user,Integer room) throws CamposDeGuerraNotFoundException;
+ 
+    /**
+     * 
+     * @param user
+     * @param room
+     * @throws CamposDeGuerraNotFoundException 
+     */
+    public void setFlagARoom(String user,Integer room) throws CamposDeGuerraNotFoundException;
+    
+    /**
+     * 
+     * @param user
+     * @param room
+     * @throws CamposDeGuerraNotFoundException 
+     */
+    public void setFlagBRoom(String user,Integer room) throws CamposDeGuerraNotFoundException;
     
 }

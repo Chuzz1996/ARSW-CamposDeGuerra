@@ -123,5 +123,12 @@ public class CamposDeGuerraServices {
         return cdgr.getTeamOfMyRoom(u,r);
     }
     
+    public void setFlagARoom(String user, Integer room) throws CamposDeGuerraNotFoundException {
+        cdgr.setFlagARoom(user, room);
+    }
+
+    public void setFlagBRoom(String user, Integer room) throws CamposDeGuerraNotFoundException {
+        cdgr.setFlagBRoom(user, room);
+    }
     
 }

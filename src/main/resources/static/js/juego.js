@@ -3,7 +3,7 @@
 var juego = (function () {
 
     class Usuario {
-        constructor(nombre, maquina, puntaje,equipo,vida) {
+        constructor(nombre, maquina, puntaje, equipo, vida) {
             this.nombre = nombre;
             this.maquina = maquina;
             this.puntaje = puntaje;
@@ -13,7 +13,16 @@ var juego = (function () {
         ;
     }
     ;
-
+        
+    class bandera {
+        constructor(x,y) {
+            this.x = x;
+            this.y = y;
+        }
+        ;
+    }
+    ;
+    
     class Maquina {
         constructor(x, y, direction, bullets) {
             this.x = x;
@@ -26,7 +35,7 @@ var juego = (function () {
     ;
 
     class Bulletcita {
-        constructor(x, y, direction,equipo,h,w) {
+        constructor(x, y, direction, equipo, h, w) {
             this.x = x;
             this.y = y;
             this.direction = direction;
@@ -51,6 +60,10 @@ var juego = (function () {
     var updateGameArea;
 
 
+    var centesimas = 0;
+    var segundos = 0;
+    var minutos = 0;
+    var horas = 0;
 
 
 
@@ -87,19 +100,19 @@ var juego = (function () {
             dx = -1;
             dy = 0;
         }
-        if(myGamePiece.crashWith(bullet,h,w)){
+        if (myGamePiece.crashWith(bullet, h, w)) {
             myGameArea.context.fillStyle = "#A9A9A9";
             myGameArea.context.fillRect(bullet.x + sx + dx, bullet.y + sy + dy, w, h);
             let image = new Image();
             image.src = "/images/explosion.png";
-            myGameArea.context.drawImage(image, myGamePiece.x , myGamePiece.y , 30, 30);
-            console.info("ENTRO");
-        }else{
+            myGameArea.context.drawImage(image, myGamePiece.x, myGamePiece.y, 30, 30);
+            document.getElementById("live").innerHTML = "Vida: " + myGamePiece.vida;
+        } else {
             myGameArea.context.fillStyle = "#A9A9A9";
             myGameArea.context.fillRect(bullet.x + sx + dx, bullet.y + sy + dy, w, h);
             myGameArea.context.drawImage(temp2, bullet.x + sx, bullet.y + sy, w, h);
         }
-        
+
     };
 
     var actualizarTrayectoriaBalas = function () {
@@ -118,7 +131,7 @@ var juego = (function () {
             if (temp[i].x >= myGameArea.canvas.width || temp[i].x <= -30 || temp[i].y >= myGameArea.canvas.height || temp[i].y <= -30) {
                 borrar.push(i);
             }
-            var temp2 = new Bulletcita(myGamePiece.shoots[i].x, myGamePiece.shoots[i].y, myGamePiece.shoots[i].dir,sessionStorage.getItem("myTeam"));
+            var temp2 = new Bulletcita(myGamePiece.shoots[i].x, myGamePiece.shoots[i].y, myGamePiece.shoots[i].dir, sessionStorage.getItem("myTeam"));
             stompClient.send("/topic/sala." + sessionStorage.getItem("idRoom") + "/bullets", {}, JSON.stringify(temp2));
         }
         for (let i = 0; i < borrar.length; i++) {
@@ -145,6 +158,50 @@ var juego = (function () {
     }
     ;
 
+    //Manejo del tiempo en el canvas
+
+    function inicio() {
+        control = setInterval(cronometro, 10);
+    }
+
+    function cronometro() {
+        if (centesimas < 99) {
+            centesimas++;
+            if (centesimas < 10) {
+                centesimas = "0" + centesimas
+            }
+        }
+        if (centesimas == 99) {
+            centesimas = -1;
+        }
+        if (centesimas == 0) {
+            segundos++;
+            if (segundos < 10) {
+                segundos = "0" + segundos
+            }
+            document.getElementById("Segundos").innerHTML = "Tiempo " + minutos + ":" + segundos;
+        }
+        if (segundos == 59) {
+            segundos = -1;
+        }
+        if ((centesimas == 0) && (segundos == 0)) {
+            minutos++;
+            if (minutos < 10) {
+                minutos = "0" + minutos
+            }
+            Segundos.innerHTML = "Tiempo " + minutos + ":" + segundos;
+        }
+        if (minutos == 59) {
+            minutos = -1;
+        }
+        if ((centesimas == 0) && (segundos == 0) && (minutos == 0)) {
+            horas++;
+            if (horas < 10) {
+                horas = "0" + horas
+            }
+        }
+    }
+
 
 
     updateGameArea = function () {
@@ -160,7 +217,7 @@ var juego = (function () {
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
 
-    function Component(width, height, color, x, y, type, bullets, direction, propietario, equipo,vida) {
+    function Component(width, height, color, x, y, type, bullets, direction, propietario, equipo, vida) {
         this.gamearea = myGameArea;
         if (type === "image") {
             this.image = new Image();
@@ -168,7 +225,7 @@ var juego = (function () {
         }
         this.propietario = propietario;
         this.vida = vida;
-        this.equipo=equipo;
+        this.equipo = equipo;
         this.width = width;
         this.height = height;
         this.speedX = 0;
@@ -187,7 +244,7 @@ var juego = (function () {
             //Dibujarme
             var ctx = myGameArea.context;
             console.info(this.vida);
-            if(this.vida > 0){
+            if (this.vida > 0) {
                 ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
             }
             //Dibujar Oponentes
@@ -207,7 +264,7 @@ var juego = (function () {
                 }
             }
         };
-        this.crashWith = function(otherobj,h,w) {
+        this.crashWith = function (otherobj, h, w) {
             var myleft = this.x;
             var myright = this.x + (this.width);
             var mytop = this.y;
@@ -218,7 +275,7 @@ var juego = (function () {
             var otherbottom = otherobj.y + h;
             var crash = true;
             this.vida -= 1;
-            if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright) && otherobj.equipo===sessionStorage.getItem("myTeam")) {
+            if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright) && otherobj.equipo === sessionStorage.getItem("myTeam")) {
                 crash = false;
                 this.vida += 1;
             }
@@ -243,10 +300,10 @@ var juego = (function () {
                 var send = function () {
                     var bullets = [];
                     for (var i = 0; i < myGamePiece.shoots.length; i++) {
-                        bullets.push(new Bulletcita(myGamePiece.shoots[i].x, myGamePiece.shoots[i].y, myGamePiece.shoots[i].dir,sessionStorage.getItem("myTeam")));
+                        bullets.push(new Bulletcita(myGamePiece.shoots[i].x, myGamePiece.shoots[i].y, myGamePiece.shoots[i].dir, sessionStorage.getItem("myTeam")));
                     }
                     var maquina = new Maquina(myGamePiece.x, myGamePiece.y, myGamePiece.direction, bullets);
-                    var usuario = new Usuario(sessionStorage.getItem("user"), maquina, puntaje,sessionStorage.getItem("myTeam"),myGamePiece.vida);
+                    var usuario = new Usuario(sessionStorage.getItem("user"), maquina, puntaje, sessionStorage.getItem("myTeam"), myGamePiece.vida);
                     var enemyteam = "";
                     if (sessionStorage.getItem("idRoom") === "A") {
                         enemyteam = "B";
@@ -359,13 +416,13 @@ var juego = (function () {
                     var object = JSON.parse(eventbody.body);
                     var bandera = 0;
                     for (var i = 0; i < aliados.length && bandera === 0; i++) {
-                        if (aliados[i].propietario === object.nombre ) {
+                        if (aliados[i].propietario === object.nombre) {
                             bandera = 1;
-                            aliados[i] = new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre,sessionStorage.getItem("myTeam"),object.vida);
+                            aliados[i] = new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre, sessionStorage.getItem("myTeam"), object.vida);
                         }
                     }
-                    if (bandera === 0 && object.equipo===sessionStorage.getItem("myTeam")) {
-                        aliados.push(new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre,sessionStorage.getItem("myTeam"),object.vida));
+                    if (bandera === 0 && object.equipo === sessionStorage.getItem("myTeam")) {
+                        aliados.push(new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre, sessionStorage.getItem("myTeam"), object.vida));
                     }
                     updateGameArea();
                 });
@@ -375,11 +432,11 @@ var juego = (function () {
                     for (var i = 0; i < oponents.length && bandera === 0; i++) {
                         if (oponents[i].propietario === object.nombre) {
                             bandera = 1;
-                            oponents[i] = new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre,sessionStorage.getItem("myTeam"),object.vida);
+                            oponents[i] = new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre, sessionStorage.getItem("myTeam"), object.vida);
                         }
                     }
-                    if (bandera === 0 && object.equipo!==sessionStorage.getItem("myTeam")) {
-                        oponents.push(new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre,sessionStorage.getItem("myTeam"),object.vida));
+                    if (bandera === 0 && object.equipo !== sessionStorage.getItem("myTeam")) {
+                        oponents.push(new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre, sessionStorage.getItem("myTeam"), object.vida));
                     }
                     updateGameArea();
                 });
@@ -389,8 +446,9 @@ var juego = (function () {
                 });
             });
             myGameArea.start();
-            myGamePiece = new Component(30, 30, directionImageTank + "1.png", 10, 120, "image", [], 1, sessionStorage.getItem("user"),sessionStorage.getItem("myTeam"),500);
+            myGamePiece = new Component(30, 30, directionImageTank + "1.png", 10, 120, "image", [], 1, sessionStorage.getItem("user"), sessionStorage.getItem("myTeam"), 500);
             updateGameArea();
+            inicio();
         }
     };
 
