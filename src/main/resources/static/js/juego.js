@@ -3,11 +3,12 @@
 var juego = (function () {
 
     class Usuario {
-        constructor(nombre, maquina, puntaje,equipo) {
+        constructor(nombre, maquina, puntaje,equipo,vida) {
             this.nombre = nombre;
             this.maquina = maquina;
             this.puntaje = puntaje;
             this.equipo = equipo;
+            this.vida = vida;
         }
         ;
     }
@@ -25,10 +26,11 @@ var juego = (function () {
     ;
 
     class Bulletcita {
-        constructor(x, y, direction) {
+        constructor(x, y, direction,equipo,h,w) {
             this.x = x;
             this.y = y;
             this.direction = direction;
+            this.equipo = equipo;
         }
     }
 
@@ -85,9 +87,19 @@ var juego = (function () {
             dx = -1;
             dy = 0;
         }
-        myGameArea.context.fillStyle = "#A9A9A9";
-        myGameArea.context.fillRect(bullet.x + sx + dx, bullet.y + sy + dy, w, h);
-        myGameArea.context.drawImage(temp2, bullet.x + sx, bullet.y + sy, w, h);
+        if(myGamePiece.crashWith(bullet,h,w)){
+            myGameArea.context.fillStyle = "#A9A9A9";
+            myGameArea.context.fillRect(bullet.x + sx + dx, bullet.y + sy + dy, w, h);
+            let image = new Image();
+            image.src = "/images/explosion.png";
+            myGameArea.context.drawImage(image, myGamePiece.x , myGamePiece.y , 30, 30);
+            console.info("ENTRO");
+        }else{
+            myGameArea.context.fillStyle = "#A9A9A9";
+            myGameArea.context.fillRect(bullet.x + sx + dx, bullet.y + sy + dy, w, h);
+            myGameArea.context.drawImage(temp2, bullet.x + sx, bullet.y + sy, w, h);
+        }
+        
     };
 
     var actualizarTrayectoriaBalas = function () {
@@ -106,7 +118,7 @@ var juego = (function () {
             if (temp[i].x >= myGameArea.canvas.width || temp[i].x <= -30 || temp[i].y >= myGameArea.canvas.height || temp[i].y <= -30) {
                 borrar.push(i);
             }
-            var temp2 = new Bulletcita(myGamePiece.shoots[i].x, myGamePiece.shoots[i].y, myGamePiece.shoots[i].dir);
+            var temp2 = new Bulletcita(myGamePiece.shoots[i].x, myGamePiece.shoots[i].y, myGamePiece.shoots[i].dir,sessionStorage.getItem("myTeam"));
             stompClient.send("/topic/sala." + sessionStorage.getItem("idRoom") + "/bullets", {}, JSON.stringify(temp2));
         }
         for (let i = 0; i < borrar.length; i++) {
@@ -148,13 +160,14 @@ var juego = (function () {
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
 
-    function Component(width, height, color, x, y, type, bullets, direction, propietario, equipo) {
+    function Component(width, height, color, x, y, type, bullets, direction, propietario, equipo,vida) {
         this.gamearea = myGameArea;
         if (type === "image") {
             this.image = new Image();
             this.image.src = color;
         }
         this.propietario = propietario;
+        this.vida = vida;
         this.equipo=equipo;
         this.width = width;
         this.height = height;
@@ -173,28 +186,44 @@ var juego = (function () {
         this.update = function () {
             //Dibujarme
             var ctx = myGameArea.context;
-            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+            console.info(this.vida);
+            if(this.vida > 0){
+                ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+            }
             //Dibujar Oponentes
-            console.info("oponentes");
-            console.info(oponents);
             for (var i = 0; i < oponents.length; i++) {
-                if (oponents[i].propietario !== sessionStorage.getItem("user")) {
+                if (oponents[i].propietario !== sessionStorage.getItem("user") && oponents[i].vida > 0) {
                     var temp = new Image();
                     temp.src = directionImageTank + oponents[i].direction + ".png";
                     ctx.drawImage(temp, oponents[i].x, oponents[i].y, 30, 30);
                 }
             }
             //Dibujar aliados
-            console.info("aliados");
-            console.info(aliados);
             for (var i = 0; i < aliados.length; i++) {
-                if (aliados[i].propietario !== sessionStorage.getItem("user")) {
+                if (aliados[i].propietario !== sessionStorage.getItem("user") && oponents[i].vida > 0) {
                     var temp = new Image();
                     temp.src = directionImageTank + aliados[i].direction + ".png";
                     ctx.drawImage(temp, aliados[i].x, aliados[i].y, 30, 30);
                 }
             }
         };
+        this.crashWith = function(otherobj,h,w) {
+            var myleft = this.x;
+            var myright = this.x + (this.width);
+            var mytop = this.y;
+            var mybottom = this.y + (this.height);
+            var otherleft = otherobj.x;
+            var otherright = otherobj.x + w;
+            var othertop = otherobj.y;
+            var otherbottom = otherobj.y + h;
+            var crash = true;
+            this.vida -= 1;
+            if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright) && otherobj.equipo===sessionStorage.getItem("myTeam")) {
+                crash = false;
+                this.vida += 1;
+            }
+            return crash;
+        }
     }
 
     myGameArea = {
@@ -214,10 +243,10 @@ var juego = (function () {
                 var send = function () {
                     var bullets = [];
                     for (var i = 0; i < myGamePiece.shoots.length; i++) {
-                        bullets.push(new Bulletcita(myGamePiece.shoots[i].x, myGamePiece.shoots[i].y, myGamePiece.shoots[i].dir));
+                        bullets.push(new Bulletcita(myGamePiece.shoots[i].x, myGamePiece.shoots[i].y, myGamePiece.shoots[i].dir,sessionStorage.getItem("myTeam")));
                     }
                     var maquina = new Maquina(myGamePiece.x, myGamePiece.y, myGamePiece.direction, bullets);
-                    var usuario = new Usuario(sessionStorage.getItem("user"), maquina, puntaje,sessionStorage.getItem("myTeam"));
+                    var usuario = new Usuario(sessionStorage.getItem("user"), maquina, puntaje,sessionStorage.getItem("myTeam"),myGamePiece.vida);
                     var enemyteam = "";
                     if (sessionStorage.getItem("idRoom") === "A") {
                         enemyteam = "B";
@@ -282,7 +311,7 @@ var juego = (function () {
                         h = 30;
                         w = 10;
                         sx = 5;
-                        sy = 20;
+                        sy = 30;
                     } else if (directionShoot === 4) {
                         h = 30;
                         w = 10;
@@ -296,7 +325,7 @@ var juego = (function () {
                     } else {
                         h = 10;
                         w = 30;
-                        sx = 20;
+                        sx = 30;
                         sy = 10;
                     }
                     var temp = new Bullet(w, h, directionImageShoot + myGamePiece.direction + ".png", myGamePiece.x + sx, myGamePiece.y + sy, "image", myGamePiece.direction);
@@ -332,11 +361,11 @@ var juego = (function () {
                     for (var i = 0; i < aliados.length && bandera === 0; i++) {
                         if (aliados[i].propietario === object.nombre ) {
                             bandera = 1;
-                            aliados[i] = new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre,sessionStorage.getItem("myTeam"));
+                            aliados[i] = new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre,sessionStorage.getItem("myTeam"),object.vida);
                         }
                     }
                     if (bandera === 0 && object.equipo===sessionStorage.getItem("myTeam")) {
-                        aliados.push(new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre,sessionStorage.getItem("myTeam")));
+                        aliados.push(new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre,sessionStorage.getItem("myTeam"),object.vida));
                     }
                     updateGameArea();
                 });
@@ -346,11 +375,11 @@ var juego = (function () {
                     for (var i = 0; i < oponents.length && bandera === 0; i++) {
                         if (oponents[i].propietario === object.nombre) {
                             bandera = 1;
-                            oponents[i] = new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre,sessionStorage.getItem("myTeam"));
+                            oponents[i] = new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre,sessionStorage.getItem("myTeam"),object.vida);
                         }
                     }
                     if (bandera === 0 && object.equipo!==sessionStorage.getItem("myTeam")) {
-                        oponents.push(new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre,sessionStorage.getItem("myTeam")));
+                        oponents.push(new Component(30, 30, directionImageTank + object.maquina.direction + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre,sessionStorage.getItem("myTeam"),object.vida));
                     }
                     updateGameArea();
                 });
@@ -360,7 +389,7 @@ var juego = (function () {
                 });
             });
             myGameArea.start();
-            myGamePiece = new Component(30, 30, directionImageTank + "1.png", 10, 120, "image", [], 1, sessionStorage.getItem("user"));
+            myGamePiece = new Component(30, 30, directionImageTank + "1.png", 10, 120, "image", [], 1, sessionStorage.getItem("user"),sessionStorage.getItem("myTeam"),500);
             updateGameArea();
         }
     };

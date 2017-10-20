@@ -23,9 +23,9 @@ public class InMemoryCamposDeGuerraUsuarioPersistence implements CamposDeGuerraU
     
     
     public InMemoryCamposDeGuerraUsuarioPersistence() {
-        Usuario u1 = new Usuario("martin", null, 99999);
-        Usuario u2= new Usuario("cristian", null, 0);
-        Usuario u3 = new Usuario("felipe", null, 123);
+        Usuario u1 = new Usuario("martin", null, 99999,100);
+        Usuario u2= new Usuario("cristian", null, 0,100);
+        Usuario u3 = new Usuario("felipe", null, 123,100);
         users.putIfAbsent("martin", u1);
         users.putIfAbsent("cristian", u2);
         users.putIfAbsent("felipe", u3);

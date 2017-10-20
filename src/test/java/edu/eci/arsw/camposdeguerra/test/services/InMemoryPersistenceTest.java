@@ -21,7 +21,7 @@ public class InMemoryPersistenceTest {
     public void saveNewAndLoadTest() {
 
         InMemoryCamposDeGuerraUsuarioPersistence icgp = new InMemoryCamposDeGuerraUsuarioPersistence();
-        Usuario u = new Usuario("test1", null, 99999);
+        Usuario u = new Usuario("test1", null, 99999,100);
         try {
             icgp.saveUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -38,7 +38,7 @@ public class InMemoryPersistenceTest {
     @Test
     public void saveExistingUserTest() {
         InMemoryCamposDeGuerraUsuarioPersistence icgp = new InMemoryCamposDeGuerraUsuarioPersistence();
-        Usuario u = new Usuario("test1", null, 99999);
+        Usuario u = new Usuario("test1", null, 99999,100);
         try {
             icgp.saveUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -57,7 +57,7 @@ public class InMemoryPersistenceTest {
 
         InMemoryCamposDeGuerraUsuarioPersistence icgp = new InMemoryCamposDeGuerraUsuarioPersistence();
 
-        Usuario u = new Usuario("test1", null, 99999);
+        Usuario u = new Usuario("test1", null, 99999,100);
         try {
             icgp.saveUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -78,7 +78,7 @@ public class InMemoryPersistenceTest {
 
         InMemoryCamposDeGuerraUsuarioPersistence icgp = new InMemoryCamposDeGuerraUsuarioPersistence();
 
-        Usuario u = new Usuario("test1", null, 99999);
+        Usuario u = new Usuario("test1", null, 99999,100);
         try {
             icgp.saveUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -105,7 +105,7 @@ public class InMemoryPersistenceTest {
 
         InMemoryCamposDeGuerraUsuarioPersistence icgp = new InMemoryCamposDeGuerraUsuarioPersistence();
 
-        Usuario u = new Usuario("test1", null, 99999);
+        Usuario u = new Usuario("test1", null, 99999,100);
         try {
             icgp.saveUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {

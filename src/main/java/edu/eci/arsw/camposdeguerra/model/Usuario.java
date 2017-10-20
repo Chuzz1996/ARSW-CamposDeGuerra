@@ -24,6 +24,7 @@ public class Usuario {
     
     private String userName="";
     private int puntaje;
+    private int vida;
 
     
     public Usuario() {
@@ -35,10 +36,11 @@ public class Usuario {
      * @param tipoMaquina
      * @param puntaje
      */
-    public Usuario(String userName,Maquina tipoMaquina,int puntaje) {
+    public Usuario(String userName,Maquina tipoMaquina,int puntaje,int vida) {
         this.userName=userName;
         this.tipoMaquina=tipoMaquina;
         this.puntaje=puntaje;
+        this.vida = vida;
     }
     
     /**
