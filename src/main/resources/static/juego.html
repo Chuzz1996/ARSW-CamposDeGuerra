@@ -18,19 +18,34 @@
     </head>
 
     <body onload="juego.movimiento()">
-        <div id="Game">
-            <div>
-                <div class="col-sm-4">
-                    <p><strong><span class="fondoLetras" id="live">Vida: 500</span></strong></p>
-                </div>
-                <div class="col-sm-4">
-                    <p><strong><span class="fondoLetras" id="PointsTeam">Puntos Equipo: 0</span></strong></p>
-                </div>
-                <div class="col-sm-4">
-                    <p><strong><span class="fondoLetras" id="Segundos">Tiempo 0:00</span></strong></p>
-                </div>
+        <div class="container2">
+            <!-- Nav -->
+            <nav id="nav2">
+                <ul>
+                    <li>
+                        <a id="live">Vida: 500</a>
+                    </li>
+                    <li>
+                        <a id="Segundos" >Tiempo: 0:00</a>
+                    </li>
+                    <li>
+                        <a id="Puntaje">Puntaje: 0-0</a>
+                    </li>
+                </ul>
+            </nav>
+            <div id="Game"></div> 
+            <!-- Footer -->
+            <div id="footerJuego">
+                <ul class="icons">
+                    <li><a href="https://twitter.com/Escuelaing?lang=es" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+                    <li><a href="https://www.facebook.com/EscuelaIng/" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+                    <li><a href="https://www.instagram.com/escuelaing/?hl=es" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
+                    <li><a href="https://github.com/Chuzz1996/ARSW-CamposDeGuerra" class="icon fa-github"><span class="label">Github</span></a></li>
+                </ul>
+                <ul class="copyright">
+                    <li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+                </ul>
             </div>
-        </div> 
-
+        </div>
     </body>
 </html>

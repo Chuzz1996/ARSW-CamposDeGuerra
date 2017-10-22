@@ -342,12 +342,28 @@ body {
 
 /* Basic */
 
-
-#Game {
-    padding: 5em 0 10em 0;
+.headerCenter{
     text-align: center;
+    align-items: center;
+    align-self: center;
+    width: 35%;
+    display: inline-block;
+}
+
+.container2 {
     width: 100%;
     height: 100%;
+}
+
+
+#Game {
+    background-image: url("../../images/header.jpg");
+    background-position: center;
+    background-size: auto;
+    padding: 0em;
+    text-align: center;
+    width: 100%;
+    height: 80%;
     overflow: hidden;
 }
 
@@ -828,6 +844,42 @@ ul.actions.vertical li:first-child {
 }
 
 
+
+/*Nav JUEGO.HTML*/
+#nav2 {
+    text-align: center;
+}
+#nav2 ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #000000;
+}
+
+#nav2 li {
+    display: inline-block;
+}
+
+#nav2 li a, .dropbtn {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+#nav2 li a:hover, .dropdown:hover .dropbtn {
+    background-color: red;
+}
+
+#nav2 li.dropdown {
+    display: inline-block;
+}
+
+
+
+
 /* Header-Imagen de soldados*/
 #headerSelection {
     background-image: url("../../images/header.jpg");
@@ -1042,3 +1094,15 @@ ul.actions.vertical li:first-child {
 }
 
 
+#footerJuego {
+    background-color: #000000;
+    background-position:center ;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding: 1em;
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+    height: 14%;
+}
