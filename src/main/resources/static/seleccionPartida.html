@@ -23,7 +23,7 @@
         <nav id="nav">
             <ul>
                 <li class="dropdown">
-                    <a  id="cuenta" class="dropbtn"></a>
+                    <a  id="cuenta" class="dropbtn">Current User</a>
                     <div class="dropdown-content">
                         <a onclick="appSeleccion.logout()">Logout</a>
                     </div>
@@ -31,55 +31,80 @@
             </ul>
         </nav>
         <section id="headerSelection" style="height: 700px; overflow: hidden;">
-                <div class="dynamicContent currentHolder" style="height: auto; left: 0px; visibility: visible;">
-                    <div class="content">
-                        <div class="container">
-                            <div class="inner2">
-                                <div class="row">
-                                    <div class="span12">
-                                        <div class="names">
-                                            <ul style="position: relative; width: 1170px; height: 1px; overflow: hidden;">
-                                                Ingrese el numero de la sala:<input id="numsala" type="number"/>
-                                                <li style="position: absolute; top: 160px; left: 0px; display: none; z-index: 4; opacity: 1; width: 1170px; height: 160px;"><p>Random Match</p></li>
-                                                <li style="position: absolute; top: 160px; left: 0px; display: none; z-index: 4; opacity: 1; width: 1170px; height: 160px;"><p>Create new Match</p></li>
-                                                <li style="position: absolute; top: 160px; left: 0px; display: none; z-index: 4; opacity: 1; width: 1170px; height: 160px;"><p>Join Existing Match</p></li>
-                                            </ul>
-                                        </div>
-                                        <div class="thumbnails" id="splash">
-                                            <ul class="row">
-                                                <li class="span3">
+
+                    <div class="container">
+
+                        <div class="row">
+                            <div class="center">
+                                <div class="names">
+                                    <ul style="position: relative; width: 1170px; height: 1px; overflow: hidden;">
+                                        <li style="position: absolute; top: 160px; left: 0px; display: none; z-index: 4; opacity: 1; width: 1170px; height: 160px;"></li>
+                                        <li style="position: absolute; top: 160px; left: 0px; display: none; z-index: 4; opacity: 1; width: 1170px; height: 160px;"></li>
+                                        <li style="position: absolute; top: 160px; left: 0px; display: none; z-index: 4; opacity: 1; width: 1170px; height: 160px;"></li>
+                                    </ul>
+                                </div>
+                                <div class="thumbnails" id="splash">
+                                    <ul class="row">
+                                        <li class="span3">
+                                            <div class="center" style="width:auto">
+                                                <div class="w3-black w3-opacity w3-hover-opacity-off w3-padding-large w3-round-large">
                                                     <a onclick="appSeleccion.partidaRandom()">
                                                         <img src="images/Rmacth.jpg" class="thumbnail" alt="">
                                                         <div>
                                                             <p style="color:#ffffff;">Random Match</p>
                                                         </div>
                                                     </a>
-                                                </li>
-                                                <li class="span3">
-                                                    <a href="http://livedemo00.template-help.com/wt_43597/index-6.html">
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="span3">
+                                            <div class="center" style="width:auto">
+                                                <div class="w3-black w3-opacity w3-hover-opacity-off w3-padding-large w3-round-large">
+                                                    <a onclick="appSeleccion.partidaRandom()">
                                                         <img src="images/Nmacth.jpg" class="thumbnail" alt="">
                                                         <div>
                                                             <p style="color:#ffffff;">Create new Match</p>
                                                         </div>
                                                     </a>
-                                                </li>
-                                                <li class="span3">
-                                                    <a href="http://livedemo00.template-help.com/wt_43597/index-6.html">
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="span3">
+                                            <div class="center" style="width:auto">
+                                                <div class="w3-black w3-opacity w3-hover-opacity-off w3-padding-large w3-round-large">
+                                                    <a onclick="appSeleccion.partidaRandom()">
                                                         <img src="images/Emacth.jpg" class="thumbnail" alt="">
                                                         <div>
                                                             <p style="color:#ffffff;">Join Existing Match</p>
                                                         </div>
                                                     </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
+
                     </div>
-                </div>
-            </section>
+        </section>
+        
+        <!-- Footer -->
+        <div id="footerSeleccionPartida">
+            <div>
+                <ul class="icons">
+                    <li><a href="https://twitter.com/Escuelaing?lang=es" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+                    <li><a href="https://www.facebook.com/EscuelaIng/" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+                    <li><a href="https://www.instagram.com/escuelaing/?hl=es" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
+                    <li><a href="https://github.com/Chuzz1996/ARSW-CamposDeGuerra" class="icon fa-github"><span class="label">Github</span></a></li>
+                </ul>
+
+                <ul class="copyright">
+                    <li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+                </ul>
+
+            </div>
+        </div>
 
     </body>
 </html>
