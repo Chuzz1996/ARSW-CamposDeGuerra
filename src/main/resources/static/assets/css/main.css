@@ -577,18 +577,18 @@ footer.major:after {
 
 /* Box-Diseño de los cudrdados*/
 
-	.box {
-		background: #ffffff;
-		border: solid 1px rgba(224, 224, 224, 0.75);
-		margin-bottom: 6em;
-		padding: 3.5em;
-	}
+.box {
+    background: #ffffff;
+    border: solid 1px rgba(224, 224, 224, 0.75);
+    margin-bottom: 6em;
+    padding: 3.5em;
+}
 
-		.box.alt {
-			background: none;
-			border: none;
-			padding: 0;
-		}
+.box.alt {
+    background: none;
+    border: none;
+    padding: 0;
+}
 
 
 /* Iconos twitter,facebook,instagram,etc*/
@@ -721,7 +721,7 @@ ul.actions.vertical li:first-child {
     overflow: hidden;
     position: relative;
     width: 50%;
-    
+
 }
 
 .feature .image img {
