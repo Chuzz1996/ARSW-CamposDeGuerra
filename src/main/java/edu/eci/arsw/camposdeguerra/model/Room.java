@@ -137,7 +137,7 @@ public class Room {
         boolean ans=false;
         if (!banderaATomada.get() && banderaB.equals(user)) {
             banderaB = "";
-            banderaATomada.getAndSet(false);
+            banderaBTomada.getAndSet(false);
             puntajeEquipoA.getAndAdd(1);
             ans=true;
         }
