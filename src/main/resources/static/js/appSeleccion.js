@@ -81,8 +81,9 @@ var appSeleccion = (function () {
                         stompClient.subscribe('/topic/sala.' + sessionStorage.getItem("idRoom"), function (eventbody) {
                             var newURL = window.location.protocol + "//" + window.location.host + "/" + "juego.html";
                             window.location.replace(newURL);
-                        })
-                    })
+                            stompClient.disconnect();
+                        });
+                    });
                     setTimeout(function (){stompClient.send("/app/sala." + sessionStorage.getItem("idRoom"), {}, 'listo')},4000);
                 },
                 function () {

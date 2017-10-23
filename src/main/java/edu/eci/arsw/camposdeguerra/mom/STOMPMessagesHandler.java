@@ -5,8 +5,12 @@
  */
 package edu.eci.arsw.camposdeguerra.mom;
 
+import edu.eci.arsw.camposdeguerra.model.Bullet;
 import edu.eci.arsw.camposdeguerra.model.Usuario;
+import edu.eci.arsw.camposdeguerra.persistence.impl.InMemoryCamposDeGuerraRoomPersistence;
 import edu.eci.arsw.camposdeguerra.services.CamposDeGuerraServices;
+import java.util.ArrayList;
+import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -23,16 +27,17 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class STOMPMessagesHandler {
 
-    
     @Autowired
     private SimpMessagingTemplate msgt;
+    @Autowired
+    private InMemoryCamposDeGuerraRoomPersistence imrp;
 
-    private ConcurrentHashMap<Integer, AtomicInteger> personasEnsalas = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Integer, AtomicInteger> personasEnsalas = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Integer, String> estadoSalas = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Integer, Timer> controlTiempo = new ConcurrentHashMap<>();
 
     @MessageMapping("/sala.{idSala}")
     public void listoParaJugar(String estado, @DestinationVariable Integer idSala) throws Exception {
-        System.out.println("LLEGO AL MOM :'D");
-        System.out.println(estado);
         if (estado.equals("listo")) {
             if (personasEnsalas.containsKey(idSala)) {
                 AtomicInteger temp = personasEnsalas.get(idSala);
@@ -41,13 +46,40 @@ public class STOMPMessagesHandler {
             } else {
                 AtomicInteger temp = new AtomicInteger(1);
                 personasEnsalas.putIfAbsent(idSala, temp);
+                estadoSalas.putIfAbsent(idSala, "nojugando");
             }
-            if (personasEnsalas.get(idSala).get() >= 4) {
-                System.out.println("idSala:"+ idSala+ " Estado: "+estado+" Personas en Sala: "+personasEnsalas.get(idSala).get());
+            if (personasEnsalas.get(idSala).get() >= 4 && estadoSalas.get(idSala).equals("nojugando")) {
+                estadoSalas.replace(idSala, "jugando");
+                msgt.convertAndSend("/topic/sala." + idSala, "Pueden Comenzar");
+                Timer temp = new Timer();
+                temp.schedule(new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        msgt.convertAndSend("/topic/sala." + idSala + "/endGame","Termino el juego");
+                    }
+                }, 95000);
+                controlTiempo.putIfAbsent(idSala, temp);
+            }
+            else if (personasEnsalas.get(idSala).get() >= 4 && estadoSalas.get(idSala).equals("jugando")) {
                 msgt.convertAndSend("/topic/sala." + idSala, "Pueden Comenzar");
             }
         }
-        
+    }
 
+    @MessageMapping("/sala.{idSala}/bullets")
+    public void reportarBala(Bullet b, @DestinationVariable Integer idSala) throws Exception {
+        msgt.convertAndSend("/topic/sala." + idSala + "/bullets", b);
+    }
+
+    @MessageMapping("/sala.{idSala}/A")
+    public void reportarInfoTeamA(Usuario u, @DestinationVariable Integer idSala) throws Exception {
+        msgt.convertAndSend("/topic/sala." + idSala + "/A", u);
+    }
+
+    @MessageMapping("/sala.{idSala}/B")
+    public void reportarInfoTeamB(Usuario u, @DestinationVariable Integer idSala) throws Exception {
+        msgt.convertAndSend("/topic/sala." + idSala + "/B", u);
     }
 }
+
+

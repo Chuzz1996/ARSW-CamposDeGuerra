@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
  */
 public class Room {
 
+    private AtomicInteger puntajeEquipoA = new AtomicInteger(0);
+    private AtomicInteger puntajeEquipoB = new AtomicInteger(0);
     private ConcurrentLinkedQueue<Usuario> equipoA = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Usuario> equipoB = new ConcurrentLinkedQueue<>();
     private Integer id;
@@ -101,15 +104,15 @@ public class Room {
 
     public HashSet<Usuario> getAllCompetitorsTeamB() {
         HashSet<Usuario> allCompetitorsB = new HashSet<>();
-        for (Usuario us : equipoA) {
+        for (Usuario us : equipoB) {
             allCompetitorsB.add(us);
         };
         return allCompetitorsB;
     }
 
     public synchronized boolean tomarBanderaA(String user) {
-        String ans=TeamOfUser(user);
-        if (!banderaATomada.get() && ans.equals("A")) {
+        String ans = TeamOfUser(user);
+        if (!banderaATomada.get() && ans.equals("B")) {
             banderaA = user;
             banderaATomada.getAndSet(true);
         }
@@ -117,20 +120,42 @@ public class Room {
     }
 
     public synchronized boolean tomarBanderaB(String user) {
-        String ans=TeamOfUser(user);
-        if (!banderaBTomada.get() && ans.equals("B")) {
+        String ans = TeamOfUser(user);
+        if (!banderaBTomada.get() && ans.equals("A")) {
             banderaB = user;
             banderaBTomada.getAndSet(true);
         }
         return banderaBTomada.get();
     }
 
-    public void soltarBanderaA() {
+    public synchronized void soltarBanderaA() {
         banderaA = "";
         banderaATomada.getAndSet(false);
     }
 
-    public void soltarBanderaB() {
+    public synchronized boolean puntuarA(String user) {
+        boolean ans=false;
+        if (!banderaATomada.get() && banderaB.equals(user)) {
+            banderaB = "";
+            banderaATomada.getAndSet(false);
+            puntajeEquipoA.getAndAdd(1);
+            ans=true;
+        }
+        return ans;
+    }
+
+    public synchronized boolean puntuarB(String user) {
+        boolean ans=false;
+        if (!banderaBTomada.get() && banderaA.equals(user)) {
+            banderaA = "";
+            banderaATomada.getAndSet(false);
+            puntajeEquipoB.getAndAdd(1);
+            ans=true;
+        }
+        return ans;
+    }
+
+    public synchronized void soltarBanderaB() {
         banderaB = "";
         banderaBTomada.getAndSet(false);
     }
