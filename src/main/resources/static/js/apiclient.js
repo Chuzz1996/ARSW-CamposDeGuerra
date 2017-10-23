@@ -10,7 +10,6 @@ var apiclient = (function () {
     return {
         
         postUser: function (user) {
-            console.log(user);
             return $.ajax({
                 url: "/CamposDeGuerra/Usuarios/", 
                 type: "POST", 

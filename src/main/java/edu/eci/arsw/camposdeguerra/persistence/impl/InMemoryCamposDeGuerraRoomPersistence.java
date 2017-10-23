@@ -32,7 +32,7 @@ public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoom
     public Integer getRoomFree() throws CamposDeGuerraNotFoundException {
         Integer r = 0;
         for (Room room : rooms.values()) {
-            if (room.isFull() == false) {
+            if (!room.isFull()) {
                 r = room.getId();
                 break;
             }
