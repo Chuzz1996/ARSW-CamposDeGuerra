@@ -5,6 +5,7 @@
  */
 package edu.eci.arsw.camposdeguerra.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -13,7 +14,7 @@ import java.util.LinkedList;
  *
  * @author pipe
  */
-
+@JsonDeserialize(as = Destructora.class)
 public interface Maquina {
     
     /**

@@ -14,11 +14,24 @@ public class Bullet {
     private int x;
     private int y;
     private int direction;
+    private String equipo;
+
+    public String getEquipo() {
+        return equipo;
+    }
+
+    public void setEquipo(String equipo) {
+        this.equipo = equipo;
+    }
     
-    public Bullet(int x, int y, int direction){
+    public Bullet(int x, int y, int direction,String equipo){
         this.x = x;
         this.y = y;
         this.direction = direction;
+        this.equipo = equipo;
+    }
+    
+    public Bullet(){
     }
     
     /**

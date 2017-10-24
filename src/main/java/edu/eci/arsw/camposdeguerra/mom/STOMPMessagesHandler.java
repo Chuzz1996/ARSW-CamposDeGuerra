@@ -5,6 +5,7 @@
  */
 package edu.eci.arsw.camposdeguerra.mom;
 
+import ch.qos.logback.core.CoreConstants;
 import edu.eci.arsw.camposdeguerra.model.Bullet;
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.impl.InMemoryCamposDeGuerraRoomPersistence;
@@ -57,7 +58,7 @@ public class STOMPMessagesHandler {
                     public void run() {
                         msgt.convertAndSend("/topic/sala." + idSala + "/endGame","Termino el juego");
                     }
-                }, 95000);
+                }, 950000);
                 controlTiempo.putIfAbsent(idSala, temp);
             }
             else if (personasEnsalas.get(idSala).get() >= 4 && estadoSalas.get(idSala).equals("jugando")) {
@@ -73,11 +74,17 @@ public class STOMPMessagesHandler {
 
     @MessageMapping("/sala.{idSala}/A")
     public void reportarInfoTeamA(Usuario u, @DestinationVariable Integer idSala) throws Exception {
+        System.out.println("EN A");
+        System.out.println(u.getEquipo()+" "+u.getUserName()+" "+u.getPuntaje()+" "+u.getVida());
+        System.out.println(u.getTipoMaquina());
         msgt.convertAndSend("/topic/sala." + idSala + "/A", u);
     }
 
     @MessageMapping("/sala.{idSala}/B")
     public void reportarInfoTeamB(Usuario u, @DestinationVariable Integer idSala) throws Exception {
+        System.out.println("EN B");
+        System.out.println(u.getEquipo()+" "+u.getUserName()+" "+u.getPuntaje()+" "+u.getVida());
+        System.out.println(u.getTipoMaquina());
         msgt.convertAndSend("/topic/sala." + idSala + "/B", u);
     }
 }

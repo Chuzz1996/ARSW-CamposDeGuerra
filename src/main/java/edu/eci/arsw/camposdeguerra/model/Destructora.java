@@ -5,6 +5,7 @@
  */
 package edu.eci.arsw.camposdeguerra.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
  * @author pipe
  */
 
-
+@JsonDeserialize(as = Destructora.class)
 public class Destructora implements Maquina{
     
     public int speed;
@@ -27,12 +28,39 @@ public class Destructora implements Maquina{
     private int y;
     private int direction;
     private LinkedList<Bullet> bullets;
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public int getAttack() {
+        return attack;
+    }
+
+    public void setAttack(int attack) {
+        this.attack = attack;
+    }
+
+    public int getDirection() {
+        return direction;
+    }
+
+    public void setDirection(int direction) {
+        this.direction = direction;
+    }
     
     public Destructora(int x,int y,int direction,LinkedList<Bullet> bullets){
         this.x = x;
         this.y = y;
         this.direction = direction;
         this.bullets = bullets;
+    }
+    
+    public Destructora(){
     }
 
     @Override

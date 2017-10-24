@@ -25,6 +25,7 @@ public class Usuario {
     private String userName="";
     private int puntaje;
     private int vida;
+    private String equipo;
 
     
     public Usuario() {
@@ -36,11 +37,12 @@ public class Usuario {
      * @param tipoMaquina
      * @param puntaje
      */
-    public Usuario(String userName,Maquina tipoMaquina,int puntaje,int vida) {
+    public Usuario(String userName,Maquina tipoMaquina,int puntaje,int vida, String equipo) {
         this.userName=userName;
         this.tipoMaquina=tipoMaquina;
         this.puntaje=puntaje;
         this.vida = vida;
+        this.equipo = equipo;
     }
     
     /**
@@ -91,6 +93,38 @@ public class Usuario {
         this.puntaje = puntaje;
     }
 
+    /**
+     * 
+     * @return 
+     */
+    public int getVida() {
+        return vida;
+    }
+
+    /**
+     * 
+     * @param vida 
+     */
+    public void setVida(int vida) {
+        this.vida = vida;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public String getEquipo() {
+        return equipo;
+    }
+
+    /**
+     * 
+     * @param equipo 
+     */
+    public void setEquipo(String equipo) {
+        this.equipo = equipo;
+    }
+    
     @Override
     public String toString(){
         return "Usuario{" + "Username:" + userName + ", Puntaje:" + puntaje + ", Maquina:" + tipoMaquina.describe() + '}';

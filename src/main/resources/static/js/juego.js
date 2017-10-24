@@ -3,9 +3,9 @@
 var juego = (function () {
 
     class Usuario {
-        constructor(nombre, maquina, puntaje, equipo, vida) {
-            this.nombre = nombre;
-            this.maquina = maquina;
+        constructor(userName, tipoMaquina, puntaje, equipo, vida) {
+            this.userName = userName;
+            this.tipoMaquina = tipoMaquina;
             this.puntaje = puntaje;
             this.equipo = equipo;
             this.vida = vida;
@@ -34,7 +34,7 @@ var juego = (function () {
     ;
 
     class Bulletcita {
-        constructor(x, y, direction, equipo, h, w) {
+        constructor(x, y, direction, equipo) {
             this.x = x;
             this.y = y;
             this.direction = direction;
@@ -70,7 +70,7 @@ var juego = (function () {
 
     var graficarBala = function (bullet) {
         var temp2 = new Image();
-        temp2.src = directionImageShoot + bullet.direction + myteam + ".png";
+        temp2.src = directionImageShoot + bullet.direction + bullet.equipo + ".png";
         var h, w, sx, sy, deltaX, deltaY;
         if (bullet.direction === 3) {
             h = 30;
@@ -244,7 +244,6 @@ var juego = (function () {
         this.update = function () {
             //Dibujarme
             var ctx = myGameArea.context;
-            console.info(this.vida);
             if (this.vida > 0) {
                 ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
             }
@@ -262,7 +261,7 @@ var juego = (function () {
             }
             //Dibujar aliados
             for (var i = 0; i < aliados.length; i++) {
-                if (aliados[i].propietario !== sessionStorage.getItem("user") && oponents[i].vida > 0) {
+                if (aliados[i].propietario !== sessionStorage.getItem("user") && aliados[i].vida > 0) {
                     var temp = new Image();
                     temp.src = directionImageTank + aliados[i].direction + myteam + ".png";
                     ctx.drawImage(temp, aliados[i].x, aliados[i].y, 30, 30);
@@ -295,6 +294,8 @@ var juego = (function () {
         }
         var maquina = new Maquina(myGamePiece.x, myGamePiece.y, myGamePiece.direction, bullets);
         var usuario = new Usuario(sessionStorage.getItem("user"), maquina, puntaje, myteam, myGamePiece.vida);
+        console.info("ENVIO");
+        console.info(usuario);
         stompClient.send("/app/sala." + myroom + "/" + myteam, {}, JSON.stringify(usuario));
         stompClient.send("/app/sala." + myroom + "/" + enemyteam, {}, JSON.stringify(usuario));
     };
@@ -407,8 +408,6 @@ var juego = (function () {
                 myteam = "B";
             }
             myroom = sessionStorage.getItem("idRoom");
-            console.info(myroom);
-            console.info(myteam);
             console.info('Connecting to WS...');
             var socket = new SockJS('/stompendpoint');
             stompClient = Stomp.over(socket);
@@ -422,28 +421,33 @@ var juego = (function () {
                 stompClient.subscribe('/topic/sala.' + myroom + "/" + myteam, function (eventbody) {
                     var object = JSON.parse(eventbody.body);
                     var ban = 0;
+                    console.info("LLEGO");
+                    console.info(object);
                     for (var i = 0; i < aliados.length && ban === 0; i++) {
-                        if (aliados[i].propietario === object.nombre) {
+                        if (aliados[i].propietario === object.userName) {
                             ban = 1;
-                            aliados[i] = new Component(30, 30, directionImageTank + object.maquina.direction + myteam + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre, myteam, object.vida);
+                            aliados[i] = new Component(30, 30, directionImageTank + object.tipoMaquina.direction + myteam + ".png", object.tipoMaquina.x, object.tipoMaquina.y, "image", object.tipoMaquina.bullets, object.tipoMaquina.direction, object.userName, myteam, object.vida);
                         }
                     }
                     if (ban === 0 && object.equipo === myteam) {
-                        aliados.push(new Component(30, 30, directionImageTank + object.maquina.direction + myteam + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre, myteam, object.vida));
+                        aliados.push(new Component(30, 30, directionImageTank + object.tipoMaquina.direction + myteam + ".png", object.tipoMaquina.x, object.tipoMaquina.y, "image", object.tipoMaquina.bullets, object.tipoMaquina.direction, object.userName, myteam, object.vida));
                     }
                     updateGameArea();
                 });
                 stompClient.subscribe('/topic/sala.' + myroom + "/" + enemyteam, function (eventbody) {
                     var object = JSON.parse(eventbody.body);
                     var ban = 0;
+                    console.info("VAAAAN");
+                    console.info(object);
+                    console.info(eventbody.body);
                     for (var i = 0; i < oponents.length && ban === 0; i++) {
-                        if (oponents[i].propietario === object.nombre) {
+                        if (oponents[i].propietario === object.userName) {
                             ban = 1;
-                            oponents[i] = new Component(30, 30, directionImageTank + object.maquina.direction + enemyteam + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre, enemyteam, object.vida);
+                            oponents[i] = new Component(30, 30, directionImageTank + object.tipoMaquina.direction + enemyteam + ".png", object.tipoMaquina.x, object.tipoMaquina.y, "image", object.tipoMaquina.bullets, object.tipoMaquina.direction, object.userName, enemyteam, object.vida);
                         }
                     }
                     if (ban === 0 && object.equipo !== myteam) {
-                        oponents.push(new Component(30, 30, directionImageTank + object.maquina.direction + enemyteam + ".png", object.maquina.x, object.maquina.y, "image", object.maquina.bullets, object.maquina.direction, object.nombre, enemyteam, object.vida));
+                        oponents.push(new Component(30, 30, directionImageTank + object.tipoMaquina.direction + enemyteam + ".png", object.tipoMaquina.x, object.tipoMaquina.y, "image", object.tipoMaquina.bullets, object.tipoMaquina.direction, object.userName, enemyteam, object.vida));
                     }
                     updateGameArea();
                 });
@@ -456,7 +460,7 @@ var juego = (function () {
             myGamePiece = new Component(30, 30, directionImageTank + "1" + myteam + ".png", 10, 120, "image", [], 1, sessionStorage.getItem("user"), myteam, 500);
             if(myteam==="A"){bandera = new Bandera(0, 30);}
             else{bandera = new Bandera(300, 30);}
-            setTimeout(function (){send();},4000);
+            setTimeout(function (){send();},10000);
             send();
             updateGameArea();
             inicio();
