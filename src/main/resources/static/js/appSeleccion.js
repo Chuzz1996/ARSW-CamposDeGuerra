@@ -72,12 +72,15 @@ var appSeleccion = (function () {
                     sessionStorage.setItem("idRoom", idRoom);
                     api.getMyTeam(sessionStorage.getItem("user"), sessionStorage.getItem("idRoom"), function (data) {
                         sessionStorage.setItem("myTeam", data);
-
                     });
                     console.info('Connecting to WS...');
                     var socket = new SockJS('/stompendpoint');
                     stompClient = Stomp.over(socket);
                     stompClient.connect({}, function (frame) {
+                        stompClient.subscribe('/topic/sala.' + sessionStorage.getItem("idRoom")+"/pos", function (eventbody) {
+                            var object = eventbody.body;
+                            if (sessionStorage.getItem("pos") === null) {sessionStorage.setItem("pos", object);}
+                        });
                         stompClient.subscribe('/topic/sala.' + sessionStorage.getItem("idRoom"), function (eventbody) {
                             var newURL = window.location.protocol + "//" + window.location.host + "/" + "juego.html";
                             window.location.replace(newURL);

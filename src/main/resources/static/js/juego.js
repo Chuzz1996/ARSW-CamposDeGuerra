@@ -457,7 +457,16 @@ var juego = (function () {
                 });
             });
             myGameArea.start();
-            myGamePiece = new Component(30, 30, directionImageTank + "1" + myteam + ".png", 10, 120, "image", [], 1, sessionStorage.getItem("user"), myteam, 500);
+            var x,y,dir;
+            console.info(sessionStorage.getItem("pos"));
+            if(sessionStorage.getItem("pos")==="1"){x=30;y=Math.round(myGameArea.canvas.height*0.30);dir="1";}
+            else if(sessionStorage.getItem("pos")==="2"){x=myGameArea.canvas.width-30;y=Math.round(myGameArea.canvas.height*0.30);dir="2";}
+            else if(sessionStorage.getItem("pos")==="3"){x=30;y=Math.round(myGameArea.canvas.height*0.60);dir="1";}
+            else if(sessionStorage.getItem("pos")==="4"){x=myGameArea.canvas.width-30;y=Math.round(myGameArea.canvas.height*0.60);dir="2";}
+            else if(sessionStorage.getItem("pos")==="5"){x=30;y=Math.round(myGameArea.canvas.height*0.90);dir="1";}
+            else if(sessionStorage.getItem("pos")==="6"){x=myGameArea.canvas.width-30;y=Math.round(myGameArea.canvas.height*0.90);dir="2";}
+            console.info(dir);
+            myGamePiece = new Component(30, 30, directionImageTank + dir + myteam + ".png", x, y, "image", [], 1, sessionStorage.getItem("user"), myteam, 500);
             if(myteam==="A"){bandera = new Bandera(0, 30);}
             else{bandera = new Bandera(300, 30);}
             setTimeout(function (){send();},10000);

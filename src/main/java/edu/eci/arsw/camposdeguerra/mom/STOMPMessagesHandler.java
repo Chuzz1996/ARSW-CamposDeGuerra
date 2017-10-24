@@ -43,6 +43,7 @@ public class STOMPMessagesHandler {
             if (personasEnsalas.containsKey(idSala)) {
                 AtomicInteger temp = personasEnsalas.get(idSala);
                 temp.addAndGet(1);
+                msgt.convertAndSend("/topic/sala." + idSala + "/pos",temp.get());
                 personasEnsalas.putIfAbsent(idSala, temp);
             } else {
                 AtomicInteger temp = new AtomicInteger(1);
@@ -50,8 +51,8 @@ public class STOMPMessagesHandler {
                 estadoSalas.putIfAbsent(idSala, "nojugando");
             }
             if (personasEnsalas.get(idSala).get() >= 4 && estadoSalas.get(idSala).equals("nojugando")) {
-                estadoSalas.replace(idSala, "jugando");
                 msgt.convertAndSend("/topic/sala." + idSala, "Pueden Comenzar");
+                estadoSalas.replace(idSala, "jugando");
                 Timer temp = new Timer();
                 temp.schedule(new java.util.TimerTask() {
                     @Override

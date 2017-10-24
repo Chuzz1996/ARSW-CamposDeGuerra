@@ -27,14 +27,27 @@ public class Room {
     private String banderaA = "", banderaB = "";
     private AtomicBoolean banderaATomada = new AtomicBoolean(false), banderaBTomada = new AtomicBoolean(false);
 
+    /**
+     * 
+     * @param id 
+     */
     public Room(Integer id) {
         this.id = id;
     }
 
+    /**
+     * 
+     * @return 
+     */
     public Integer getId() {
         return id;
     }
 
+    /**
+     * 
+     * @param us
+     * @return 
+     */
     public boolean addCompetidor(Usuario us) {
         boolean agregoUser = true;
         if (equipoA.size() >= equipoB.size() && equipoB.size() < 3) {
@@ -47,10 +60,19 @@ public class Room {
         return agregoUser;
     }
 
+    /**
+     * 
+     * @return 
+     */
     public boolean isFull() {
         return equipoA.size() + equipoB.size() == 6;
     }
 
+    /**
+     * 
+     * @param us
+     * @return 
+     */
     public boolean deleteUser(Usuario us) {
         boolean borroUser = true;
         if (equipoA.contains(us)) {
@@ -63,11 +85,19 @@ public class Room {
         return borroUser;
     }
 
+    /**
+     * 
+     */
     public void clear() {
         equipoA.clear();
         equipoB.clear();
     }
 
+    /**
+     * 
+     * @param us
+     * @return 
+     */
     public String TeamOfUser(String us) {
         String team = "Ninguno";
         for (Usuario u : equipoA) {
@@ -83,6 +113,10 @@ public class Room {
         return team;
     }
 
+    /**
+     * 
+     * @return 
+     */
     public HashSet<Usuario> getAllCompetitors() {
         HashSet<Usuario> allCompetitors = new HashSet<>();
         for (Usuario us : equipoA) {
