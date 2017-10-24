@@ -47,6 +47,7 @@ public class STOMPMessagesHandler {
                 personasEnsalas.putIfAbsent(idSala, temp);
             } else {
                 AtomicInteger temp = new AtomicInteger(1);
+                msgt.convertAndSend("/topic/sala." + idSala + "/pos",temp.get());
                 personasEnsalas.putIfAbsent(idSala, temp);
                 estadoSalas.putIfAbsent(idSala, "nojugando");
             }
@@ -75,17 +76,11 @@ public class STOMPMessagesHandler {
 
     @MessageMapping("/sala.{idSala}/A")
     public void reportarInfoTeamA(Usuario u, @DestinationVariable Integer idSala) throws Exception {
-        System.out.println("EN A");
-        System.out.println(u.getEquipo()+" "+u.getUserName()+" "+u.getPuntaje()+" "+u.getVida());
-        System.out.println(u.getTipoMaquina());
         msgt.convertAndSend("/topic/sala." + idSala + "/A", u);
     }
 
     @MessageMapping("/sala.{idSala}/B")
     public void reportarInfoTeamB(Usuario u, @DestinationVariable Integer idSala) throws Exception {
-        System.out.println("EN B");
-        System.out.println(u.getEquipo()+" "+u.getUserName()+" "+u.getPuntaje()+" "+u.getVida());
-        System.out.println(u.getTipoMaquina());
         msgt.convertAndSend("/topic/sala." + idSala + "/B", u);
     }
 }

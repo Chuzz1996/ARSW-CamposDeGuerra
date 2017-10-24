@@ -76,10 +76,12 @@ var appSeleccion = (function () {
                     console.info('Connecting to WS...');
                     var socket = new SockJS('/stompendpoint');
                     stompClient = Stomp.over(socket);
+                    sessionStorage.setItem("pos", "noactualizado");
                     stompClient.connect({}, function (frame) {
                         stompClient.subscribe('/topic/sala.' + sessionStorage.getItem("idRoom")+"/pos", function (eventbody) {
                             var object = eventbody.body;
-                            if (sessionStorage.getItem("pos") === null) {sessionStorage.setItem("pos", object);}
+                            if (sessionStorage.getItem("pos") === "noactualizado") {console.info("ENTRO");console.info(object);sessionStorage.setItem("pos", object);}
+                            else{console.info("NO ENTRO");}
                         });
                         stompClient.subscribe('/topic/sala.' + sessionStorage.getItem("idRoom"), function (eventbody) {
                             var newURL = window.location.protocol + "//" + window.location.host + "/" + "juego.html";

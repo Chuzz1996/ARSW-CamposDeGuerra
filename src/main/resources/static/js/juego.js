@@ -78,27 +78,27 @@ var juego = (function () {
             sx = 5;
             sy = 10;
             dx = 0;
-            dy = -1;
+            dy = -15;
         } else if (bullet.direction === 4) {
             h = 30;
             w = 10;
             sx = 5;
             sy = 0;
             dx = 0;
-            dy = 1;
+            dy = 15;
         } else if (bullet.direction === 2) {
             h = 10;
             w = 30;
             sx = 0;
             sy = 0;
-            dx = 1;
+            dx = 15;
             dy = 0;
         } else {
             h = 10;
             w = 30;
             sx = 10;
             sy = 0;
-            dx = -1;
+            dx = -15;
             dy = 0;
         }
         if (myGamePiece.crashWith(bullet, h, w)) {
@@ -121,13 +121,13 @@ var juego = (function () {
         var borrar = [];
         for (let i = 0; i < temp.length; i++) {
             if (temp[i].dir === 3) {
-                myGamePiece.shoots[i].y += 1;
+                myGamePiece.shoots[i].y += 15;
             } else if (temp[i].dir === 4) {
-                myGamePiece.shoots[i].y -= 1;
+                myGamePiece.shoots[i].y -= 15;
             } else if (temp[i].dir === 2) {
-                myGamePiece.shoots[i].x -= 1;
+                myGamePiece.shoots[i].x -= 15;
             } else {
-                myGamePiece.shoots[i].x += 1;
+                myGamePiece.shoots[i].x += 15;
             }
             if (temp[i].x >= myGameArea.canvas.width || temp[i].x <= -30 || temp[i].y >= myGameArea.canvas.height || temp[i].y <= -30) {
                 borrar.push(i);
@@ -294,8 +294,6 @@ var juego = (function () {
         }
         var maquina = new Maquina(myGamePiece.x, myGamePiece.y, myGamePiece.direction, bullets);
         var usuario = new Usuario(sessionStorage.getItem("user"), maquina, puntaje, myteam, myGamePiece.vida);
-        console.info("ENVIO");
-        console.info(usuario);
         stompClient.send("/app/sala." + myroom + "/" + myteam, {}, JSON.stringify(usuario));
         stompClient.send("/app/sala." + myroom + "/" + enemyteam, {}, JSON.stringify(usuario));
     };
@@ -315,9 +313,10 @@ var juego = (function () {
             window.addEventListener("keydown", function (e) {
 
                 myGameArea.key = e.keyCode;
+                if(myGamePiece.vida>0){
                 //THE A KEY
                 if (myGameArea.key && myGameArea.key === 65) {
-                    myGamePiece.speedX = -1;
+                    myGamePiece.speedX = -10;
                     myGamePiece.image.src = directionImageTank + "2" + myteam + ".png";
                     directionShoot = 2;
                     myGamePiece.direction = 2;
@@ -328,7 +327,7 @@ var juego = (function () {
                 }
                 //THE D KEY
                 else if (myGameArea.key && myGameArea.key === 68) {
-                    myGamePiece.speedX = 1;
+                    myGamePiece.speedX = 10;
                     myGamePiece.image.src = directionImageTank + "1" + myteam + ".png";
                     directionShoot = 1;
                     myGamePiece.direction = 1;
@@ -339,7 +338,7 @@ var juego = (function () {
                 }
                 //THE W KEY
                 else if (myGameArea.key && myGameArea.key === 87) {
-                    myGamePiece.speedY = -1;
+                    myGamePiece.speedY = -10;
                     myGamePiece.image.src = directionImageTank + "4" + myteam + ".png";
                     directionShoot = 4;
                     myGamePiece.direction = 4;
@@ -350,7 +349,7 @@ var juego = (function () {
                 }
                 //THE S KEY
                 else if (myGameArea.key && myGameArea.key === 83) {
-                    myGamePiece.speedY = 1;
+                    myGamePiece.speedY = 10;
                     myGamePiece.image.src = directionImageTank + "3" + myteam + ".png";
                     directionShoot = 3;
                     myGamePiece.direction = 3;
@@ -385,7 +384,7 @@ var juego = (function () {
                     }
                     var temp = new Bullet(w, h, directionImageShoot + myGamePiece.direction + myteam + ".png", myGamePiece.x + sx, myGamePiece.y + sy, "image", myGamePiece.direction);
                     myGamePiece.shoots.push(temp);
-                }
+                }}
             });
             window.addEventListener("keyup", function (e) {
                 myGameArea.key = false;
@@ -408,7 +407,6 @@ var juego = (function () {
                 myteam = "B";
             }
             myroom = sessionStorage.getItem("idRoom");
-            console.info('Connecting to WS...');
             var socket = new SockJS('/stompendpoint');
             stompClient = Stomp.over(socket);
             stompClient.connect({}, function (frame) {
@@ -421,8 +419,6 @@ var juego = (function () {
                 stompClient.subscribe('/topic/sala.' + myroom + "/" + myteam, function (eventbody) {
                     var object = JSON.parse(eventbody.body);
                     var ban = 0;
-                    console.info("LLEGO");
-                    console.info(object);
                     for (var i = 0; i < aliados.length && ban === 0; i++) {
                         if (aliados[i].propietario === object.userName) {
                             ban = 1;
@@ -437,9 +433,6 @@ var juego = (function () {
                 stompClient.subscribe('/topic/sala.' + myroom + "/" + enemyteam, function (eventbody) {
                     var object = JSON.parse(eventbody.body);
                     var ban = 0;
-                    console.info("VAAAAN");
-                    console.info(object);
-                    console.info(eventbody.body);
                     for (var i = 0; i < oponents.length && ban === 0; i++) {
                         if (oponents[i].propietario === object.userName) {
                             ban = 1;
@@ -458,14 +451,14 @@ var juego = (function () {
             });
             myGameArea.start();
             var x,y,dir;
-            console.info(sessionStorage.getItem("pos"));
+  
             if(sessionStorage.getItem("pos")==="1"){x=30;y=Math.round(myGameArea.canvas.height*0.30);dir="1";}
             else if(sessionStorage.getItem("pos")==="2"){x=myGameArea.canvas.width-30;y=Math.round(myGameArea.canvas.height*0.30);dir="2";}
             else if(sessionStorage.getItem("pos")==="3"){x=30;y=Math.round(myGameArea.canvas.height*0.60);dir="1";}
             else if(sessionStorage.getItem("pos")==="4"){x=myGameArea.canvas.width-30;y=Math.round(myGameArea.canvas.height*0.60);dir="2";}
             else if(sessionStorage.getItem("pos")==="5"){x=30;y=Math.round(myGameArea.canvas.height*0.90);dir="1";}
             else if(sessionStorage.getItem("pos")==="6"){x=myGameArea.canvas.width-30;y=Math.round(myGameArea.canvas.height*0.90);dir="2";}
-            console.info(dir);
+       
             myGamePiece = new Component(30, 30, directionImageTank + dir + myteam + ".png", x, y, "image", [], 1, sessionStorage.getItem("user"), myteam, 500);
             if(myteam==="A"){bandera = new Bandera(0, 30);}
             else{bandera = new Bandera(300, 30);}
