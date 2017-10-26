@@ -95,4 +95,14 @@ public interface CamposDeGuerraRoomPersistence {
      */
     public void setFlagBRoom(String user,Integer room) throws CamposDeGuerraNotFoundException;
     
+    
+    
+    public  void puntuarA(String user,Integer room) throws CamposDeGuerraNotFoundException;
+
+    public  void puntuarB(String user,Integer room) throws CamposDeGuerraNotFoundException;
+
+    public  void soltarBanderaB(String user,Integer room) throws CamposDeGuerraNotFoundException;
+    
+    public  void soltarBanderaA(String user,Integer room) throws CamposDeGuerraNotFoundException;
+
 }

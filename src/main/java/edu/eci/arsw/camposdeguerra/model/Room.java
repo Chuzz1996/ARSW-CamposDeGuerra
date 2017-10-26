@@ -162,10 +162,7 @@ public class Room {
         return banderaBTomada.get();
     }
 
-    public synchronized void soltarBanderaA() {
-        banderaA = "";
-        banderaATomada.getAndSet(false);
-    }
+    
 
     public synchronized boolean puntuarA(String user) {
         boolean ans=false;
@@ -189,8 +186,22 @@ public class Room {
         return ans;
     }
 
-    public synchronized void soltarBanderaB() {
-        banderaB = "";
-        banderaBTomada.getAndSet(false);
+    public synchronized boolean soltarBanderaB(String user) {
+        boolean ans=false;
+        if(banderaB.equals(user)){
+            banderaB = "";
+            banderaBTomada.getAndSet(false);
+            ans=true;
+        }
+        return ans;
+    }
+    
+    public synchronized boolean soltarBanderaA(String user) {
+        boolean ans=false;
+        if(banderaA.equals(user)){
+        banderaA = "";
+        banderaATomada.getAndSet(false);
+        }
+        return ans;
     }
 }

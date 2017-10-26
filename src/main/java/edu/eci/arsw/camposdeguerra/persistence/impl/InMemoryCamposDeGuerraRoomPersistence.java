@@ -147,4 +147,60 @@ public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoom
         }
     }
 
+    @Override
+    public void puntuarA(String user,Integer room) throws CamposDeGuerraNotFoundException {
+        boolean ans;
+        if(rooms.containsKey(room)){
+            ans=rooms.get(room).puntuarA(user);
+            if(!ans){
+                throw  new CamposDeGuerraNotFoundException("La Bandera de su equipo fue tomada por el enemigo o el usuario no existe en la sala!");
+            }
+        }
+        else{
+            throw  new CamposDeGuerraNotFoundException("La Room ingresada no existe!");
+        }
+    }
+
+    @Override
+    public void puntuarB(String user,Integer room) throws CamposDeGuerraNotFoundException {
+        boolean ans;
+        if(rooms.containsKey(room)){
+            ans=rooms.get(room).puntuarB(user);
+            if(!ans){
+                throw  new CamposDeGuerraNotFoundException("La Bandera de su equipo fue tomada por el enemigo o el usuario no existe en la sala!");
+            }
+        }
+        else{
+            throw  new CamposDeGuerraNotFoundException("La Room ingresada no existe!");
+        }
+    }
+
+    @Override
+    public void soltarBanderaB(String user,Integer room) throws CamposDeGuerraNotFoundException {
+        boolean ans;
+        if(rooms.containsKey(room)){
+            ans=rooms.get(room).soltarBanderaB(user);
+            if(!ans){
+                throw  new CamposDeGuerraNotFoundException("Usted no posee la bandera B!");
+            }
+        }
+        else{
+            throw  new CamposDeGuerraNotFoundException("La Room ingresada no existe!");
+        }
+    }
+
+    @Override
+    public void soltarBanderaA(String user,Integer room) throws CamposDeGuerraNotFoundException {
+        boolean ans;
+        if(rooms.containsKey(room)){
+            ans=rooms.get(room).puntuarA(user);
+            if(!ans){
+                throw  new CamposDeGuerraNotFoundException("Usted no posee la bandera A!");
+            }
+        }
+        else{
+            throw  new CamposDeGuerraNotFoundException("La Room ingresada no existe!");
+        }
+    }
+    
 }

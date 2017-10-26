@@ -131,4 +131,25 @@ public class CamposDeGuerraServices {
         cdgr.setFlagBRoom(user, room);
     }
     
+    public void puntuarA(String user,Integer room) throws CamposDeGuerraNotFoundException {
+      cdgr.puntuarA(user, room);
+    }
+
+   
+    public void puntuarB(String user,Integer room) throws CamposDeGuerraNotFoundException {
+        cdgr.puntuarB(user, room);
+    }
+
+  
+    public void soltarBanderaB(String user,Integer room) throws CamposDeGuerraNotFoundException {
+       cdgr.soltarBanderaB(user, room);
+    }
+
+    
+    public void soltarBanderaA(String user,Integer room) throws CamposDeGuerraNotFoundException {
+        cdgr.soltarBanderaA(user, room);
+    }
+    
+    
+    
 }

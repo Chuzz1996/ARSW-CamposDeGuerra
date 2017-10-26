@@ -62,9 +62,50 @@ var apiclient = (function () {
         },
         getFreeRoom: function (callback) {
             return $.get("/CamposDeGuerra/Rooms/free",callback);
+        },
+        postBanderaA: function (room,user) {
+            return $.ajax({
+                url: "/CamposDeGuerra/Rooms/"+room+"/Bandera/A", 
+                type: "POST", 
+                data: JSON.stringify(user), 
+                contentType: "application/json"});
+        }, 
+        postBanderaB: function (room,user) {
+            return $.ajax({
+                url: "/CamposDeGuerra/Rooms/"+room+"/Bandera/B", 
+                type: "POST", 
+                data: JSON.stringify(user), 
+                contentType: "application/json"});
+        }, 
+        postPuntuarBanderaA: function (room,user) {
+            return $.ajax({
+                url: "/CamposDeGuerra/Rooms/"+room+"/Bandera/A/Puntuar", 
+                type: "POST", 
+                data: JSON.stringify(user), 
+                contentType: "application/json"});
+        }, 
+        postPuntuarBanderaB: function (room,user) {
+            return $.ajax({
+                url: "/CamposDeGuerra/Rooms/"+room+"/Bandera/B/Puntuar", 
+                type: "POST", 
+                data: JSON.stringify(user), 
+                contentType: "application/json"});
+        },
+        deleteSoltarBanderaA: function (room,user) {
+            return $.ajax({
+                url: "/CamposDeGuerra/Rooms/"+room+"/Bandera/A", 
+                type: "DELETE", 
+                data: JSON.stringify(user), 
+                contentType: "application/json"});
+        }, 
+        deleteSoltarBanderaB: function (room,user) {
+            return $.ajax({
+                url: "/CamposDeGuerra/Rooms/"+room+"/Bandera/B", 
+                type: "DELETE", 
+                data: JSON.stringify(user), 
+                contentType: "application/json"});
         }
-        
-        
+
     };
     
 }());

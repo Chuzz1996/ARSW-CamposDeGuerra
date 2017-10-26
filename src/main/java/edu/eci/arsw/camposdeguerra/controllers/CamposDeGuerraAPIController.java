@@ -211,5 +211,74 @@ public class CamposDeGuerraAPIController {
         }
     }
     
+    @RequestMapping(path = "/Rooms/{room}/Bandera/A",method = RequestMethod.POST)
+    public ResponseEntity<?> setFlagARoom(@RequestBody String user, @PathVariable Integer room) throws CamposDeGuerraNotFoundException {
+        try {
+            cdg.setFlagARoom(user, room);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (CamposDeGuerraNotFoundException ex) {
+            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+        }
+        
+       
+    }
+    
+    @RequestMapping(path = "/Rooms/{room}/Bandera/B",method = RequestMethod.POST)
+    public ResponseEntity<?> setFlagBRoom(@RequestBody String user, @PathVariable Integer room) throws CamposDeGuerraNotFoundException {
+         try {
+            cdg.setFlagBRoom(user, room);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (CamposDeGuerraNotFoundException ex) {
+            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+        }
+    }
+    
+    @RequestMapping(path = "/Rooms/{room}/Bandera/A/Puntuar",method = RequestMethod.POST)
+    public  ResponseEntity<?> puntuarA(String user,Integer room) throws CamposDeGuerraNotFoundException{
+        try {
+            cdg.puntuarA(user, room);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (CamposDeGuerraNotFoundException ex) {
+            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+        }
+    }
+    
+    @RequestMapping(path = "/Rooms/{room}/Bandera/B/Puntuar",method = RequestMethod.POST)
+    public  ResponseEntity<?> puntuarB(String user,Integer room) throws CamposDeGuerraNotFoundException{
+        try {
+            cdg.puntuarB(user, room);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (CamposDeGuerraNotFoundException ex) {
+            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+        }
+    }
+    
+    @RequestMapping(path = "/Rooms/{room}/Bandera/A",method = RequestMethod.DELETE)
+    public  ResponseEntity<?> soltarBanderaB(String user,Integer room) throws CamposDeGuerraNotFoundException{
+         try {
+            cdg.soltarBanderaB(user, room);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (CamposDeGuerraNotFoundException ex) {
+            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+        }
+    }
+    @RequestMapping(path = "/Rooms/{room}/Bandera/B",method = RequestMethod.DELETE)
+    public  ResponseEntity<?> soltarBanderaA(String user,Integer room) throws CamposDeGuerraNotFoundException{
+        try {
+            cdg.soltarBanderaB(user, room);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (CamposDeGuerraNotFoundException ex) {
+            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+        }
+    }
+    
+    
+    
     
 }
