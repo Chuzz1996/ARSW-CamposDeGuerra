@@ -19,6 +19,8 @@ var juego = (function () {
             this.x = x;
             this.y = y;
             this.team = team;
+            this.image = new Image();
+            this.image.src = directionBandera + team + ".png";
         }
     }
     ;
@@ -140,9 +142,8 @@ var juego = (function () {
         });
     };
     var graficarBandera = function (ban) {
-        var temp1 = new Image();
-        temp1.src = directionBandera + ban.team + ".png";
-        myGameArea.context.drawImage(temp1, ban.x, ban.y, 20, 20);
+        console.info(ban);
+        myGameArea.context.drawImage(ban.image, ban.x, ban.y, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.05));
     };
 
     var graficarExplosion = function (explosion) {
@@ -164,14 +165,17 @@ var juego = (function () {
     var checkGetBandera = function () {
         var obtenerBandera;
         if (myteam === "A") {
-            obtenerBandera = apiclient.postBanderaA(myroom, sessionStorage.getItem("user"));
-        } else {
             obtenerBandera = apiclient.postBanderaB(myroom, sessionStorage.getItem("user"));
+        } else {
+            obtenerBandera = apiclient.postBanderaA(myroom, sessionStorage.getItem("user"));
         }
         obtenerBandera.then(
                 function () {
                     alert("Tomaste la bandera");
                     myGamePiece.hasban = true;
+                    myGameArea.context.fillStyle = "#A9A9A9";
+                    myGameArea.context.fillRect(enemyBandera.x, enemyBandera.y, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.05));
+
                 },
                 function () {
                     alert("la bandera ya fue tomada por otra persona");
@@ -184,9 +188,9 @@ var juego = (function () {
     var checkPostPoint = function () {
         var postPoint;
         if (myteam === "A") {
-            postPoint = apiclient.postPuntuarBanderaA(myroom, sessionStorage.getItem("user"));
+            postPoint = apiclient.postPuntuarBanderaA(myroom, JSON.stringify(sessionStorage.getItem("user")));
         } else {
-            postPoint = apiclient.postPuntuarBanderaB(myroom, sessionStorage.getItem("user"));
+            postPoint = apiclient.postPuntuarBanderaB(myroom, JSON.stringify(sessionStorage.getItem("user")));
         }
         postPoint.then(
                 function () {
@@ -218,8 +222,7 @@ var juego = (function () {
                         enemyBandera.x = 30;
                         enemyBandera.y = Math.round(myGameArea.canvas.height * 0.50);
                     }
-                    var ban = new Bandera(enemyBandera.x, enemyBandera.y, enemyteam);
-                    stompClient.send("/topic/sala." + myroom + "/bandera", {}, JSON.stringify(ban));
+                    stompClient.send("/topic/sala." + myroom + "/bandera", {}, enemyBandera);
 
                 },
                 function () {
@@ -338,17 +341,19 @@ var juego = (function () {
 
         this.newPos = function () {
             myGameArea.context.fillStyle = "#A9A9A9";
-            myGameArea.context.fillRect(this.x, this.y, 30, 30);
+            myGameArea.context.fillRect(this.x, this.y, 50, 50);
             this.x += this.speedX;
             this.y += this.speedY;
-            if (this.x === enemyBandera.x && this.y === enemyBandera.y && this.hasban === false) {
+            if (this.crashWith(enemyBandera, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.05)) && this.hasban === false) {
                 checkGetBandera();
             }
             if (this.hasban) {
-                enemyBandera.x = this.x - 10;
-                enemyBandera.y = this.y - 10;
+                myGameArea.context.fillStyle = "#A9A9A9";
+                myGameArea.context.fillRect(enemyBandera.x, enemyBandera.y, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.05));
+                enemyBandera.x = this.x - 20;
+                enemyBandera.y = this.y - 20;
             }
-            if (this.hasban && this.x === myBandera.x && this.y === myBandera.y) {
+            if (this.hasban && this.crashWith(myBandera, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.05))) {
                 checkPostPoint().then(checkSoltarBandera);
             }
         };
@@ -385,8 +390,7 @@ var juego = (function () {
         stompClient.send("/app/sala." + myroom + "/" + myteam, {}, JSON.stringify(usuario));
         stompClient.send("/app/sala." + myroom + "/" + enemyteam, {}, JSON.stringify(usuario));
         if (myGamePiece.hasban) {
-            var ban = new Bandera(enemyBandera.x, enemyBandera.y, enemyteam);
-            stompClient.send("/topic/sala." + myroom + "/bandera", {}, JSON.stringify(ban));
+            stompClient.send("/topic/sala." + myroom + "/bandera", {}, enemyBandera);
         }
     };
 
@@ -557,12 +561,14 @@ var juego = (function () {
                 });
                 stompClient.subscribe('/topic/sala.' + myroom + "/bandera", function (eventbody) {
                     var object = JSON.parse(eventbody.body);
+                    myGameArea.context.fillStyle = "#A9A9A9";
+                    myGameArea.context.fillRect(object.x - 20, object.y - 20, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.05));
                     graficarBandera(object);
                 });
             });
             myGameArea.start();
             var x, y, dir;
-
+            console.info(sessionStorage.getItem("pos"));
             if (sessionStorage.getItem("pos") === "1") {
                 x = 30;
                 y = Math.round(myGameArea.canvas.height * 0.30);
@@ -589,21 +595,21 @@ var juego = (function () {
                 dir = "2";
             }
 
-            myGamePiece = new Component(30, 30, directionImageTank + dir + myteam + ".png", x, y, "image", [], 1, sessionStorage.getItem("user"), myteam, 500);
+            myGamePiece = new Component(50, 50, directionImageTank + dir + myteam + ".png", x, y, "image", [], 1, sessionStorage.getItem("user"), myteam, 500);
             if (myteam === "A") {
-                myBandera = new Bandera(x, Math.round(myGameArea.canvas.height * 0.50), myteam);
-                enemyBandera = new Bandera(myGameArea.canvas.width - 30, Math.round(myGameArea.canvas.height * 0.50), enemyteam);
+                myBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.50), Math.round(myGameArea.canvas.height * 0.50), myteam);
+                enemyBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.50) - 30, Math.round(myGameArea.canvas.height * 0.50), enemyteam);
             } else {
-                myBandera = new Bandera(myGameArea.canvas.width - 30, Math.round(myGameArea.canvas.height * 0.50), myteam);
-                enemyBandera = new Bandera(x, Math.round(myGameArea.canvas.height * 0.50), enemyteam);
+
+                myBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.50) - 30, Math.round(myGameArea.canvas.height * 0.50), myteam);
+                enemyBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.50), Math.round(myGameArea.canvas.height * 0.50), enemyteam);
             }
             setTimeout(function () {
                 send();
+                graficarBandera(myBandera);
+                graficarBandera(enemyBandera);
             }, 10000);
-            myGamePiece.update();
-            //updateBandera();
-            graficarBandera(myBandera);
-            graficarBandera(enemyBandera);
+
             inicio();
         }
     };

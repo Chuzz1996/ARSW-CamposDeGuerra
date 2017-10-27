@@ -51,7 +51,7 @@ public class STOMPMessagesHandler {
                 personasEnsalas.putIfAbsent(idSala, temp);
                 estadoSalas.putIfAbsent(idSala, "nojugando");
             }
-            if (personasEnsalas.get(idSala).get() >= 4 && estadoSalas.get(idSala).equals("nojugando")) {
+            if (personasEnsalas.get(idSala).get() >= 1 && estadoSalas.get(idSala).equals("nojugando")) {
                 msgt.convertAndSend("/topic/sala." + idSala, "Pueden Comenzar");
                 estadoSalas.replace(idSala, "jugando");
                 Timer temp = new Timer();

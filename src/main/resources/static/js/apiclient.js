@@ -65,14 +65,14 @@ var apiclient = (function () {
         },
         postBanderaA: function (room,user) {
             return $.ajax({
-                url: "/CamposDeGuerra/Rooms/"+room+"/Bandera/A", 
+                url: "/CamposDeGuerra/Rooms/"+room+"/Bandera/A/"+user, 
                 type: "POST", 
                 data: JSON.stringify(user), 
                 contentType: "application/json"});
         }, 
         postBanderaB: function (room,user) {
             return $.ajax({
-                url: "/CamposDeGuerra/Rooms/"+room+"/Bandera/B", 
+                url: "/CamposDeGuerra/Rooms/"+room+"/Bandera/B/"+user, 
                 type: "POST", 
                 data: JSON.stringify(user), 
                 contentType: "application/json"});

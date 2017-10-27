@@ -187,6 +187,8 @@ public class CamposDeGuerraAPIController {
         }
     }
     
+    
+    
     @RequestMapping(path = "/Rooms/{room}/user",method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteUsuarioFromRoom(@RequestBody Usuario user,@PathVariable Integer room ) {
         try {
@@ -211,8 +213,8 @@ public class CamposDeGuerraAPIController {
         }
     }
     
-    @RequestMapping(path = "/Rooms/{room}/Bandera/A",method = RequestMethod.POST)
-    public ResponseEntity<?> setFlagARoom(@RequestBody String user, @PathVariable Integer room) throws CamposDeGuerraNotFoundException {
+    @RequestMapping(path = "/Rooms/{room}/Bandera/A/{user}",method = RequestMethod.POST)
+    public ResponseEntity<?> setFlagARoom(@PathVariable String user, @PathVariable Integer room) throws CamposDeGuerraNotFoundException {
         try {
             cdg.setFlagARoom(user, room);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -220,12 +222,11 @@ public class CamposDeGuerraAPIController {
             Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
         }
-        
-       
     }
     
-    @RequestMapping(path = "/Rooms/{room}/Bandera/B",method = RequestMethod.POST)
-    public ResponseEntity<?> setFlagBRoom(@RequestBody String user, @PathVariable Integer room) throws CamposDeGuerraNotFoundException {
+    
+    @RequestMapping(path = "/Rooms/{room}/Bandera/B/{user}",method = RequestMethod.POST)
+    public ResponseEntity<?> setFlagBRoom(@PathVariable String user, @PathVariable Integer room) throws CamposDeGuerraNotFoundException {
          try {
             cdg.setFlagBRoom(user, room);
             return new ResponseEntity<>(HttpStatus.OK);

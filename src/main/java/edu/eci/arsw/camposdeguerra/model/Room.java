@@ -100,12 +100,15 @@ public class Room {
      */
     public String TeamOfUser(String us) {
         String team = "Ninguno";
+        System.out.println("US: "+us);
         for (Usuario u : equipoA) {
+            System.out.println("A:"+u.getUserName());
             if (u.getUserName().equals(us)) {
                 team = "A";
             }
         }
         for (Usuario u : equipoB) {
+            System.out.println("B:"+u.getUserName());
             if (u.getUserName().equals(us)) {
                 team = "B";
             }
@@ -146,6 +149,7 @@ public class Room {
 
     public synchronized boolean tomarBanderaA(String user) {
         String ans = TeamOfUser(user);
+        System.out.println("ANS: "+ans);
         if (!banderaATomada.get() && ans.equals("B")) {
             banderaA = user;
             banderaATomada.getAndSet(true);
