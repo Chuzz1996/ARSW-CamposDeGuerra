@@ -7,6 +7,7 @@ package edu.eci.arsw.camposdeguerra.model;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -23,6 +24,8 @@ public class Room {
     private AtomicInteger puntajeEquipoB = new AtomicInteger(0);
     private ConcurrentLinkedQueue<Usuario> equipoA = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Usuario> equipoB = new ConcurrentLinkedQueue<>();
+    private ConcurrentHashMap<String, Integer> puntuacionesEquipoA = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Integer> puntuacionesEquipoB = new ConcurrentHashMap<>();
     private Integer id;
     private String banderaA = "", banderaB = "";
     private AtomicBoolean banderaATomada = new AtomicBoolean(false), banderaBTomada = new AtomicBoolean(false);
@@ -50,10 +53,10 @@ public class Room {
      */
     public boolean addCompetidor(Usuario us) {
         boolean agregoUser = true;
-        if (equipoA.size() >= equipoB.size() && equipoB.size() < 3) {
-            equipoB.add(us);
-        } else if (equipoB.size() >= equipoA.size() && equipoA.size() < 3) {
+        if (equipoB.size() >= equipoA.size() && equipoA.size() < 3) {
             equipoA.add(us);
+        } else if (equipoA.size() >= equipoB.size() && equipoB.size() < 3) {
+            equipoB.add(us);
         } else {
             agregoUser = false;
         }
@@ -100,15 +103,12 @@ public class Room {
      */
     public String TeamOfUser(String us) {
         String team = "Ninguno";
-        System.out.println("US: "+us);
         for (Usuario u : equipoA) {
-            System.out.println("A:"+u.getUserName());
             if (u.getUserName().equals(us)) {
                 team = "A";
             }
         }
         for (Usuario u : equipoB) {
-            System.out.println("B:"+u.getUserName());
             if (u.getUserName().equals(us)) {
                 team = "B";
             }
@@ -149,21 +149,24 @@ public class Room {
 
     public synchronized boolean tomarBanderaA(String user) {
         String ans = TeamOfUser(user);
-        System.out.println("ANS: "+ans);
+        boolean res=false;
         if (!banderaATomada.get() && ans.equals("B")) {
             banderaA = user;
             banderaATomada.getAndSet(true);
+            res=true;
         }
-        return banderaATomada.get();
+        return res;
     }
 
     public synchronized boolean tomarBanderaB(String user) {
+        boolean res=false;
         String ans = TeamOfUser(user);
         if (!banderaBTomada.get() && ans.equals("A")) {
             banderaB = user;
             banderaBTomada.getAndSet(true);
+            res=true;
         }
-        return banderaBTomada.get();
+        return res;
     }
 
     
@@ -171,9 +174,9 @@ public class Room {
     public synchronized boolean puntuarA(String user) {
         boolean ans=false;
         if (!banderaATomada.get() && banderaB.equals(user)) {
-            banderaB = "";
-            banderaBTomada.getAndSet(false);
             puntajeEquipoA.getAndAdd(1);
+            if(puntuacionesEquipoA.containsKey(user)){puntuacionesEquipoA.putIfAbsent(user,puntuacionesEquipoA.get(user)+1);}
+            else{puntuacionesEquipoA.putIfAbsent(user,1);}
             ans=true;
         }
         return ans;
@@ -182,9 +185,9 @@ public class Room {
     public synchronized boolean puntuarB(String user) {
         boolean ans=false;
         if (!banderaBTomada.get() && banderaA.equals(user)) {
-            banderaA = "";
-            banderaATomada.getAndSet(false);
             puntajeEquipoB.getAndAdd(1);
+            if(puntuacionesEquipoB.containsKey(user)){puntuacionesEquipoB.putIfAbsent(user,puntuacionesEquipoB.get(user)+1);}
+            else{puntuacionesEquipoB.putIfAbsent(user,1);}
             ans=true;
         }
         return ans;

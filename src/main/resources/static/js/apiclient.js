@@ -65,42 +65,42 @@ var apiclient = (function () {
         },
         postBanderaA: function (room,user) {
             return $.ajax({
-                url: "/CamposDeGuerra/Rooms/"+room+"/Bandera/A/"+user, 
+                url: "/CamposDeGuerra/Rooms/"+room+"/Banderas/A", 
                 type: "POST", 
                 data: JSON.stringify(user), 
                 contentType: "application/json"});
         }, 
         postBanderaB: function (room,user) {
             return $.ajax({
-                url: "/CamposDeGuerra/Rooms/"+room+"/Bandera/B/"+user, 
+                url: "/CamposDeGuerra/Rooms/"+room+"/Banderas/B", 
                 type: "POST", 
                 data: JSON.stringify(user), 
                 contentType: "application/json"});
         }, 
         postPuntuarBanderaA: function (room,user) {
             return $.ajax({
-                url: "/CamposDeGuerra/Rooms/"+room+"/Bandera/A/Puntuar", 
+                url: "/CamposDeGuerra/Rooms/"+room+"/Banderas/A/Puntuaciones", 
                 type: "POST", 
-                data: JSON.stringify(user), 
+                data: JSON.stringify(user),
                 contentType: "application/json"});
         }, 
         postPuntuarBanderaB: function (room,user) {
             return $.ajax({
-                url: "/CamposDeGuerra/Rooms/"+room+"/Bandera/B/Puntuar", 
+                url: "/CamposDeGuerra/Rooms/"+room+"/Banderas/B/Puntuaciones", 
                 type: "POST", 
                 data: JSON.stringify(user), 
                 contentType: "application/json"});
         },
         deleteSoltarBanderaA: function (room,user) {
             return $.ajax({
-                url: "/CamposDeGuerra/Rooms/"+room+"/Bandera/A", 
+                url: "/CamposDeGuerra/Rooms/"+room+"/Banderas/A", 
                 type: "DELETE", 
                 data: JSON.stringify(user), 
                 contentType: "application/json"});
         }, 
         deleteSoltarBanderaB: function (room,user) {
             return $.ajax({
-                url: "/CamposDeGuerra/Rooms/"+room+"/Bandera/B", 
+                url: "/CamposDeGuerra/Rooms/"+room+"/Banderas/B", 
                 type: "DELETE", 
                 data: JSON.stringify(user), 
                 contentType: "application/json"});

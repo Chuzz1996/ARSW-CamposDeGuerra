@@ -5,15 +5,11 @@
  */
 package edu.eci.arsw.camposdeguerra.mom;
 
-import ch.qos.logback.core.CoreConstants;
 import edu.eci.arsw.camposdeguerra.model.Bullet;
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.impl.InMemoryCamposDeGuerraRoomPersistence;
-import edu.eci.arsw.camposdeguerra.services.CamposDeGuerraServices;
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -42,32 +38,31 @@ public class STOMPMessagesHandler {
         if (estado.equals("listo")) {
             if (personasEnsalas.containsKey(idSala)) {
                 AtomicInteger temp = personasEnsalas.get(idSala);
-                temp.addAndGet(1);
-                msgt.convertAndSend("/topic/sala." + idSala + "/pos",temp.get());
+                msgt.convertAndSend("/topic/sala." + idSala + "/pos", temp.addAndGet(1));
                 personasEnsalas.putIfAbsent(idSala, temp);
             } else {
                 AtomicInteger temp = new AtomicInteger(1);
-                msgt.convertAndSend("/topic/sala." + idSala + "/pos",temp.get());
                 personasEnsalas.putIfAbsent(idSala, temp);
+                msgt.convertAndSend("/topic/sala." + idSala + "/pos", temp.get());
                 estadoSalas.putIfAbsent(idSala, "nojugando");
             }
-            if (personasEnsalas.get(idSala).get() >= 1 && estadoSalas.get(idSala).equals("nojugando")) {
+            if (personasEnsalas.get(idSala).get() >= 4 && estadoSalas.get(idSala).equals("nojugando")) {
                 msgt.convertAndSend("/topic/sala." + idSala, "Pueden Comenzar");
                 estadoSalas.replace(idSala, "jugando");
                 Timer temp = new Timer();
                 temp.schedule(new java.util.TimerTask() {
                     @Override
                     public void run() {
-                        msgt.convertAndSend("/topic/sala." + idSala + "/endGame","Termino el juego");
+                        msgt.convertAndSend("/topic/sala." + idSala + "/endGame", "Termino el juego");
                     }
                 }, 950000);
                 controlTiempo.putIfAbsent(idSala, temp);
-            }
-            else if (personasEnsalas.get(idSala).get() >= 4 && estadoSalas.get(idSala).equals("jugando")) {
+            } else if (personasEnsalas.get(idSala).get() >= 4 && estadoSalas.get(idSala).equals("jugando")) {
                 msgt.convertAndSend("/topic/sala." + idSala, "Pueden Comenzar");
             }
         }
     }
+
 
     @MessageMapping("/sala.{idSala}/bullets")
     public void reportarBala(Bullet b, @DestinationVariable Integer idSala) throws Exception {
@@ -84,5 +79,3 @@ public class STOMPMessagesHandler {
         msgt.convertAndSend("/topic/sala." + idSala + "/B", u);
     }
 }
-
-
