@@ -7,6 +7,7 @@ package edu.eci.arsw.camposdeguerra.persistence;
 
 
 import edu.eci.arsw.camposdeguerra.model.Usuario;
+import java.util.List;
 import java.util.Set;
 
 
@@ -104,5 +105,7 @@ public interface CamposDeGuerraRoomPersistence {
     public  void soltarBanderaB(String user,Integer room) throws CamposDeGuerraNotFoundException;
     
     public  void soltarBanderaA(String user,Integer room) throws CamposDeGuerraNotFoundException;
+    
+    public List<Integer> obtenerScorer(Integer room) throws CamposDeGuerraNotFoundException;
 
 }

@@ -1,4 +1,4 @@
-/* global  updateBullets, graficarBalas, graficarBalaOponente, actualizarTrayectoriaBalas, send, graficarExplosion, graficarBala, updateOponents, updateAliados, graficarBandera, checkBandera, checkSoltarBandera, checkPostPoint, checkGetBandera */
+/* global  updateBullets, graficarBalas, graficarBalaOponente, actualizarTrayectoriaBalas, send, graficarExplosion, graficarBala, updateOponents, updateAliados, graficarBandera, checkBandera, checkSoltarBandera, checkPostPoint, checkGetBandera, getscorer */
 
 var juego = (function () {
 
@@ -52,6 +52,14 @@ var juego = (function () {
 
         }
     }
+    
+    class Score {
+        constructor(scorerA,scorerB) {
+            this.scorerA = scorerA;
+            this.scorerB = scorerB;
+
+        }
+    }
 
     var myroom;
     var myGamePiece;
@@ -68,14 +76,9 @@ var juego = (function () {
     var directionImageShoot = "/images/bullet";
     var directionBandera = "/images/bandera";
     var directionShoot = 1;
-    var puntosA = 0;
-    var puntosB = 0;
+    var puntos;
 
 
-    var centesimas = 0;
-    var segundos = 0;
-    var minutos = 0;
-    var horas = 0;
 
 
 
@@ -127,12 +130,30 @@ var juego = (function () {
 
     };
 
+    var updateVidaOtherUser = function (o) {
+        if (o.vida > 0) {
+            var ctx = myGameArea.context;
+            ctx.drawImage(o.image, o.x, o.y, o.width, o.height);
+            ctx.font = "10px Verdana";
+            var gradient = ctx.createLinearGradient(0, 0, myGameArea.canvas.width, 0);
+            if (o.equipo === "A") {
+                gradient.addColorStop("1.0", "blue");
+            } else {
+                gradient.addColorStop("1.0", "red");
+            }
+            ctx.fillStyle = gradient;
+            ctx.fillText(o.propietario, o.x, o.y + o.height + 10);
+            ctx.fillText(o.vida, o.x, o.y + o.height + 20);
+        }
+    };
+
     var updateOponents = function () {
         //Dibujar Oponentes
         oponents.map(function (o) {
             if (o.vida > 0) {
                 var ctx = myGameArea.context;
                 ctx.drawImage(o.image, o.x, o.y, o.width, o.height);
+                updateVidaOtherUser(o);
             }
         });
     };
@@ -142,6 +163,7 @@ var juego = (function () {
             if (a.vida > 0) {
                 var ctx = myGameArea.context;
                 ctx.drawImage(a.image, a.x, a.y, a.width, a.height);
+                updateVidaOtherUser(a);
             }
         });
     };
@@ -190,56 +212,6 @@ var juego = (function () {
         return obtenerBandera;
     };
 
-    var getAllUsers = function () {
-        var getPromise = apiclient.getRoom(0, function (lista1) {
-            reducir = function (objeto) {
-                return objeto2 = {"userName": objeto.userName, "equipo": objeto.equipo, "puntaje": objeto.puntaje};
-
-            };
-            $("#table1").find("tr:gt(0)").remove();
-            lista = lista1.map(reducir);
-            anadir = function (objeto) {
-                $(document).ready(function () {
-                    if (puntosA > puntosB) {
-                        if (objeto.equipo === "A") {
-                            $('#table1').append("<tr class='success' ><th>" + objeto.userName + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
-                        } else {
-                            $('#table1').append("<tr class='danger' ><th>" + objeto.userName + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
-                        }
-
-                    } else if (puntosA < puntosB) {
-                        if (objeto.equipo === "B") {
-                            $('#table1').append("<tr class='success' ><th>" + objeto.userName + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
-                        } else {
-                            $('#table1').append("<tr class='danger' ><th>" + objeto.userName + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
-                        }
-                    } else {
-                        $('#table1').append("<tr class='warning' ><th>" + objeto.userName + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
-                    }
-
-                });
-            };
-            console.info(lista);
-            lista.map(anadir);
-        });
-        getPromise.then(
-                function () {
-                    if (puntosA > puntosB) {
-                        alert("Gano el equipo A!");
-
-
-                    } else if (puntosA < puntosB) {
-                        alert("Gano el equipo B!");
-                    } else {
-                        alert("Ningun equipo gano, se considera empate!");
-                    }
-                },
-                function () {
-                    alert("ERROR! no Cargo Todos Usuario");
-                }
-        );
-        return getPromise;
-    };
 
     var checkPostPoint = function () {
         var postPoint;
@@ -252,13 +224,12 @@ var juego = (function () {
                 function () {
                     alert("Has Realizado un Punto!!!");
                     myGamePiece.hasban = false;
-                    if(myteam==="A"){
-                        puntosA += 1;
-                    }else{
-                        puntosB += 1;
+                    if (myteam === "A") {
+                        puntos.scorerA += 1;
+                    } else {
+                        puntos.scorerB += 1;
                     }
-                    document.getElementById("Puntaje").innerHTML = "Puntaje: " + puntosA + "-" + puntosB;
-                    
+
                 },
                 function () {
                     alert("Tu bandera fue robada,ve y buscala!!!");
@@ -266,6 +237,7 @@ var juego = (function () {
         );
         return postPoint;
     };
+
 
     var checkSoltarBandera = function () {
         var deleteBandera;
@@ -287,9 +259,6 @@ var juego = (function () {
                         enemyBandera.x = Math.round(myGameArea.canvas.width * 0.10);
                         enemyBandera.y = Math.round(myGameArea.canvas.height * 0.50);
                     }
-                    if(myGamePiece.vida<0){
-                        
-                    }
                     stompClient.send("/topic/sala." + myroom + "/bandera", {}, JSON.stringify(enemyBandera));
 
                 },
@@ -298,6 +267,24 @@ var juego = (function () {
                 }
         );
         return deleteBandera;
+    };
+    
+    var getscorer = function () {
+        var getPromise = apiclient.getScorer(sessionStorage.getItem("idRoom"),function(data) {
+            puntos.scoreA=data[0];
+            puntos.scoreB=data[1];
+        });
+
+        getPromise.then(
+                function () {
+                    console.info("Se obtuvo el Scorer");
+
+                },
+                function () {
+                    console.info("No Se obtuvo el Scorer");
+                }
+        );
+        return getPromise;
     };
 
     var actualizarTrayectoriaBalas = function () {
@@ -344,49 +331,6 @@ var juego = (function () {
     }
     ;
 
-    //Manejo del tiempo en el canvas
-
-    function inicio() {
-        control = setInterval(cronometro, 10);
-    }
-
-    function cronometro() {
-        if (centesimas < 99) {
-            centesimas++;
-            if (centesimas < 10) {
-                centesimas = "0" + centesimas;
-            }
-        }
-        if (centesimas === 99) {
-            centesimas = -1;
-        }
-        if (centesimas === 0) {
-            segundos++;
-            if (segundos < 10) {
-                segundos = "0" + segundos;
-            }
-            document.getElementById("Segundos").innerHTML = "Tiempo " + minutos + ":" + segundos;
-        }
-        if (segundos === 59) {
-            segundos = -1;
-        }
-        if ((centesimas === 0) && (segundos === 0)) {
-            minutos++;
-            if (minutos < 10) {
-                minutos = "0" + minutos;
-            }
-            document.getElementById("Segundos").innerHTML = "Tiempo " + minutos + ":" + segundos;
-        }
-        if (minutos === 59) {
-            minutos = -1;
-        }
-        if ((centesimas === 0) && (segundos === 0) && (minutos === 0)) {
-            horas++;
-            if (horas < 10) {
-                horas = "0" + horas;
-            }
-        }
-    }
 
     function Component(width, height, color, x, y, type, bullets, direction, propietario, equipo, vida) {
         this.gamearea = myGameArea;
@@ -409,7 +353,7 @@ var juego = (function () {
 
         this.newPos = function () {
             myGameArea.context.fillStyle = "#A9A9A9";
-            myGameArea.context.fillRect(this.x, this.y, 50, 50);
+            myGameArea.context.fillRect(this.x, this.y, 50, 80);
             this.x += this.speedX;
             this.y += this.speedY;
             if (this.crashWith(enemyBandera, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.04)) && this.hasban === false) {
@@ -424,7 +368,8 @@ var juego = (function () {
             if (this.hasban && this.crashWith(myBandera, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.04))) {
                 checkPostPoint().then(checkSoltarBandera);
             }
-
+            graficarBandera(myBandera);
+            graficarBandera(enemyBandera);
 
         };
 
@@ -433,20 +378,10 @@ var juego = (function () {
             var ctx = myGameArea.context;
             if (this.vida > 0) {
                 ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-            
-            //duda de donde va
+                updateVidaOtherUser(this);
             } else if (this.vida < 0 && this.hasban) {
-                if (myteam === "A") {
-                    enemyBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.90), Math.round(myGameArea.canvas.height * 0.50), enemyteam);
-                } else {
-                    enemyBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.10), Math.round(myGameArea.canvas.height * 0.50), enemyteam);
-                }
-                this.hasban=false;
                 checkSoltarBandera();
-                stompClient.send("/topic/sala." + myroom + "/bandera", {}, JSON.stringify(enemyBandera));
-                
             }
-            //
             graficarBandera(myBandera);
             graficarBandera(enemyBandera);
         };
@@ -460,10 +395,12 @@ var juego = (function () {
             var othertop = otherobj.y;
             var otherbottom = otherobj.y + h;
             var crash = true;
-            this.vida -= 1;
+            if (otherobj !== myBandera && otherobj !== enemyBandera) {
+
+                this.vida -= 1;
+            }
             if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
                 crash = false;
-                this.vida += 1;
             }
             return crash;
         };
@@ -471,9 +408,24 @@ var juego = (function () {
 
     var send = function () {
         var maquina = new Maquina(myGamePiece.x, myGamePiece.y, myGamePiece.direction, []);
-        var usuario = new Usuario(sessionStorage.getItem("user"), maquina, puntaje, myteam, myGamePiece.vida);
-        stompClient.send("/app/sala." + myroom + "/" + myteam, {}, JSON.stringify(usuario));
-        stompClient.send("/app/sala." + myroom + "/" + enemyteam, {}, JSON.stringify(usuario));
+        var usuarioA;
+        var usuarioB;
+        var vidaenemigo;
+        if (myGamePiece.vida > 0) {
+            vidaenemigo = 999;
+        } else {
+            vidaenemigo = 0;
+        }
+        if (myteam === "A") {
+            usuarioA = new Usuario(sessionStorage.getItem("user"), maquina, puntaje, myteam, myGamePiece.vida);
+            usuarioB = new Usuario(sessionStorage.getItem("user"), maquina, puntaje, myteam, vidaenemigo);
+        } else {
+            usuarioA = new Usuario(sessionStorage.getItem("user"), maquina, puntaje, myteam, vidaenemigo);
+            usuarioB = new Usuario(sessionStorage.getItem("user"), maquina, puntaje, myteam, myGamePiece.vida);
+        }
+        stompClient.send("/app/sala." + myroom + "/" + myteam, {}, JSON.stringify(usuarioA));
+        stompClient.send("/app/sala." + myroom + "/" + enemyteam, {}, JSON.stringify(usuarioB));
+        stompClient.send("/topic/sala." + myroom + "/puntaje", {}, JSON.stringify(puntos));
         if (myGamePiece.hasban) {
             stompClient.send("/topic/sala." + myroom + "/bandera", {}, JSON.stringify(enemyBandera));
         }
@@ -594,6 +546,8 @@ var juego = (function () {
             stompClient.connect({}, function (frame) {
 
                 stompClient.subscribe("/topic/sala." + myroom + "/endGame", function (evenbody) {
+                    sessionStorage.setItem("PuntosA",puntos.scorerA);sessionStorage.setItem("PuntosB",puntos.scorerB);
+                    stompClient.disconnect();
                     var newURL = window.location.protocol + "//" + window.location.host + "/" + "endgame.html";
                     window.location.replace(newURL);
                 });
@@ -604,7 +558,7 @@ var juego = (function () {
                     for (var i = 0; i < aliados.length && ban === 0; i++) {
                         if (aliados[i].propietario === object.userName) {
                             myGameArea.context.fillStyle = "#A9A9A9";
-                            myGameArea.context.fillRect(aliados[i].x, aliados[i].y, 50, 50);
+                            myGameArea.context.fillRect(aliados[i].x, aliados[i].y, 50, 80);
                             ban = 1;
                             var a = new Component(50, 50, directionImageTank + object.tipoMaquina.direction + myteam + ".png", object.tipoMaquina.x, object.tipoMaquina.y, "image", [], object.tipoMaquina.direction, object.userName, myteam, object.vida);
                             aliados[i] = a;
@@ -623,7 +577,7 @@ var juego = (function () {
                     for (var i = 0; i < oponents.length && ban === 0; i++) {
                         if (oponents[i].propietario === object.userName) {
                             myGameArea.context.fillStyle = "#A9A9A9";
-                            myGameArea.context.fillRect(oponents[i].x, oponents[i].y, 50, 50);
+                            myGameArea.context.fillRect(oponents[i].x, oponents[i].y, 50, 80);
                             ban = 1;
                             var o = new Component(50, 50, directionImageTank + object.tipoMaquina.direction + enemyteam + ".png", object.tipoMaquina.x, object.tipoMaquina.y, "image", [], object.tipoMaquina.direction, object.userName, enemyteam, object.vida);
                             oponents[i] = o;
@@ -659,6 +613,18 @@ var juego = (function () {
 
                     }
                     graficarBandera(object.team);
+
+
+                });
+                stompClient.subscribe('/topic/sala.' + myroom + "/puntaje", function (eventbody) {
+                    var object = JSON.parse(eventbody.body);
+                    console.info(object);
+                    puntos = object;
+                    document.getElementById("Puntaje").innerHTML = "Puntaje: " + puntos.scorerA + "-" + puntos.scorerB;
+                });
+                stompClient.subscribe('/topic/sala.' + myroom + "/tiempo", function (eventbody) {
+                    var object = eventbody.body;
+                    document.getElementById("Segundos").innerHTML = object;
                 });
             });
             myGameArea.start();
@@ -686,6 +652,8 @@ var juego = (function () {
                 }
             }
             myGamePiece = new Component(50, 50, directionImageTank + dir + myteam + ".png", x, y, "image", [], 1, sessionStorage.getItem("user"), myteam, 500);
+            puntos= new Score(0, 0);
+            getscorer();
             if (myteam === "A") {
                 myBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.10), Math.round(myGameArea.canvas.height * 0.50), myteam);
                 enemyBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.90), Math.round(myGameArea.canvas.height * 0.50), enemyteam);
@@ -696,14 +664,8 @@ var juego = (function () {
             setTimeout(function () {
                 graficarBandera(myteam);
                 graficarBandera(enemyteam);
-                inicio();
                 send();
             }, 5000);
-        },
-
-        actualizarPuntajes: function () {
-            getAllUsers();
-
         }
     };
 }());

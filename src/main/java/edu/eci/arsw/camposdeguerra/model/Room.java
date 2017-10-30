@@ -5,7 +5,11 @@
  */
 package edu.eci.arsw.camposdeguerra.model;
 
+import com.sun.jmx.remote.internal.ArrayQueue;
+import java.util.ArrayList;
+import static java.util.Collections.list;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -24,8 +28,6 @@ public class Room {
     private AtomicInteger puntajeEquipoB = new AtomicInteger(0);
     private ConcurrentLinkedQueue<Usuario> equipoA = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Usuario> equipoB = new ConcurrentLinkedQueue<>();
-    private ConcurrentHashMap<String, Integer> puntuacionesEquipoA = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<String, Integer> puntuacionesEquipoB = new ConcurrentHashMap<>();
     private Integer id;
     private String banderaA = "", banderaB = "";
     private AtomicBoolean banderaATomada = new AtomicBoolean(false), banderaBTomada = new AtomicBoolean(false);
@@ -54,7 +56,7 @@ public class Room {
     public boolean addCompetidor(Usuario us) {
         boolean agregoUser = true;
         if (equipoB.size() >= equipoA.size() && equipoA.size() < 3) {
-            equipoA.add(us); 
+            equipoA.add(us);
             us.setEquipo("A");
         } else if (equipoA.size() >= equipoB.size() && equipoB.size() < 3) {
             equipoB.add(us);
@@ -94,6 +96,12 @@ public class Room {
      *
      */
     public void clear() {
+        puntajeEquipoA.set(0);
+        puntajeEquipoB.set(0);
+        banderaA = "";
+        banderaB = "";
+        banderaATomada.getAndSet(false);
+        banderaBTomada.getAndSet(false);
         equipoA.clear();
         equipoB.clear();
     }
@@ -226,6 +234,13 @@ public class Room {
             ans = true;
         }
 
+        return ans;
+    }
+    
+    public List<Integer> obtenerScorer(){
+        ArrayList<Integer> ans = new ArrayList<>();
+        ans.add(puntajeEquipoA.get());
+        ans.add(puntajeEquipoB.get());
         return ans;
     }
 }

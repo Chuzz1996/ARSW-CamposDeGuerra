@@ -10,6 +10,7 @@ import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.impl.InMemoryCamposDeGuerraRoomPersistence;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -32,6 +33,7 @@ public class STOMPMessagesHandler {
     private final ConcurrentHashMap<Integer, AtomicInteger> personasEnsalas = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, String> estadoSalas = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, Timer> controlTiempo = new ConcurrentHashMap<>();
+    Integer timeGame=180000;
 
     @MessageMapping("/sala.{idSala}")
     public void listoParaJugar(String estado, @DestinationVariable Integer idSala) throws Exception {
@@ -54,15 +56,34 @@ public class STOMPMessagesHandler {
                     @Override
                     public void run() {
                         msgt.convertAndSend("/topic/sala." + idSala + "/endGame", "Termino el juego");
+                        personasEnsalas.remove(idSala);
+                        estadoSalas.remove(idSala);
                     }
-                }, 180000);
+                }, timeGame);
+                final int GAME_LIMIT = timeGame+2000;
+                temp.schedule(new java.util.TimerTask() {
+                    int tiempo = 0;
+
+                    public void run() {
+                        String time=String.format("%02d : %02d",
+                                TimeUnit.MILLISECONDS.toMinutes(tiempo),
+                                TimeUnit.MILLISECONDS.toSeconds(tiempo) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(tiempo))
+                        );
+                        msgt.convertAndSend("/topic/sala." + idSala + "/tiempo", time);
+                        tiempo+=1000;
+                        if (tiempo > GAME_LIMIT) {
+                            temp.cancel();
+                            controlTiempo.remove(idSala);
+                        }
+                    }
+
+                }, 0, 1000);
                 controlTiempo.putIfAbsent(idSala, temp);
             } else if (personasEnsalas.get(idSala).get() >= 4 && estadoSalas.get(idSala).equals("jugando")) {
                 msgt.convertAndSend("/topic/sala." + idSala, "Pueden Comenzar");
             }
         }
     }
-
 
     @MessageMapping("/sala.{idSala}/bullets")
     public void reportarBala(Bullet b, @DestinationVariable Integer idSala) throws Exception {

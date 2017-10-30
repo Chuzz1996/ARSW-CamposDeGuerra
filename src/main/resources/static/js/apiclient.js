@@ -63,6 +63,9 @@ var apiclient = (function () {
         getFreeRoom: function (callback) {
             return $.get("/CamposDeGuerra/Rooms/free",callback);
         },
+        getScorer: function (room,callback) {
+            return $.get("/CamposDeGuerra/Rooms/"+room+"/Scorer",callback);
+        },
         postBanderaA: function (room,user) {
             return $.ajax({
                 url: "/CamposDeGuerra/Rooms/"+room+"/Banderas/A", 

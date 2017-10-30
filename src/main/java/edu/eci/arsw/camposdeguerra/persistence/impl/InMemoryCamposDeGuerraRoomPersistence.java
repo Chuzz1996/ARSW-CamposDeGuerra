@@ -10,7 +10,9 @@ import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraRoomPersistence;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Set;
 import org.springframework.stereotype.Service;
@@ -201,6 +203,18 @@ public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoom
         else{
             throw  new CamposDeGuerraNotFoundException("La Room ingresada no existe!");
         }
+    }
+
+    @Override
+    public List<Integer> obtenerScorer(Integer room) throws CamposDeGuerraNotFoundException {
+        List<Integer> ans =new ArrayList<>();
+        if(rooms.containsKey(room)){
+            ans=rooms.get(room).obtenerScorer();
+        }
+        else{
+            throw  new CamposDeGuerraNotFoundException("La Room ingresada no existe!");
+        }
+        return ans;
     }
     
 }

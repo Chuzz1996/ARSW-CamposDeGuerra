@@ -279,7 +279,16 @@ public class CamposDeGuerraAPIController {
         }
     }
     
-    
+    @RequestMapping(path = "/Rooms/{room}/Scorer",method = RequestMethod.GET)
+    public ResponseEntity<?> getScorer(@PathVariable Integer room) {
+        try {
+            //Obtener datos
+            return new ResponseEntity<>(cdg.obtenerScorer(room), HttpStatus.ACCEPTED);
+        } catch (CamposDeGuerraNotFoundException ex) {
+            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
     
     
 }

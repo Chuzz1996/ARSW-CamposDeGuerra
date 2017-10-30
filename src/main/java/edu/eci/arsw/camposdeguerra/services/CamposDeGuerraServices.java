@@ -12,6 +12,7 @@ import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraUsuarioPersistence;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraRoomPersistence;
+import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -150,6 +151,8 @@ public class CamposDeGuerraServices {
         cdgr.soltarBanderaA(user, room);
     }
     
-    
+    public List<Integer> obtenerScorer(Integer room) throws CamposDeGuerraNotFoundException {
+        return cdgr.obtenerScorer(room);
+    }
     
 }
