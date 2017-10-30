@@ -27,3 +27,4 @@
 
   To move the tank use the keys  (w,a,s,d)
   To shoot use the key (space)
+fd
