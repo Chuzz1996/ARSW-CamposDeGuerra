@@ -1,3 +1,5 @@
+/* global apiclient */
+
 var endGame = (function () {
     var getAllUsers = function () {
         var getPromise = apiclient.getRoom(sessionStorage.getItem("idRoom"), function (lista1) {
@@ -29,20 +31,21 @@ var endGame = (function () {
             };
             lista.map(anadir);
         });
+        
         getPromise.then(
                 function () {
-                    if (puntosA > puntosB) {
-                        setTimeout(alert("Gano el equipo A!"),2000);
+                    if (sessionStorage.getItem("PuntosA") > sessionStorage.getItem("puntosB")) {
+                        //setTimeout(alert("Gano el equipo A!"),2000);
 
 
-                    } else if (puntosA < puntosB) {
-                        setTimeout(alert("Gano el equipo B!"),2000);
+                    } else if (sessionStorage.getItem("PuntosA") < sessionStorage.getItem("puntosB")) {
+                        //setTimeout(alert("Gano el equipo B!"),2000);
                     } else {
-                        setTimeout(alert("Ningun equipo gano, se considera empate!"),2000);
+                        //setTimeout(alert("Ningun equipo gano, se considera empate!"),2000);
                     }
                 },
                 function () {
-                    alert("ERROR! no Cargo Todos Usuario");
+                    //alert("ERROR! no Cargo Todos Usuario");
                 }
         );
         return getPromise;
@@ -66,7 +69,6 @@ var endGame = (function () {
     return {
     actualizarPuntajes: function () {
             getAllUsers().then(clearRoom);
-
         }
     };
 }());    

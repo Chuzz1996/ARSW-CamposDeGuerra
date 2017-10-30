@@ -54,9 +54,9 @@ var juego = (function () {
     }
     
     class Score {
-        constructor(scorerA,scorerB) {
-            this.scorerA = scorerA;
-            this.scorerB = scorerB;
+        constructor(scoreA,scoreB) {
+            this.scoreA = scoreA;
+            this.scoreB = scoreB;
 
         }
     }
@@ -225,11 +225,10 @@ var juego = (function () {
                     alert("Has Realizado un Punto!!!");
                     myGamePiece.hasban = false;
                     if (myteam === "A") {
-                        puntos.scorerA += 1;
+                        puntos.scoreA += 1;
                     } else {
-                        puntos.scorerB += 1;
+                        puntos.scoreB += 1;
                     }
-
                 },
                 function () {
                     alert("Tu bandera fue robada,ve y buscala!!!");
@@ -271,8 +270,13 @@ var juego = (function () {
     
     var getscorer = function () {
         var getPromise = apiclient.getScorer(sessionStorage.getItem("idRoom"),function(data) {
-            puntos.scoreA=data[0];
-            puntos.scoreB=data[1];
+            reducir = function (objeto) {
+                return objeto2 = {"score": objeto};
+            };
+            lista = data.map(reducir);
+            puntos.scoreA=lista[0].score;
+            puntos.scoreB=lista[1].score;
+
         });
 
         getPromise.then(
@@ -396,7 +400,6 @@ var juego = (function () {
             var otherbottom = otherobj.y + h;
             var crash = true;
             if (otherobj !== myBandera && otherobj !== enemyBandera) {
-
                 this.vida -= 1;
             }
             if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
@@ -546,7 +549,7 @@ var juego = (function () {
             stompClient.connect({}, function (frame) {
 
                 stompClient.subscribe("/topic/sala." + myroom + "/endGame", function (evenbody) {
-                    sessionStorage.setItem("PuntosA",puntos.scorerA);sessionStorage.setItem("PuntosB",puntos.scorerB);
+                    sessionStorage.setItem("PuntosA",puntos.scoreA);sessionStorage.setItem("PuntosB",puntos.scoreB);
                     stompClient.disconnect();
                     var newURL = window.location.protocol + "//" + window.location.host + "/" + "endgame.html";
                     window.location.replace(newURL);
@@ -617,10 +620,8 @@ var juego = (function () {
 
                 });
                 stompClient.subscribe('/topic/sala.' + myroom + "/puntaje", function (eventbody) {
-                    var object = JSON.parse(eventbody.body);
-                    console.info(object);
-                    puntos = object;
-                    document.getElementById("Puntaje").innerHTML = "Puntaje: " + puntos.scorerA + "-" + puntos.scorerB;
+                    getscorer().then(function (){document.getElementById("Puntaje").innerHTML = "Puntaje: " + puntos.scoreA + "-" + puntos.scoreB;});
+                    
                 });
                 stompClient.subscribe('/topic/sala.' + myroom + "/tiempo", function (eventbody) {
                     var object = eventbody.body;
@@ -653,7 +654,6 @@ var juego = (function () {
             }
             myGamePiece = new Component(50, 50, directionImageTank + dir + myteam + ".png", x, y, "image", [], 1, sessionStorage.getItem("user"), myteam, 500);
             puntos= new Score(0, 0);
-            getscorer();
             if (myteam === "A") {
                 myBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.10), Math.round(myGameArea.canvas.height * 0.50), myteam);
                 enemyBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.90), Math.round(myGameArea.canvas.height * 0.50), enemyteam);
@@ -664,7 +664,7 @@ var juego = (function () {
             setTimeout(function () {
                 graficarBandera(myteam);
                 graficarBandera(enemyteam);
-                send();
+                getscorer().then(send);
             }, 5000);
         }
     };
