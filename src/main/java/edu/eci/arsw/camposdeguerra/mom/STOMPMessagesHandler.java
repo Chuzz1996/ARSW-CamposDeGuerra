@@ -55,7 +55,7 @@ public class STOMPMessagesHandler {
                     public void run() {
                         msgt.convertAndSend("/topic/sala." + idSala + "/endGame", "Termino el juego");
                     }
-                }, 950000);
+                }, 180000);
                 controlTiempo.putIfAbsent(idSala, temp);
             } else if (personasEnsalas.get(idSala).get() >= 4 && estadoSalas.get(idSala).equals("jugando")) {
                 msgt.convertAndSend("/topic/sala." + idSala, "Pueden Comenzar");

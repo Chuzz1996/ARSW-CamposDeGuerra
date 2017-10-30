@@ -23,7 +23,7 @@ public class Usuario {
     private Maquina tipoMaquina;
     
     private String userName="";
-    private int puntaje;
+    private int puntaje=0;
     private int vida;
     private String equipo;
 

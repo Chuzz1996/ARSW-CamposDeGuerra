@@ -11,23 +11,34 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="js/apiclient.js"></script>
+        <script src="js/appSeleccion.js"></script>
         <script src="js/juego.js"></script>
         <script src="assets/js/jquery.min.js"></script>
         <script src="/webjars/sockjs-client/sockjs.min.js"></script>
         <script src="/webjars/stomp-websocket/stomp.min.js"></script>
     </head>
-
-    <body >
+    <body onload="juego.actualizarPuntajes()">
         <div class="container2">
             <!-- Nav -->
             <nav id="nav2">
                 <ul>
                     <li>
-                        <a id="live">Fin del Juego</a>
+                        <a id="live" onClick="location.href = 'seleccionPartida.html'">Select another match</a>
+                    </li>
+                    <li class="dropdown">
+                        <a onclick="appSeleccion.logout()">Logout</a>
                     </li>
                 </ul>
             </nav>
-            <div id="Game"></div> 
+            <div id="Game">
+                <table id="table1" class="table" style="width:100%">
+                        <tr>
+                            <th>User Name</th>
+                            <th>Team</th>
+                            <th>Score</th> 
+                        </tr>
+                    </table>
+            </div> 
             <!-- Footer -->
             <div id="footerJuego">
                 <ul class="icons">

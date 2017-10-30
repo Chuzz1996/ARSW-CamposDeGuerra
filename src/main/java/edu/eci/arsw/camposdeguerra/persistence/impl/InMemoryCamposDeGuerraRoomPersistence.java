@@ -123,8 +123,6 @@ public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoom
     public void setFlagARoom(String user, Integer room) throws CamposDeGuerraNotFoundException {
         boolean ans;
         if(rooms.containsKey(room)){
-            System.out.println("user: "+ user);
-            System.out.println("Room: "+room);
             ans=rooms.get(room).tomarBanderaA(user);
             if(!ans){
                 throw  new CamposDeGuerraNotFoundException("La Bandera ya fue tomada o el usuario no existe en la sala!");
@@ -195,7 +193,7 @@ public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoom
     public void soltarBanderaA(String user,Integer room) throws CamposDeGuerraNotFoundException {
         boolean ans;
         if(rooms.containsKey(room)){
-            ans=rooms.get(room).puntuarA(user);
+            ans=rooms.get(room).soltarBanderaA(user);
             if(!ans){
                 throw  new CamposDeGuerraNotFoundException("Usted no posee la bandera A!");
             }

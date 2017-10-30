@@ -68,6 +68,8 @@ var juego = (function () {
     var directionImageShoot = "/images/bullet";
     var directionBandera = "/images/bandera";
     var directionShoot = 1;
+    var puntosA = 0;
+    var puntosB = 0;
 
 
     var centesimas = 0;
@@ -178,8 +180,8 @@ var juego = (function () {
                     myGamePiece.hasban = true;
                     myGameArea.context.fillStyle = "#A9A9A9";
                     myGameArea.context.fillRect(enemyBandera.x, enemyBandera.y, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.04));
-                    enemyBandera.x=myGamePiece.x-20;
-                    enemyBandera.x=myGamePiece.y-20;
+                    enemyBandera.x = myGamePiece.x - 20;
+                    enemyBandera.x = myGamePiece.y - 20;
                 },
                 function () {
                     alert("la bandera ya fue tomada por otra persona");
@@ -188,6 +190,56 @@ var juego = (function () {
         return obtenerBandera;
     };
 
+    var getAllUsers = function () {
+        var getPromise = apiclient.getRoom(0, function (lista1) {
+            reducir = function (objeto) {
+                return objeto2 = {"userName": objeto.userName, "equipo": objeto.equipo, "puntaje": objeto.puntaje};
+
+            };
+            $("#table1").find("tr:gt(0)").remove();
+            lista = lista1.map(reducir);
+            anadir = function (objeto) {
+                $(document).ready(function () {
+                    if (puntosA > puntosB) {
+                        if (objeto.equipo === "A") {
+                            $('#table1').append("<tr class='success' ><th>" + objeto.userName + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
+                        } else {
+                            $('#table1').append("<tr class='danger' ><th>" + objeto.userName + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
+                        }
+
+                    } else if (puntosA < puntosB) {
+                        if (objeto.equipo === "B") {
+                            $('#table1').append("<tr class='success' ><th>" + objeto.userName + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
+                        } else {
+                            $('#table1').append("<tr class='danger' ><th>" + objeto.userName + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
+                        }
+                    } else {
+                        $('#table1').append("<tr class='warning' ><th>" + objeto.userName + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
+                    }
+
+                });
+            };
+            console.info(lista);
+            lista.map(anadir);
+        });
+        getPromise.then(
+                function () {
+                    if (puntosA > puntosB) {
+                        alert("Gano el equipo A!");
+
+
+                    } else if (puntosA < puntosB) {
+                        alert("Gano el equipo B!");
+                    } else {
+                        alert("Ningun equipo gano, se considera empate!");
+                    }
+                },
+                function () {
+                    alert("ERROR! no Cargo Todos Usuario");
+                }
+        );
+        return getPromise;
+    };
 
     var checkPostPoint = function () {
         var postPoint;
@@ -200,6 +252,13 @@ var juego = (function () {
                 function () {
                     alert("Has Realizado un Punto!!!");
                     myGamePiece.hasban = false;
+                    if(myteam==="A"){
+                        puntosA += 1;
+                    }else{
+                        puntosB += 1;
+                    }
+                    document.getElementById("Puntaje").innerHTML = "Puntaje: " + puntosA + "-" + puntosB;
+                    
                 },
                 function () {
                     alert("Tu bandera fue robada,ve y buscala!!!");
@@ -222,11 +281,14 @@ var juego = (function () {
                     myGameArea.context.fillStyle = "#A9A9A9";
                     myGameArea.context.fillRect(enemyBandera.x, enemyBandera.y, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.04));
                     if (myteam === "A") {
-                        enemyBandera.x = myGameArea.canvas.width - 30;
+                        enemyBandera.x = Math.round(myGameArea.canvas.width * 0.90);
                         enemyBandera.y = Math.round(myGameArea.canvas.height * 0.50);
                     } else {
-                        enemyBandera.x = 30;
+                        enemyBandera.x = Math.round(myGameArea.canvas.width * 0.10);
                         enemyBandera.y = Math.round(myGameArea.canvas.height * 0.50);
+                    }
+                    if(myGamePiece.vida<0){
+                        
                     }
                     stompClient.send("/topic/sala." + myroom + "/bandera", {}, JSON.stringify(enemyBandera));
 
@@ -371,9 +433,22 @@ var juego = (function () {
             var ctx = myGameArea.context;
             if (this.vida > 0) {
                 ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-                graficarBandera(myteam);
-                graficarBandera(enemyBandera);
+            
+            //duda de donde va
+            } else if (this.vida < 0 && this.hasban) {
+                if (myteam === "A") {
+                    enemyBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.90), Math.round(myGameArea.canvas.height * 0.50), enemyteam);
+                } else {
+                    enemyBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.10), Math.round(myGameArea.canvas.height * 0.50), enemyteam);
+                }
+                this.hasban=false;
+                checkSoltarBandera();
+                stompClient.send("/topic/sala." + myroom + "/bandera", {}, JSON.stringify(enemyBandera));
+                
             }
+            //
+            graficarBandera(myBandera);
+            graficarBandera(enemyBandera);
         };
         this.crashWith = function (otherobj, h, w) {
             var myleft = this.x;
@@ -465,7 +540,7 @@ var juego = (function () {
                     myGamePiece.speedY = 0;
                 }
                 //THE SPACE KEY   
-                else if (myGameArea.key && myGameArea.key === 32 && myGamePiece.vida > 0) {
+                else if (myGameArea.key && myGameArea.key === 32 && myGamePiece.vida > 0 && myGamePiece.shoots.length < 11) {
                     var h, w, sx, sy;
                     if (directionShoot === 3) {
                         h = 30;
@@ -581,7 +656,7 @@ var juego = (function () {
                         myGameArea.context.fillRect(enemyBandera.x, enemyBandera.y, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.04));
                         enemyBandera.x = object.x;
                         enemyBandera.y = object.y;
-                        
+
                     }
                     graficarBandera(object.team);
                 });
@@ -589,19 +664,26 @@ var juego = (function () {
             myGameArea.start();
             var x, y, dir;
             console.info(sessionStorage.getItem("pos"));
-            if(myteam === "A"){
+            if (myteam === "A") {
                 x = 30;
                 dir = "1";
-                if (sessionStorage.getItem("pos") === "1"){y = Math.round(myGameArea.canvas.height * 0.30);}
-                else if (sessionStorage.getItem("pos") === "3"){y = Math.round(myGameArea.canvas.height * 0.60);}
-                else{y = Math.round(myGameArea.canvas.height * 0.90);}
-            }
-            else{
+                if (sessionStorage.getItem("pos") === "1") {
+                    y = Math.round(myGameArea.canvas.height * 0.30);
+                } else if (sessionStorage.getItem("pos") === "3") {
+                    y = Math.round(myGameArea.canvas.height * 0.60);
+                } else {
+                    y = Math.round(myGameArea.canvas.height * 0.90);
+                }
+            } else {
                 x = myGameArea.canvas.width - 30;
                 dir = "2";
-                if (sessionStorage.getItem("pos") === "2"){y = Math.round(myGameArea.canvas.height * 0.30);}
-                else if (sessionStorage.getItem("pos") === "4"){y = Math.round(myGameArea.canvas.height * 0.60);}
-                else{y = Math.round(myGameArea.canvas.height * 0.90);}
+                if (sessionStorage.getItem("pos") === "2") {
+                    y = Math.round(myGameArea.canvas.height * 0.30);
+                } else if (sessionStorage.getItem("pos") === "4") {
+                    y = Math.round(myGameArea.canvas.height * 0.60);
+                } else {
+                    y = Math.round(myGameArea.canvas.height * 0.90);
+                }
             }
             myGamePiece = new Component(50, 50, directionImageTank + dir + myteam + ".png", x, y, "image", [], 1, sessionStorage.getItem("user"), myteam, 500);
             if (myteam === "A") {
@@ -617,6 +699,11 @@ var juego = (function () {
                 inicio();
                 send();
             }, 5000);
+        },
+
+        actualizarPuntajes: function () {
+            getAllUsers();
+
         }
     };
 }());
