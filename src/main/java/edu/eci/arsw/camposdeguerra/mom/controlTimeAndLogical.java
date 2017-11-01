@@ -17,8 +17,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
  * @author 2106913
  */
 
-
-
 public class controlTimeAndLogical {
     private final ConcurrentHashMap<Integer, AtomicInteger> personasEnsalas = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, String> estadoSalas = new ConcurrentHashMap<>();
