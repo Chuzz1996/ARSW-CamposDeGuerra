@@ -77,57 +77,58 @@ var juego = (function () {
     var directionBandera = "/images/bandera";
     var directionShoot = 1;
     var puntos;
+    var bala;
 
 
 
 
 
     var graficarBala = function (bullet) {
-        var temp2 = new Image();
-        temp2.src = directionImageShoot + bullet.direction + bullet.equipo + ".png";
+        bala.src = directionImageShoot + bullet.direction + bullet.equipo + ".png";
+        myGameArea.context.drawImage(bala, bullet.x, bullet.y, w, h);
         var h, w, sx, sy, deltaX, deltaY;
-        if (bullet.direction === 3) {
-            h = 30;
-            w = 10;
-            sx = 5;
-            sy = 10;
-            dx = 0;
-            dy = -15;
-        } else if (bullet.direction === 4) {
-            h = 30;
-            w = 10;
-            sx = 5;
-            sy = 0;
-            dx = 0;
-            dy = 15;
-        } else if (bullet.direction === 2) {
-            h = 10;
-            w = 30;
-            sx = 0;
-            sy = 0;
-            dx = 15;
-            dy = 0;
-        } else {
-            h = 10;
-            w = 30;
-            sx = 10;
-            sy = 0;
-            dx = -15;
-            dy = 0;
-        }
-        if (bullet.equipo !== myteam && myGamePiece.crashWith(bullet, h, w)) {
-            myGameArea.context.fillStyle = "#A9A9A9";
-            myGameArea.context.fillRect(bullet.x + sx + dx, bullet.y + sy + dy, w, h);
-            var temp2 = new Explocion(myGamePiece.x, myGamePiece.y);
-            stompClient.send("/topic/sala." + myroom + "/explocion", {}, JSON.stringify(temp2));
-            document.getElementById("live").innerHTML = "Vida: " + myGamePiece.vida;
+            if (bullet.direction === 3) {
+                h = 30;
+                w = 10;
+                sx = 5;
+                sy = 10;
+                dx = 0;
+                dy = -15;
+            } else if (bullet.direction === 4) {
+                h = 30;
+                w = 10;
+                sx = 5;
+                sy = 0;
+                dx = 0;
+                dy = 15;
+            } else if (bullet.direction === 2) {
+                h = 10;
+                w = 30;
+                sx = 0;
+                sy = 0;
+                dx = 15;
+                dy = 0;
+            } else {
+                h = 10;
+                w = 30;
+                sx = 10;
+                sy = 0;
+                dx = -15;
+                dy = 0;
+            }
+            if (bullet.equipo !== myteam && myGamePiece.crashWith(bullet, h, w)) {
+                myGameArea.context.fillStyle = "#A9A9A9";
+                myGameArea.context.fillRect(bullet.x + sx + dx, bullet.y + sy + dy, w, h);
+                var temp2 = new Explocion(myGamePiece.x, myGamePiece.y);
+                stompClient.send("/topic/sala." + myroom + "/explocion", {}, JSON.stringify(temp2));
+                document.getElementById("live").innerHTML = "Vida: " + myGamePiece.vida;
 
-        } else {
-            myGameArea.context.fillStyle = "#A9A9A9";
-            myGameArea.context.fillRect(bullet.x + sx + dx, bullet.y + sy + dy, w, h);
-            myGameArea.context.drawImage(temp2, bullet.x + sx, bullet.y + sy, w, h);
-        }
-
+            } else {
+                myGameArea.context.fillStyle = "#A9A9A9";
+                myGameArea.context.fillRect(bullet.x + sx + dx, bullet.y + sy + dy, w, h);
+                myGameArea.context.drawImage(bala, bullet.x + sx, bullet.y + sy, w, h);
+            }
+            setTimeout(actualizarTrayectoriaBalas(bullet),20000);
     };
 
     var updateVidaOtherUser = function (o) {
@@ -291,33 +292,21 @@ var juego = (function () {
         return getPromise;
     };
 
-    var actualizarTrayectoriaBalas = function () {
-        var temp = myGamePiece.shoots;
-        var borrar = [];
-        for (let i = 0; i < temp.length; i++) {
-            if (temp[i].dir === 3) {
-                myGamePiece.shoots[i].y += 15;
-            } else if (temp[i].dir === 4) {
-                myGamePiece.shoots[i].y -= 15;
-            } else if (temp[i].dir === 2) {
-                myGamePiece.shoots[i].x -= 15;
+    var actualizarTrayectoriaBalas = function (shoot) {
+        console.info(shoot);
+            if (shoot.direction === 3) {
+                shoot.y += 15;
+            } else if (shoot.direction === 4) {
+                shoot.y -= 15;
+            } else if (shoot.direction === 2) {
+                shoot.x -= 15;
             } else {
-                myGamePiece.shoots[i].x += 15;
+                shoot.x += 15;
             }
-            if (temp[i].x >= myGameArea.canvas.width || temp[i].x <= -50 || temp[i].y >= myGameArea.canvas.height || temp[i].y <= -50) {
-                borrar.push(i);
-            } else {
-                var temp2 = new Bulletcita(temp[i].x, temp[i].y, temp[i].dir, myteam);
-                stompClient.send("/app/sala." + myroom + "/bullets", {}, JSON.stringify(temp2));
+            if (shoot.x >= myGameArea.canvas.width || shoot.x <= -50 || shoot.y >= myGameArea.canvas.height || shoot.y <= -50) {
+                
             }
-        }
-        for (let i = 0; i < borrar.length; i++) {
-            if (i === 0) {
-                myGamePiece.shoots.splice(borrar[i], 1);
-            } else {
-                myGamePiece.shoots.splice(borrar[i] - 1, 1);
-            }
-        }
+            else{graficarBala(shoot);}
     };
 
 
@@ -332,8 +321,8 @@ var juego = (function () {
         this.height = height;
         this.x = x;
         this.y = y;
-    }
-    ;
+    };
+    
 
 
     function Component(width, height, color, x, y, type, bullets, direction, propietario, equipo, vida) {
@@ -444,7 +433,6 @@ var juego = (function () {
             this.context = this.canvas.getContext("2d");
             this.context.fillStyle = "#A9A9A9";
             this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-            this.interval = setInterval(actualizarTrayectoriaBalas, 20);
             document.getElementById("Game").appendChild(this.canvas);
             window.addEventListener("keydown", function (e) {
 
@@ -518,8 +506,8 @@ var juego = (function () {
                         sx = 30;
                         sy = 10;
                     }
-                    var temp = new Bullet(w, h, directionImageShoot + myGamePiece.direction + myteam + ".png", myGamePiece.x + sx, myGamePiece.y + sy, "image", myGamePiece.direction);
-                    myGamePiece.shoots.push(temp);
+                    var temp2 = new Bulletcita(myGamePiece.x + sx, myGamePiece.y + sy,myGamePiece.direction,myteam)
+                    stompClient.send("/app/sala." + myroom + "/bullets", {}, JSON.stringify(temp2));
                 }
 
             });
@@ -654,6 +642,7 @@ var juego = (function () {
             }
             myGamePiece = new Component(50, 50, directionImageTank + dir + myteam + ".png", x, y, "image", [], 1, sessionStorage.getItem("user"), myteam, 500);
             puntos= new Score(0, 0);
+            bala=new Image();
             if (myteam === "A") {
                 myBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.10), Math.round(myGameArea.canvas.height * 0.50), myteam);
                 enemyBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.90), Math.round(myGameArea.canvas.height * 0.50), enemyteam);

@@ -5,18 +5,12 @@
  */
 package edu.eci.arsw.camposdeguerra.model;
 
-import com.sun.jmx.remote.internal.ArrayQueue;
 import java.util.ArrayList;
-import static java.util.Collections.list;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  *

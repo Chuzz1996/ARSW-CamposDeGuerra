@@ -11,12 +11,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author 2106913
  */
 
+@Service
 public class controlTimeAndLogical {
     private final ConcurrentHashMap<Integer, AtomicInteger> personasEnsalas = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, String> estadoSalas = new ConcurrentHashMap<>();
