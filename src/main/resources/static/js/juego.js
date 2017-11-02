@@ -78,19 +78,16 @@ var juego = (function () {
     var directionShoot = 1;
     var puntos;
     var bala;
-    var min;
-    var sec;
+    var min=0;
+    var sec=0;
+    var mili=0;
 
 
-    var startTime = function (mili) {
-        console.info("--------------------------------");
-        console.info(mili);
-        console.info("--------------------------------");
-        var totalSeconds = Math.floor(mili / 1000);
-        min = Math.floor(totalSeconds / 60);
-        sec = totalSeconds - min * 60;
-        
+    var startTime = function () {
         var handler = function () {
+            var totalSeconds = Math.floor(mili / 1000);
+            min = Math.floor(totalSeconds / 60);
+            sec = totalSeconds - min * 60;
             console.info("--------------------------------");
             console.info(min);
             console.info(sec);
@@ -103,8 +100,9 @@ var juego = (function () {
                     min = 0;
                 }    
             }
+            mili=((min*60)+sec)*1000;
             if (min === 3) {
-                stompClient.send('/app/sala.' + myroom + "/tiempo", {},'end');
+                stompClient.send('/app/sala.' + myroom + "/endGame", {},'end');
             }
             document.getElementById("Segundos").innerHTML = (min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec);
         };
@@ -151,26 +149,28 @@ var juego = (function () {
             stompClient.send("/topic/sala." + myroom + "/explocion", {}, JSON.stringify(temp2));
             document.getElementById("live").innerHTML = "Vida: " + myGamePiece.vida;
         } else {
-            //myGameArea.context.fillStyle = "#A9A9A9";
-            //myGameArea.context.fillRect(bullet.x + sx + dx, bullet.y + sy + dy, w, h);
+            myGameArea.context.fillStyle = "#A9A9A9";
+            myGameArea.context.fillRect(bullet.x + dx, bullet.y + dy, w, h);
             myGameArea.context.drawImage(bala, bullet.x + sx, bullet.y + sy, w, h);
         }
-        setTimeout(actualizarTrayectoriaBalas(bullet), 40000);
+        setTimeout(function(){actualizarTrayectoriaBalas(bullet);}, 10);
+        console.info("esperando los 20 segundos");
     };
     
     var actualizarTrayectoriaBalas = function (shoot) {
-        if (shoot.direction === 3) {
-            shoot.y += 15;
-        } else if (shoot.direction === 4) {
-            shoot.y -= 15;
-        } else if (shoot.direction === 2) {
-            shoot.x -= 15;
-        } else {
-            shoot.x += 15;
-        }
-        if (shoot.x <= myGameArea.canvas.width && shoot.x >= -50 && shoot.y <= myGameArea.canvas.height && shoot.y >= -50) {
-            graficarBala(shoot);
-        }
+        console.info("pasaron los 20 segundos");
+                if (shoot.direction === 3) {
+                    shoot.y += 15;
+                } else if (shoot.direction === 4) {
+                    shoot.y -= 15;
+                } else if (shoot.direction === 2) {
+                    shoot.x -= 15;
+                } else {
+                    shoot.x += 15;
+                }
+                if (shoot.x <= myGameArea.canvas.width && shoot.x >= -50 && shoot.y <= myGameArea.canvas.height && shoot.y >= -50) {
+                    graficarBala(shoot);
+                } 
     };
     
 
@@ -387,8 +387,8 @@ var juego = (function () {
             if (this.hasban && this.crashWith(myBandera, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.04))) {
                 checkPostPoint().then(checkSoltarBandera);
             }
-            graficarBandera(myBandera);
-            graficarBandera(enemyBandera);
+            graficarBandera(myteam);
+            graficarBandera(enemyteam);
 
         };
 
@@ -401,8 +401,8 @@ var juego = (function () {
             } else if (this.vida < 0 && this.hasban) {
                 checkSoltarBandera();
             }
-            graficarBandera(myBandera);
-            graficarBandera(enemyBandera);
+            graficarBandera(myteam);
+            graficarBandera(enemyteam);
         };
         this.crashWith = function (otherobj, h, w) {
             var myleft = this.x;
@@ -414,12 +414,10 @@ var juego = (function () {
             var othertop = otherobj.y;
             var otherbottom = otherobj.y + h;
             var crash = true;
-            if (otherobj !== myBandera && otherobj !== enemyBandera) {
-                this.vida -= 1;
-            }
             if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
                 crash = false;
             }
+            if(crash && otherobj !== myBandera && otherobj !== enemyBandera){this.vida-=1;}
             return crash;
         };
     }
@@ -513,23 +511,23 @@ var juego = (function () {
                     if (directionShoot === 3) {
                         h = 30;
                         w = 10;
-                        sx = 5;
-                        sy = 30;
+                        sx = 60;
+                        sy = -20;
                     } else if (directionShoot === 4) {
                         h = 30;
                         w = 10;
-                        sx = 5;
-                        sy = -30;
+                        sx = -15;
+                        sy = -20;
                     } else if (directionShoot === 2) {
                         h = 10;
                         w = 30;
-                        sx = -30;
-                        sy = 10;
+                        sx = -60;
+                        sy = 20;
                     } else {
                         h = 10;
                         w = 30;
-                        sx = 30;
-                        sy = 10;
+                        sx = 70;
+                        sy = 20;
                     }
                     var temp2 = new Bulletcita(myGamePiece.x + sx, myGamePiece.y + sy, myGamePiece.direction, myteam)
                     stompClient.send("/app/sala." + myroom + "/bullets", {}, JSON.stringify(temp2));
@@ -638,7 +636,7 @@ var juego = (function () {
                 });
                 stompClient.subscribe('/topic/sala.' + myroom + "/tiempo", function (eventbody) {
                     var object = eventbody.body;
-                    startTime(object);
+                    mili=object;
                 });
             });
             myGameArea.start();
@@ -679,6 +677,7 @@ var juego = (function () {
                 graficarBandera(myteam);
                 graficarBandera(enemyteam);
                 getscorer().then(send);
+                startTime();
             }, 5000);
         }
     };

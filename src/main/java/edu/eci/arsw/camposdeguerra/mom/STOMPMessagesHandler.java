@@ -53,10 +53,10 @@ public class STOMPMessagesHandler {
         msgt.convertAndSend("/topic/sala." + idSala + "/B", u);
     }
     
-    @MessageMapping("/sala.{idSala}/tiempo")
+    
+    @MessageMapping("/sala.{idSala}/endGame")
     public void reportarEndGame(String ans,@DestinationVariable Integer idSala) throws Exception {
         l.gameEnded(idSala);
-        msgt.convertAndSend("/topic/sala." + idSala + "/tiempo", "ok");
+        msgt.convertAndSend("/topic/sala." + idSala + "/endGame", "ok");
     }
-    
 }
