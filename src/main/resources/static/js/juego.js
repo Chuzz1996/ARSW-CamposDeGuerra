@@ -88,10 +88,6 @@ var juego = (function () {
             var totalSeconds = Math.floor(mili / 1000);
             min = Math.floor(totalSeconds / 60);
             sec = totalSeconds - min * 60;
-            console.info("--------------------------------");
-            console.info(min);
-            console.info(sec);
-            console.info("--------------------------------");
             sec++;
             if (sec === 60) {
                 sec = 0;
@@ -116,14 +112,14 @@ var juego = (function () {
         if (bullet.direction === 3) {
             h = 30;
             w = 10;
-            sx = 5;
+            sx = 0;
             sy = 10;
             dx = 0;
             dy = -15;
         } else if (bullet.direction === 4) {
             h = 30;
             w = 10;
-            sx = 5;
+            sx = 0;
             sy = 0;
             dx = 0;
             dy = 15;
@@ -150,15 +146,13 @@ var juego = (function () {
             document.getElementById("live").innerHTML = "Vida: " + myGamePiece.vida;
         } else {
             myGameArea.context.fillStyle = "#A9A9A9";
-            myGameArea.context.fillRect(bullet.x + dx, bullet.y + dy, w, h);
+            myGameArea.context.fillRect(bullet.x +sx+dx, bullet.y +sy+dy, w, h);
             myGameArea.context.drawImage(bala, bullet.x + sx, bullet.y + sy, w, h);
         }
         setTimeout(function(){actualizarTrayectoriaBalas(bullet);}, 10);
-        console.info("esperando los 20 segundos");
     };
     
     var actualizarTrayectoriaBalas = function (shoot) {
-        console.info("pasaron los 20 segundos");
                 if (shoot.direction === 3) {
                     shoot.y += 15;
                 } else if (shoot.direction === 4) {
@@ -511,13 +505,13 @@ var juego = (function () {
                     if (directionShoot === 3) {
                         h = 30;
                         w = 10;
-                        sx = 60;
-                        sy = -20;
+                        sx = 20;
+                        sy = 60;
                     } else if (directionShoot === 4) {
                         h = 30;
                         w = 10;
-                        sx = -15;
-                        sy = -20;
+                        sx = 20;
+                        sy = -60;
                     } else if (directionShoot === 2) {
                         h = 10;
                         w = 30;
@@ -641,7 +635,6 @@ var juego = (function () {
             });
             myGameArea.start();
             var x, y, dir;
-            console.info(sessionStorage.getItem("pos"));
             if (myteam === "A") {
                 x = 30;
                 dir = "1";

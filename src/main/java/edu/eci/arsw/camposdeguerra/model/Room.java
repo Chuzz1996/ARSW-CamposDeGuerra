@@ -128,7 +128,7 @@ public class Room {
         HashSet<Usuario> allCompetitors = new HashSet<>();
         for (Usuario us : equipoA) {
             allCompetitors.add(us);
-        };
+        }
         for (Usuario us : equipoB) {
             allCompetitors.add(us);
         }

@@ -7,7 +7,6 @@ package edu.eci.arsw.camposdeguerra.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
