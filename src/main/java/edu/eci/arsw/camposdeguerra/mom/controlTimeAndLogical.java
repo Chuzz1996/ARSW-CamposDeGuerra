@@ -23,8 +23,8 @@ public class controlTimeAndLogical {
     private final ConcurrentHashMap<Integer, AtomicInteger> personasEnsalas = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, String> estadoSalas = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, Timer> controlTiempo = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Integer, Integer> tiempoSalas = new ConcurrentHashMap<>();
     Integer timeGame = 180000;
-    @Autowired private SimpMessagingTemplate msgt;
     
     public Integer listoParaJugar(String estado, Integer idSala) throws Exception {
         Integer pos=0;
@@ -48,19 +48,19 @@ public class controlTimeAndLogical {
         if (personasEnsalas.get(idSala).get() >= 4 && estadoSalas.get(idSala).equals("nojugando")) {
             ans = true;
             estadoSalas.replace(idSala, "jugando");
+            tiempoSalas.putIfAbsent(idSala,0);
             Timer temp = new Timer();
-            temp.schedule(new java.util.TimerTask() {@Override public void run() {msgt.convertAndSend("/topic/sala." + idSala + "/endGame", "Termino el juego");personasEnsalas.remove(idSala);estadoSalas.remove(idSala);}}, timeGame);
             final int GAME_LIMIT = timeGame + 2000;
             temp.schedule(new java.util.TimerTask() {
                 int tiempo = 0;
                 @Override
                 public void run() {
-                    String time = String.format("%02d : %02d", TimeUnit.MILLISECONDS.toMinutes(tiempo), TimeUnit.MILLISECONDS.toSeconds(tiempo) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(tiempo)));
-                    msgt.convertAndSend("/topic/sala." + idSala + "/tiempo", time);
                     tiempo += 1000;
+                    tiempoSalas.replace(idSala,tiempo);
                     if (tiempo > GAME_LIMIT) {
                         temp.cancel();
                         controlTiempo.remove(idSala);
+                        tiempoSalas.remove(idSala);
                     }
                 }
             }, 0, 1000);
@@ -71,6 +71,21 @@ public class controlTimeAndLogical {
         }
         return ans;
     }
+    
+    public Integer getTime(Integer idSala){
+        return tiempoSalas.get(idSala);
+    }
+    
+    public void gameEnded (Integer idSala){
+        if(personasEnsalas.containsKey(idSala)){
+            estadoSalas.remove(idSala);
+            personasEnsalas.remove(idSala);
+        }
+        
+    }
+    
+    
+    
 
 
 }

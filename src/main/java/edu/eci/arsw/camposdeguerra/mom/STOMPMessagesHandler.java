@@ -34,6 +34,7 @@ public class STOMPMessagesHandler {
         msgt.convertAndSend("/topic/sala." + idSala + "/pos",pos);
         if (l.roomFull(idSala)) {
             msgt.convertAndSend("/topic/sala." + idSala, "Pueden comensar");
+            msgt.convertAndSend("/topic/sala." + idSala + "/tiempo", l.getTime(idSala));
         }
     }
 
@@ -51,4 +52,11 @@ public class STOMPMessagesHandler {
     public void reportarInfoTeamB(Usuario u, @DestinationVariable Integer idSala) throws Exception {
         msgt.convertAndSend("/topic/sala." + idSala + "/B", u);
     }
+    
+    @MessageMapping("/sala.{idSala}/tiempo")
+    public void reportarEndGame(String ans,@DestinationVariable Integer idSala) throws Exception {
+        l.gameEnded(idSala);
+        msgt.convertAndSend("/topic/sala." + idSala + "/tiempo", "ok");
+    }
+    
 }

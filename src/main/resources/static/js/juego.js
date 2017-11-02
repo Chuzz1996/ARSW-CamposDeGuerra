@@ -1,4 +1,4 @@
-/* global  updateBullets, graficarBalas, graficarBalaOponente, actualizarTrayectoriaBalas, send, graficarExplosion, graficarBala, updateOponents, updateAliados, graficarBandera, checkBandera, checkSoltarBandera, checkPostPoint, checkGetBandera, getscorer */
+/* global  updateBullets, graficarBalas, graficarBalaOponente, actualizarTrayectoriaBalas, send, graficarExplosion, graficarBala, updateOponents, updateAliados, graficarBandera, checkBandera, checkSoltarBandera, checkPostPoint, checkGetBandera, getscorer, startTime, updateVidaOtherUser */
 
 var juego = (function () {
 
@@ -52,9 +52,9 @@ var juego = (function () {
 
         }
     }
-    
+
     class Score {
-        constructor(scoreA,scoreB) {
+        constructor(scoreA, scoreB) {
             this.scoreA = scoreA;
             this.scoreB = scoreB;
 
@@ -78,58 +78,101 @@ var juego = (function () {
     var directionShoot = 1;
     var puntos;
     var bala;
+    var min;
+    var sec;
 
 
-
+    var startTime = function (mili) {
+        console.info("--------------------------------");
+        console.info(mili);
+        console.info("--------------------------------");
+        var totalSeconds = Math.floor(mili / 1000);
+        min = Math.floor(totalSeconds / 60);
+        sec = totalSeconds - minutes * 60;
+        
+        var handler = function () {
+            console.info("--------------------------------");
+            console.info(min);
+            console.info(sec);
+            console.info("--------------------------------");
+            sec++;
+            if (sec === 60) {
+                sec = 0;
+                min++;
+                if (min === 60){
+                    min = 0;
+                }    
+            }
+            if (min === 3) {
+                stompClient.send('/app/sala.' + myroom + "/tiempo", {},'end');
+            }
+            document.getElementById("Segundos").innerHTML = (min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec);
+        };
+        setInterval(handler, 1000);
+    };
 
 
     var graficarBala = function (bullet) {
         bala.src = directionImageShoot + bullet.direction + bullet.equipo + ".png";
-        myGameArea.context.drawImage(bala, bullet.x, bullet.y, w, h);
-        var h, w, sx, sy, deltaX, deltaY;
-            if (bullet.direction === 3) {
-                h = 30;
-                w = 10;
-                sx = 5;
-                sy = 10;
-                dx = 0;
-                dy = -15;
-            } else if (bullet.direction === 4) {
-                h = 30;
-                w = 10;
-                sx = 5;
-                sy = 0;
-                dx = 0;
-                dy = 15;
-            } else if (bullet.direction === 2) {
-                h = 10;
-                w = 30;
-                sx = 0;
-                sy = 0;
-                dx = 15;
-                dy = 0;
-            } else {
-                h = 10;
-                w = 30;
-                sx = 10;
-                sy = 0;
-                dx = -15;
-                dy = 0;
-            }
-            if (bullet.equipo !== myteam && myGamePiece.crashWith(bullet, h, w)) {
-                myGameArea.context.fillStyle = "#A9A9A9";
-                myGameArea.context.fillRect(bullet.x + sx + dx, bullet.y + sy + dy, w, h);
-                var temp2 = new Explocion(myGamePiece.x, myGamePiece.y);
-                stompClient.send("/topic/sala." + myroom + "/explocion", {}, JSON.stringify(temp2));
-                document.getElementById("live").innerHTML = "Vida: " + myGamePiece.vida;
-
-            } else {
-                myGameArea.context.fillStyle = "#A9A9A9";
-                myGameArea.context.fillRect(bullet.x + sx + dx, bullet.y + sy + dy, w, h);
-                myGameArea.context.drawImage(bala, bullet.x + sx, bullet.y + sy, w, h);
-            }
-            setTimeout(actualizarTrayectoriaBalas(bullet),20000);
+        var h, w, sx, sy, dx, dy;
+        if (bullet.direction === 3) {
+            h = 30;
+            w = 10;
+            sx = 5;
+            sy = 10;
+            dx = 0;
+            dy = -15;
+        } else if (bullet.direction === 4) {
+            h = 30;
+            w = 10;
+            sx = 5;
+            sy = 0;
+            dx = 0;
+            dy = 15;
+        } else if (bullet.direction === 2) {
+            h = 10;
+            w = 30;
+            sx = 0;
+            sy = 0;
+            dx = 15;
+            dy = 0;
+        } else {
+            h = 10;
+            w = 30;
+            sx = 10;
+            sy = 0;
+            dx = -15;
+            dy = 0;
+        }
+        if (bullet.equipo !== myteam && myGamePiece.crashWith(bullet, h, w)) {
+            myGameArea.context.fillStyle = "#A9A9A9";
+            myGameArea.context.fillRect(bullet.x + sx + dx, bullet.y + sy + dy, w, h);
+            var temp2 = new Explocion(myGamePiece.x, myGamePiece.y);
+            stompClient.send("/topic/sala." + myroom + "/explocion", {}, JSON.stringify(temp2));
+            document.getElementById("live").innerHTML = "Vida: " + myGamePiece.vida;
+        } else {
+            //myGameArea.context.fillStyle = "#A9A9A9";
+            //myGameArea.context.fillRect(bullet.x + sx + dx, bullet.y + sy + dy, w, h);
+            myGameArea.context.drawImage(bala, bullet.x + sx, bullet.y + sy, w, h);
+        }
+        setTimeout(actualizarTrayectoriaBalas(bullet), 40000);
     };
+    
+    var actualizarTrayectoriaBalas = function (shoot) {
+        if (shoot.direction === 3) {
+            shoot.y += 15;
+        } else if (shoot.direction === 4) {
+            shoot.y -= 15;
+        } else if (shoot.direction === 2) {
+            shoot.x -= 15;
+        } else {
+            shoot.x += 15;
+        }
+        if (shoot.x <= myGameArea.canvas.width && shoot.x >= -50 && shoot.y <= myGameArea.canvas.height && shoot.y >= -50) {
+            graficarBala(shoot);
+        }
+    };
+    
 
     var updateVidaOtherUser = function (o) {
         if (o.vida > 0) {
@@ -230,6 +273,7 @@ var juego = (function () {
                     } else {
                         puntos.scoreB += 1;
                     }
+                    stompClient.send("/topic/sala." + myroom + "/puntaje", {}, JSON.stringify(puntos));
                 },
                 function () {
                     alert("Tu bandera fue robada,ve y buscala!!!");
@@ -268,22 +312,19 @@ var juego = (function () {
         );
         return deleteBandera;
     };
-    
+
     var getscorer = function () {
-        var getPromise = apiclient.getScorer(sessionStorage.getItem("idRoom"),function(data) {
+        var getPromise = apiclient.getScorer(sessionStorage.getItem("idRoom"), function (data) {
             reducir = function (objeto) {
                 return objeto2 = {"score": objeto};
             };
             lista = data.map(reducir);
-            puntos.scoreA=lista[0].score;
-            puntos.scoreB=lista[1].score;
-
+            puntos.scoreA = lista[0].score;
+            puntos.scoreB = lista[1].score;
         });
-
         getPromise.then(
                 function () {
                     console.info("Se obtuvo el Scorer");
-
                 },
                 function () {
                     console.info("No Se obtuvo el Scorer");
@@ -292,22 +333,6 @@ var juego = (function () {
         return getPromise;
     };
 
-    var actualizarTrayectoriaBalas = function (shoot) {
-        console.info(shoot);
-            if (shoot.direction === 3) {
-                shoot.y += 15;
-            } else if (shoot.direction === 4) {
-                shoot.y -= 15;
-            } else if (shoot.direction === 2) {
-                shoot.x -= 15;
-            } else {
-                shoot.x += 15;
-            }
-            if (shoot.x >= myGameArea.canvas.width || shoot.x <= -50 || shoot.y >= myGameArea.canvas.height || shoot.y <= -50) {
-                
-            }
-            else{graficarBala(shoot);}
-    };
 
 
     function Bullet(width, height, color, x, y, type, dir) {
@@ -321,8 +346,9 @@ var juego = (function () {
         this.height = height;
         this.x = x;
         this.y = y;
-    };
-    
+    }
+    ;
+
 
 
     function Component(width, height, color, x, y, type, bullets, direction, propietario, equipo, vida) {
@@ -417,7 +443,6 @@ var juego = (function () {
         }
         stompClient.send("/app/sala." + myroom + "/" + myteam, {}, JSON.stringify(usuarioA));
         stompClient.send("/app/sala." + myroom + "/" + enemyteam, {}, JSON.stringify(usuarioB));
-        stompClient.send("/topic/sala." + myroom + "/puntaje", {}, JSON.stringify(puntos));
         if (myGamePiece.hasban) {
             stompClient.send("/topic/sala." + myroom + "/bandera", {}, JSON.stringify(enemyBandera));
         }
@@ -439,7 +464,7 @@ var juego = (function () {
                 myGameArea.key = e.keyCode;
 
                 //THE A KEY
-                if (myGameArea.key && myGameArea.key === 65 && myGamePiece.vida > 0) {
+                if (myGameArea.key && myGameArea.key === 65 ) {
                     myGamePiece.speedX = -10;
                     myGamePiece.image.src = directionImageTank + "2" + myteam + ".png";
                     directionShoot = 2;
@@ -450,7 +475,7 @@ var juego = (function () {
                     myGamePiece.speedX = 0;
                 }
                 //THE D KEY
-                else if (myGameArea.key && myGameArea.key === 68 && myGamePiece.vida > 0) {
+                else if (myGameArea.key && myGameArea.key === 68 ) {
                     myGamePiece.speedX = 10;
                     myGamePiece.image.src = directionImageTank + "1" + myteam + ".png";
                     directionShoot = 1;
@@ -461,7 +486,7 @@ var juego = (function () {
                     myGamePiece.speedX = 0;
                 }
                 //THE W KEY
-                else if (myGameArea.key && myGameArea.key === 87 && myGamePiece.vida > 0) {
+                else if (myGameArea.key && myGameArea.key === 87 ) {
                     myGamePiece.speedY = -10;
                     myGamePiece.image.src = directionImageTank + "4" + myteam + ".png";
                     directionShoot = 4;
@@ -472,7 +497,7 @@ var juego = (function () {
                     myGamePiece.speedY = 0;
                 }
                 //THE S KEY
-                else if (myGameArea.key && myGameArea.key === 83 && myGamePiece.vida > 0) {
+                else if (myGameArea.key && myGameArea.key === 83 ) {
                     myGamePiece.speedY = 10;
                     myGamePiece.image.src = directionImageTank + "3" + myteam + ".png";
                     directionShoot = 3;
@@ -483,7 +508,7 @@ var juego = (function () {
                     myGamePiece.speedY = 0;
                 }
                 //THE SPACE KEY   
-                else if (myGameArea.key && myGameArea.key === 32 && myGamePiece.vida > 0 && myGamePiece.shoots.length < 11) {
+                else if (myGameArea.key && myGameArea.key === 32  && myGamePiece.shoots.length < 11) {
                     var h, w, sx, sy;
                     if (directionShoot === 3) {
                         h = 30;
@@ -506,7 +531,7 @@ var juego = (function () {
                         sx = 30;
                         sy = 10;
                     }
-                    var temp2 = new Bulletcita(myGamePiece.x + sx, myGamePiece.y + sy,myGamePiece.direction,myteam)
+                    var temp2 = new Bulletcita(myGamePiece.x + sx, myGamePiece.y + sy, myGamePiece.direction, myteam)
                     stompClient.send("/app/sala." + myroom + "/bullets", {}, JSON.stringify(temp2));
                 }
 
@@ -537,7 +562,8 @@ var juego = (function () {
             stompClient.connect({}, function (frame) {
 
                 stompClient.subscribe("/topic/sala." + myroom + "/endGame", function (evenbody) {
-                    sessionStorage.setItem("PuntosA",puntos.scoreA);sessionStorage.setItem("PuntosB",puntos.scoreB);
+                    sessionStorage.setItem("PuntosA", puntos.scoreA);
+                    sessionStorage.setItem("PuntosB", puntos.scoreB);
                     stompClient.disconnect();
                     var newURL = window.location.protocol + "//" + window.location.host + "/" + "endgame.html";
                     window.location.replace(newURL);
@@ -601,19 +627,18 @@ var juego = (function () {
                         myGameArea.context.fillRect(enemyBandera.x, enemyBandera.y, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.04));
                         enemyBandera.x = object.x;
                         enemyBandera.y = object.y;
-
                     }
                     graficarBandera(object.team);
-
-
                 });
                 stompClient.subscribe('/topic/sala.' + myroom + "/puntaje", function (eventbody) {
-                    getscorer().then(function (){document.getElementById("Puntaje").innerHTML = "Puntaje: " + puntos.scoreA + "-" + puntos.scoreB;});
-                    
+                    getscorer().then(function () {
+                        document.getElementById("Puntaje").innerHTML = "Puntaje: " + puntos.scoreA + "-" + puntos.scoreB;
+                    });
+
                 });
                 stompClient.subscribe('/topic/sala.' + myroom + "/tiempo", function (eventbody) {
                     var object = eventbody.body;
-                    document.getElementById("Segundos").innerHTML = object;
+                    startTime(object);
                 });
             });
             myGameArea.start();
@@ -641,8 +666,8 @@ var juego = (function () {
                 }
             }
             myGamePiece = new Component(50, 50, directionImageTank + dir + myteam + ".png", x, y, "image", [], 1, sessionStorage.getItem("user"), myteam, 500);
-            puntos= new Score(0, 0);
-            bala=new Image();
+            puntos = new Score(0, 0);
+            bala = new Image();
             if (myteam === "A") {
                 myBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.10), Math.round(myGameArea.canvas.height * 0.50), myteam);
                 enemyBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.90), Math.round(myGameArea.canvas.height * 0.50), enemyteam);
