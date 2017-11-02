@@ -88,7 +88,7 @@ var juego = (function () {
         console.info("--------------------------------");
         var totalSeconds = Math.floor(mili / 1000);
         min = Math.floor(totalSeconds / 60);
-        sec = totalSeconds - minutes * 60;
+        sec = totalSeconds - min * 60;
         
         var handler = function () {
             console.info("--------------------------------");
