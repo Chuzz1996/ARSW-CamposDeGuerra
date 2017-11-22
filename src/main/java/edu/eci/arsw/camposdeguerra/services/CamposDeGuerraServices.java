@@ -11,7 +11,7 @@ import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraUsuarioPersistence;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
-import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraRoomPersistence;
+import edu.eci.arsw.camposdeguerra.cache.CamposDeGuerraRoomPersistence;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;

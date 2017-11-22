@@ -10,26 +10,19 @@ import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraUsuarioPersistence;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Set;
-import javafx.collections.transformation.FilteredList;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
-@Service
-public  class InMemoryCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUsuarioPersistence {
+
+public  class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUsuarioPersistence {
     
     private final ConcurrentHashMap<String, Usuario> users = new ConcurrentHashMap<>();
 
     
     
-    public InMemoryCamposDeGuerraUsuarioPersistence() {
+    public MongoDBCamposDeGuerraUsuarioPersistence() {
         Usuario u1 = new Usuario("martin", null, 99,100,"");
         Usuario u2= new Usuario("cristian", null, 100,100,"");
         Usuario u4= new Usuario("NMCC", null, 8888,100,"");
@@ -68,5 +61,5 @@ public  class InMemoryCamposDeGuerraUsuarioPersistence implements CamposDeGuerra
         if(users.containsKey(user)){users.remove(user);}
         else{throw new CamposDeGuerraPersistenceException("El usuario "+user+" no puede ser borrado porque no existe.");}
     }
-
+    
 }

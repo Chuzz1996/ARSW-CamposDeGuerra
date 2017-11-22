@@ -3,10 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.eci.arsw.camposdeguerra.persistence;
+package edu.eci.arsw.camposdeguerra.cache;
 
 
 import edu.eci.arsw.camposdeguerra.model.Usuario;
+import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
+import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
 import java.util.List;
 import java.util.Set;
 

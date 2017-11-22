@@ -1,0 +1,12 @@
+spring:
+    data:
+        mongodb:
+            host: xxxxxxx
+            port: xxxxxx
+            database: xxxxx
+            username: xxxxx
+            password: xxxxx
+    redis:
+        host: xxxx
+        port: xxxx
+        #password:

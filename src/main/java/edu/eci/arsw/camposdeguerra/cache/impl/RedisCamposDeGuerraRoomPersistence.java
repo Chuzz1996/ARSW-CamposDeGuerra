@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.eci.arsw.camposdeguerra.persistence.impl;
+package edu.eci.arsw.camposdeguerra.cache.impl;
 
 import edu.eci.arsw.camposdeguerra.model.Room;
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
-import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraRoomPersistence;
+import edu.eci.arsw.camposdeguerra.cache.CamposDeGuerraRoomPersistence;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,12 +17,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.Set;
 import org.springframework.stereotype.Service;
 
-@Service
-public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPersistence {
+
+public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPersistence {
 
     private final ConcurrentHashMap<Integer, Room> rooms = new ConcurrentHashMap<>();
 
-    public InMemoryCamposDeGuerraRoomPersistence() {
+    public RedisCamposDeGuerraRoomPersistence() {
         for (int i = 0; i < 20; i++) {
             rooms.putIfAbsent(i, new Room(i));
         }

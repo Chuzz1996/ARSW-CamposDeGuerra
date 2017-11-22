@@ -1,24 +1,32 @@
 package edu.eci.arsw.camposdeguerra.test.services;
 
+import edu.eci.arsw.camposdeguerra.cache.impl.InMemoryCamposDeGuerraRoomPersistence;
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
 import edu.eci.arsw.camposdeguerra.persistence.impl.InMemoryCamposDeGuerraUsuarioPersistence;
 import edu.eci.arsw.camposdeguerra.services.CamposDeGuerraServices;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Before;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class RegistroUsuarioTests {
+   
+    
 
     @Test
     public void saveNewAndLoadTest() {
 
         InMemoryCamposDeGuerraUsuarioPersistence icgp = new InMemoryCamposDeGuerraUsuarioPersistence();
-        Usuario u = new Usuario("test", null, 99999,100,"");
+        Usuario u = new Usuario("test1", null, 99999, 100, "");
         try {
             icgp.saveUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -36,7 +44,7 @@ public class RegistroUsuarioTests {
     public void saveExistingUserTest() {
 
         InMemoryCamposDeGuerraUsuarioPersistence icgp = new InMemoryCamposDeGuerraUsuarioPersistence();
-        Usuario u = new Usuario("test", null, 99999,100,"");
+        Usuario u = new Usuario("test2", null, 99999, 100, "");
         try {
             icgp.saveUsuario(u);
         } catch (CamposDeGuerraPersistenceException ex) {
@@ -53,78 +61,41 @@ public class RegistroUsuarioTests {
 
     @Test
     public void saveAndGetUsuarioTest() {
-
-        ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
-        CamposDeGuerraServices cdg = ac.getBean(CamposDeGuerraServices.class);
-
-        Usuario u = new Usuario("test", null, 99999,100,"");
+        
+        InMemoryCamposDeGuerraRoomPersistence icgp = new InMemoryCamposDeGuerraRoomPersistence();
+        Usuario u = new Usuario("test3", null, 99999, 100, "");
         try {
-            cdg.addNewUsuario(u);
+            icgp.addUserToRoom(u,0);
         } catch (CamposDeGuerraPersistenceException ex) {
             Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        Usuario temp = null;
+        ArrayList<Usuario> temp = new ArrayList<>() ;
         try {
-            temp = cdg.getUsuario("test");
+            temp = new ArrayList<>(icgp.getAllUsuariosFromRoom(0));
         } catch (CamposDeGuerraNotFoundException ex) {
             Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        assertEquals(temp.getUserName(), u.getUserName());
+        assertEquals(temp.get(0).getUserName(), u.getUserName());
     }
 
     @Test
     public void saveAndUpdateAndGetUsuarioTest() {
 
-        ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
-        CamposDeGuerraServices cdg = ac.getBean(CamposDeGuerraServices.class);
-
-        Usuario u = new Usuario("test", null, 99999,100,"");
+        InMemoryCamposDeGuerraRoomPersistence icgp = new InMemoryCamposDeGuerraRoomPersistence();
+        Usuario u = new Usuario("test4", null, 0, 100, "");
         try {
-            cdg.addNewUsuario(u);
+            icgp.addUserToRoom(u,0);
         } catch (CamposDeGuerraPersistenceException ex) {
             Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        u.setPuntaje(0);
+        ArrayList<Usuario> temp = new ArrayList<>() ;
         try {
-            cdg.updateUsuario(u);
-        } catch (CamposDeGuerraPersistenceException ex) {
-            Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Usuario temp = new Usuario();
-        try {
-            temp = cdg.getUsuario("test");
+            temp = new ArrayList<>(icgp.getAllUsuariosFromRoom(0));
         } catch (CamposDeGuerraNotFoundException ex) {
             Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        assertEquals(0, temp.getPuntaje());
+        assertEquals(0, temp.get(0).getPuntaje());
     }
 
-    @Test
-    public void saveAndDeleteUsuarioTest() {
-
-        ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
-        CamposDeGuerraServices cdg = ac.getBean(CamposDeGuerraServices.class);
-
-        Usuario u = new Usuario("test", null, 99999,100,"");
-        try {
-            cdg.addNewUsuario(u);
-        } catch (CamposDeGuerraPersistenceException ex) {
-            Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try {
-            cdg.deleteUsuario("test");
-        } catch (CamposDeGuerraPersistenceException ex) {
-            Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try {
-            cdg.getUsuario("test");
-        } catch (CamposDeGuerraNotFoundException ex) {
-            //Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
-            assertEquals(ex.getMessage(), "El usuario test no existe.");
-        }
-    }
 }
