@@ -8,8 +8,6 @@ package edu.eci.arsw.camposdeguerra.persistence;
 
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import java.util.Set;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
-import org.springframework.data.mongodb.repository.MongoRepository;
 
 
 public interface CamposDeGuerraUsuarioPersistence{

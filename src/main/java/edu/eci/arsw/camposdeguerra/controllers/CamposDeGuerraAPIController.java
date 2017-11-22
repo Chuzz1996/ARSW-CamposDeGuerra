@@ -11,7 +11,6 @@ import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
 import edu.eci.arsw.camposdeguerra.services.CamposDeGuerraServices;
-import java.util.Set;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

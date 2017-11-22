@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Set;
-import org.springframework.stereotype.Service;
 
 
 public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPersistence {
@@ -117,7 +116,9 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
         else{
             throw  new CamposDeGuerraNotFoundException("La Room ingresada no existe!");
         }
-        if(ans.equals("Ninguno")){throw  new CamposDeGuerraNotFoundException("El usuario ingresado no existe en esta sala!");}
+        if(ans.equals("Ninguno")){
+            throw  new CamposDeGuerraNotFoundException("El usuario ingresado no existe en esta sala!");
+        }
         return ans;
     }
 
