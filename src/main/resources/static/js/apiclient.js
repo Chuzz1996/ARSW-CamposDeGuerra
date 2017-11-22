@@ -107,6 +107,16 @@ var apiclient = (function () {
                 type: "DELETE", 
                 data: JSON.stringify(user), 
                 contentType: "application/json"});
+        },
+        getAllRooms: function(callback){
+            return $.get("/CamposDeGuerra/Rooms",callback);
+        },
+        postRoom: function(room){
+            return $.ajax({
+                url: "/CamposDeGuerra/Rooms", 
+                type: "POST", 
+                data: JSON.stringify(room), 
+                contentType: "application/json"});
         }
 
     };

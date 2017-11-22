@@ -23,7 +23,7 @@ public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoom
     private final ConcurrentHashMap<Integer, Room> rooms = new ConcurrentHashMap<>();
 
     public InMemoryCamposDeGuerraRoomPersistence() {
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 4; i++) {
             rooms.putIfAbsent(i, new Room(i));
         }
     }
@@ -215,6 +215,20 @@ public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoom
             throw  new CamposDeGuerraNotFoundException("La Room ingresada no existe!");
         }
         return ans;
+    }
+
+    @Override
+    public void addRoom(Room room) throws CamposDeGuerraPersistenceException {
+        if(rooms.contains(room.getId())){
+            rooms.putIfAbsent(room.getId(), room);
+        }else{
+            throw new CamposDeGuerraPersistenceException("el identificador de la sala ya esta");
+        }
+    }
+
+    @Override
+    public List<Room> getAllRooms() throws CamposDeGuerraNotFoundException {
+        return new ArrayList<>(rooms.values());
     }
     
 }

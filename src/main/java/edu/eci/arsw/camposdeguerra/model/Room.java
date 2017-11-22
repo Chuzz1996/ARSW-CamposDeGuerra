@@ -25,6 +25,203 @@ public class Room {
     private Integer id;
     private String banderaA = "", banderaB = "";
     private AtomicBoolean banderaATomada = new AtomicBoolean(false), banderaBTomada = new AtomicBoolean(false);
+    private int tiempo = 180000;
+    private int cantidadJugadores = 6;
+    private int potenciadores = 0;
+    private int capturasPartida = 2;
+
+    /**
+     * 
+     * @return 
+     */
+    public AtomicInteger getPuntajeEquipoA() {
+        return puntajeEquipoA;
+    }
+
+    /**
+     * 
+     * @param puntajeEquipoA 
+     */
+    public void setPuntajeEquipoA(AtomicInteger puntajeEquipoA) {
+        this.puntajeEquipoA = puntajeEquipoA;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public AtomicInteger getPuntajeEquipoB() {
+        return puntajeEquipoB;
+    }
+
+    /**
+     * 
+     * @param puntajeEquipoB 
+     */
+    public void setPuntajeEquipoB(AtomicInteger puntajeEquipoB) {
+        this.puntajeEquipoB = puntajeEquipoB;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public ConcurrentLinkedQueue<Usuario> getEquipoA() {
+        return equipoA;
+    }
+
+    /**
+     * 
+     * @param equipoA 
+     */
+    public void setEquipoA(ConcurrentLinkedQueue<Usuario> equipoA) {
+        this.equipoA = equipoA;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public ConcurrentLinkedQueue<Usuario> getEquipoB() {
+        return equipoB;
+    }
+
+    /**
+     * 
+     * @param equipoB 
+     */
+    public void setEquipoB(ConcurrentLinkedQueue<Usuario> equipoB) {
+        this.equipoB = equipoB;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public String getBanderaA() {
+        return banderaA;
+    }
+
+    /**
+     * 
+     * @param banderaA 
+     */
+    public void setBanderaA(String banderaA) {
+        this.banderaA = banderaA;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public String getBanderaB() {
+        return banderaB;
+    }
+
+    /**
+     * 
+     * @param banderaB 
+     */
+    public void setBanderaB(String banderaB) {
+        this.banderaB = banderaB;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public AtomicBoolean getBanderaATomada() {
+        return banderaATomada;
+    }
+
+    /**
+     * 
+     * @param banderaATomada 
+     */
+    public void setBanderaATomada(AtomicBoolean banderaATomada) {
+        this.banderaATomada = banderaATomada;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public AtomicBoolean getBanderaBTomada() {
+        return banderaBTomada;
+    }
+
+    /**
+     * 
+     * @param banderaBTomada 
+     */
+    public void setBanderaBTomada(AtomicBoolean banderaBTomada) {
+        this.banderaBTomada = banderaBTomada;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public int getTiempo() {
+        return tiempo;
+    }
+
+    /**
+     * 
+     * @param tiempo 
+     */
+    public void setTiempo(int tiempo) {
+        this.tiempo = tiempo;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public int getCantidadJugadores() {
+        return cantidadJugadores;
+    }
+
+    /**
+     * 
+     * @param cantidadJugadores 
+     */
+    public void setCantidadJugadores(int cantidadJugadores) {
+        this.cantidadJugadores = cantidadJugadores;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public int getPotenciadores() {
+        return potenciadores;
+    }
+
+    /**
+     * 
+     * @param potenciadores 
+     */
+    public void setPotenciadores(int potenciadores) {
+        this.potenciadores = potenciadores;
+    }
+
+    /**
+     * 
+     * @return 
+     */
+    public int getCapturasPartida() {
+        return capturasPartida;
+    }
+
+    /**
+     * 
+     * @param capturasPartida 
+     */
+    public void setCapturasPartida(int capturasPartida) {
+        this.capturasPartida = capturasPartida;
+    }
+    
 
     /**
      *
@@ -59,6 +256,14 @@ public class Room {
             agregoUser = false;
         }
         return agregoUser;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    public boolean isEmpty(){
+        return equipoA.size() + equipoB.size() == 0;
     }
 
     /**

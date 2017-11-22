@@ -134,6 +134,22 @@ var appSeleccion = (function () {
         );
         return getPromise;
     };
+    
+    var createRoom = function(){
+    }
+    
+    var joinRoom = function(){
+        var getPromise = api.getAllRooms(function(data){
+            var totalSalas = parseInt(data.length);
+            var countDown_overlay = 'position:absolute;top:50%;left:50%;background-color:black;z-index:1002;overflow:auto;width:400px;text-align:center;height:400px;margin-left:-200px;margin-top:-200px';
+            $('body').append('<div id="overLay" style="' + countDown_overlay + '"><span id="time" style="color:white" >Salas disponibles</span></br><table id="table1"  style="width:100%"><tr><th>ID Sala</th><th>Cantidad de Jugadores</th></tr></table> <input id="idSala" type="number" min="0" max=totalSalas/> <button class=btn btn-outline-primary >Join Match</button></div>');
+            console.info(data.length);
+            for(var i=0;i<data.length;i++){
+                var cant =parseInt(data[i].equipoA.length)+ parseInt(data[i].equipoB.length);
+                $('#table1').append("<tr> <th>" + data[i].id + "</th> <th>" + cant +"/"+data[i].cantidadJugadores + "</th> </tr>");
+            }
+        });
+    }
 
     var counter = 10;
 
@@ -150,10 +166,10 @@ var appSeleccion = (function () {
             getRamdonRoom().then(getUser).then(postUserRoom).then(getMyTeam).then(conectar);
         },
         nuevaPartida: function () {
-
+            
         },
         unirExistente: function () {
-
+            joinRoom();
         }
     };
 

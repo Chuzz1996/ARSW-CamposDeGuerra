@@ -7,6 +7,7 @@ package edu.eci.arsw.camposdeguerra.controllers;
 
 
 
+import edu.eci.arsw.camposdeguerra.model.Room;
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
@@ -118,6 +119,10 @@ public class CamposDeGuerraAPIController {
         }
     }
     
+    /**
+     * 
+     * @return 
+     */
     @RequestMapping(path = "/Rooms/free",method = RequestMethod.GET)
     public ResponseEntity<?> getRoomFree() {
         try {
@@ -129,6 +134,12 @@ public class CamposDeGuerraAPIController {
         }
     }
     
+    /**
+     * 
+     * @param u
+     * @param room
+     * @return 
+     */
     @RequestMapping(path = "/Rooms/{room}",method = RequestMethod.POST)
     public ResponseEntity<?> addUserToRoom(@RequestBody Usuario u,@PathVariable Integer room) {
         try {
@@ -142,6 +153,11 @@ public class CamposDeGuerraAPIController {
 
     }
     
+    /**
+     * 
+     * @param room
+     * @return 
+     */
     @RequestMapping(path = "/Rooms/{room}",method = RequestMethod.GET)
     public ResponseEntity<?> getAllUsuariosFromRoom(@PathVariable Integer room) {
         try {
@@ -153,6 +169,11 @@ public class CamposDeGuerraAPIController {
         }
     }
 
+    /**
+     * 
+     * @param room
+     * @return 
+     */
     @RequestMapping(path = "/Rooms/{room}/TeamA",method = RequestMethod.GET)
     public ResponseEntity<?> getAllUsuariosFromTeamARoom(@PathVariable Integer room) {
         try {
@@ -164,6 +185,11 @@ public class CamposDeGuerraAPIController {
         }
     }
     
+    /**
+     * 
+     * @param room
+     * @return 
+     */
     @RequestMapping(path = "/Rooms/{room}/TeamB",method = RequestMethod.GET)
     public ResponseEntity<?> getAllUsuariosFromTeamBRoom(@PathVariable Integer room) {
         try {
@@ -175,6 +201,12 @@ public class CamposDeGuerraAPIController {
         }
     }
     
+    /**
+     * 
+     * @param user
+     * @param room
+     * @return 
+     */
     @RequestMapping(path = "/Rooms/{room}/Teams/{user}",method = RequestMethod.GET)
     public ResponseEntity<?> getMyTeam(@PathVariable String user,@PathVariable Integer room) {
         try {
@@ -186,8 +218,12 @@ public class CamposDeGuerraAPIController {
         }
     }
     
-    
-    
+    /**
+     * 
+     * @param user
+     * @param room
+     * @return 
+     */
     @RequestMapping(path = "/Rooms/{room}/user",method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteUsuarioFromRoom(@RequestBody Usuario user,@PathVariable Integer room ) {
         try {
@@ -200,6 +236,11 @@ public class CamposDeGuerraAPIController {
         }
     }
 
+    /**
+     * 
+     * @param room
+     * @return 
+     */
     @RequestMapping(path = "/Rooms/{room}",method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteAllUsuariosFromRoom(@PathVariable Integer room ) {
         try {
@@ -212,6 +253,13 @@ public class CamposDeGuerraAPIController {
         }
     }
     
+    /**
+     * 
+     * @param u
+     * @param room
+     * @return
+     * @throws CamposDeGuerraNotFoundException 
+     */
     @RequestMapping(path = "/Rooms/{room}/Banderas/A",method = RequestMethod.POST)
     public ResponseEntity<?> setFlagARoom(@RequestBody Usuario u , @PathVariable Integer room) throws CamposDeGuerraNotFoundException {
         try {
@@ -223,7 +271,13 @@ public class CamposDeGuerraAPIController {
         }
     }
     
-    
+    /**
+     * 
+     * @param u
+     * @param room
+     * @return
+     * @throws CamposDeGuerraNotFoundException 
+     */
     @RequestMapping(path = "/Rooms/{room}/Banderas/B",method = RequestMethod.POST)
     public ResponseEntity<?> setFlagBRoom(@RequestBody Usuario u , @PathVariable Integer room) throws CamposDeGuerraNotFoundException {
          try {
@@ -235,6 +289,13 @@ public class CamposDeGuerraAPIController {
         }
     }
     
+    /**
+     * 
+     * @param u
+     * @param room
+     * @return
+     * @throws CamposDeGuerraNotFoundException 
+     */
     @RequestMapping(path = "/Rooms/{room}/Banderas/A/Puntuaciones",method = RequestMethod.POST)
     public  ResponseEntity<?> puntuarA(@RequestBody Usuario u,@PathVariable Integer room) throws CamposDeGuerraNotFoundException{
         try {
@@ -246,6 +307,13 @@ public class CamposDeGuerraAPIController {
         }
     }
     
+    /**
+     * 
+     * @param u
+     * @param room
+     * @return
+     * @throws CamposDeGuerraNotFoundException 
+     */
     @RequestMapping(path = "/Rooms/{room}/Banderas/B/Puntuaciones",method = RequestMethod.POST)
     public  ResponseEntity<?> puntuarB(@RequestBody Usuario u,@PathVariable Integer room) throws CamposDeGuerraNotFoundException{
         try {
@@ -257,6 +325,13 @@ public class CamposDeGuerraAPIController {
         }
     }
     
+    /**
+     * 
+     * @param u
+     * @param room
+     * @return
+     * @throws CamposDeGuerraNotFoundException 
+     */
     @RequestMapping(path = "/Rooms/{room}/Banderas/A",method = RequestMethod.DELETE)
     public  ResponseEntity<?> soltarBanderaA(@RequestBody Usuario u,@PathVariable Integer room) throws CamposDeGuerraNotFoundException{
          try {
@@ -267,6 +342,14 @@ public class CamposDeGuerraAPIController {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
+    
+    /**
+     * 
+     * @param u
+     * @param room
+     * @return
+     * @throws CamposDeGuerraNotFoundException 
+     */
     @RequestMapping(path = "/Rooms/{room}/Banderas/B",method = RequestMethod.DELETE)
     public  ResponseEntity<?> soltarBanderaB(@RequestBody Usuario u,@PathVariable Integer room) throws CamposDeGuerraNotFoundException{
         try {
@@ -278,6 +361,11 @@ public class CamposDeGuerraAPIController {
         }
     }
     
+    /**
+     * 
+     * @param room
+     * @return 
+     */
     @RequestMapping(path = "/Rooms/{room}/Scorer",method = RequestMethod.GET)
     public ResponseEntity<?> getScorer(@PathVariable Integer room) {
         try {
@@ -289,5 +377,36 @@ public class CamposDeGuerraAPIController {
         }
     }
     
+    /**
+     * 
+     * @param room
+     * @return 
+     */
+    @RequestMapping(path = "/Rooms",method = RequestMethod.POST)
+    public ResponseEntity<?> addRoom(@RequestBody Room room){
+        try {
+            //Obtener datos
+            cdg.addRoom(room);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        } catch (CamposDeGuerraPersistenceException ex) {
+            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    @RequestMapping(path = "/Rooms",method = RequestMethod.GET)
+    public ResponseEntity<?> getAllRooms(){
+        try {
+            //Obtener datos
+            return new ResponseEntity<>(cdg.getAllRooms(),HttpStatus.ACCEPTED);
+        } catch (CamposDeGuerraNotFoundException ex) {
+            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
     
 }

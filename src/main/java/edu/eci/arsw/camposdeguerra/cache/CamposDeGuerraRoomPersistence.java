@@ -6,6 +6,7 @@
 package edu.eci.arsw.camposdeguerra.cache;
 
 
+import edu.eci.arsw.camposdeguerra.model.Room;
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
@@ -23,6 +24,12 @@ public interface CamposDeGuerraRoomPersistence {
      */
     public Integer getRoomFree() throws CamposDeGuerraNotFoundException;
     
+    /**
+     * 
+     * @param idSala
+     * @throws CamposDeGuerraPersistenceException 
+     */
+    public void addRoom(Room room)throws CamposDeGuerraPersistenceException;
     
     /**
      * 
@@ -98,16 +105,51 @@ public interface CamposDeGuerraRoomPersistence {
      */
     public void setFlagBRoom(String user,Integer room) throws CamposDeGuerraNotFoundException;
     
+    /**
+     * 
+     * @return
+     * @throws CamposDeGuerraNotFoundException 
+     */
+    public List<Room> getAllRooms()throws CamposDeGuerraNotFoundException;
     
-    
+    /**
+     * 
+     * @param user
+     * @param room
+     * @throws CamposDeGuerraNotFoundException 
+     */
     public  void puntuarA(String user,Integer room) throws CamposDeGuerraNotFoundException;
 
+    /**
+     * 
+     * @param user
+     * @param room
+     * @throws CamposDeGuerraNotFoundException 
+     */
     public  void puntuarB(String user,Integer room) throws CamposDeGuerraNotFoundException;
 
+    /**
+     * 
+     * @param user
+     * @param room
+     * @throws CamposDeGuerraNotFoundException 
+     */
     public  void soltarBanderaB(String user,Integer room) throws CamposDeGuerraNotFoundException;
     
+    /**
+     * 
+     * @param user
+     * @param room
+     * @throws CamposDeGuerraNotFoundException 
+     */
     public  void soltarBanderaA(String user,Integer room) throws CamposDeGuerraNotFoundException;
     
+    /**
+     * 
+     * @param room
+     * @return
+     * @throws CamposDeGuerraNotFoundException 
+     */
     public List<Integer> obtenerScorer(Integer room) throws CamposDeGuerraNotFoundException;
 
 }
