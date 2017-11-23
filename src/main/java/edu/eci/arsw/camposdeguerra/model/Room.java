@@ -30,6 +30,7 @@ public class Room {
     private String potenciadores = "";
     private int capturasPartida = 2;
     private String tipoMaquina="";
+    private String estado="No jugando";
 
     
     
@@ -47,6 +48,15 @@ public class Room {
     public void setTipoMaquina(String tipoMaquina) {
         this.tipoMaquina = tipoMaquina;
     }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+    
 
    
     /**

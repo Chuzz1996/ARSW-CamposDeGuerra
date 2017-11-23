@@ -5,6 +5,8 @@
  */
 package edu.eci.arsw.camposdeguerra.mom;
 
+import edu.eci.arsw.camposdeguerra.cache.CamposDeGuerraRoomPersistence;
+import edu.eci.arsw.camposdeguerra.model.Room;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -19,34 +21,33 @@ import org.springframework.stereotype.Service;
 @Service
 public class controlTimeAndLogical {
     
-    private final ConcurrentHashMap<Integer, AtomicInteger> personasEnsalas = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<Integer, String> estadoSalas = new ConcurrentHashMap<>();
+    @Autowired
+    private CamposDeGuerraRoomPersistence rp;
     private final ConcurrentHashMap<Integer, Timer> controlTiempo = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, Integer> tiempoSalas = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Integer, Integer> getdatos = new ConcurrentHashMap<>();
     Integer timeGame = 180000;
     
     public Integer listoParaJugar(String estado, Integer idSala) throws Exception {
         Integer pos=0;
         if (estado.equals("listo")) {
-            if (personasEnsalas.containsKey(idSala)) {
-                AtomicInteger temp = personasEnsalas.get(idSala);
-                pos=temp.addAndGet(1);
-                personasEnsalas.putIfAbsent(idSala, temp);
-            } else {
-                AtomicInteger temp = new AtomicInteger(1);
-                pos=temp.get();
-                personasEnsalas.putIfAbsent(idSala, temp);
-                estadoSalas.putIfAbsent(idSala, "nojugando");
-            }
+            Room r=null;
+            try{
+               r=rp.getRoom(idSala);
+               pos=(r.getAllCompetitors().size())+1;
+            }catch (Exception e){throw new Exception("Hubo un problema asignando posicion");}
         }
         return pos;
     }
 
-    public boolean roomFull(Integer idSala) {
+    public boolean roomFull(Integer idSala) throws Exception{
         boolean ans = false;
-        if (personasEnsalas.get(idSala).get() >= 4 && estadoSalas.get(idSala).equals("nojugando")) {
+        try{
+            Room r=rp.getRoom(idSala);
+            Integer cj= r.getAllCompetitors().size();
+        if ( cj % 2 == 0 && cj>0 && cj<= r.getCantidadJugadores() && r.getEstado().equals("No jugando")) {
             ans = true;
-            estadoSalas.replace(idSala, "jugando");
+            r.setEstado("Jugando");
             tiempoSalas.putIfAbsent(idSala,0);
             Timer temp = new Timer();
             final int GAME_LIMIT = timeGame + 2000;
@@ -65,9 +66,12 @@ public class controlTimeAndLogical {
             }, 0, 1000);
             controlTiempo.putIfAbsent(idSala, temp);
 
-        } else if (personasEnsalas.get(idSala).get() >= 4 && estadoSalas.get(idSala).equals("jugando")) {
+        } else if (cj % 2 == 0 && cj>0 && cj<= r.getCantidadJugadores() && r.getEstado().equals("Jugando")) {
             ans = true;
         }
+  
+        }catch (Exception e){}
+        
         return ans;
     }
     
@@ -75,12 +79,25 @@ public class controlTimeAndLogical {
         return tiempoSalas.get(idSala);
     }
     
-    public void gameEnded (Integer idSala){
-        if(personasEnsalas.containsKey(idSala)){
-            estadoSalas.remove(idSala);
-            personasEnsalas.remove(idSala);
+     
+
+    void getDatos(Integer idSala) throws Exception{
+
+        if(getdatos.containsKey(idSala)){
+            Integer listos=getdatos.get(idSala);
+            if(listos==rp.getRoom(idSala).getAllCompetitors().size()-1){
+                if(idSala<4){rp.deleteAllUsuariosFromRoom(idSala);}
+                else{rp.deleteRoom(idSala);}
+                getdatos.remove(idSala);
+            }
+            else{
+                listos=listos+1;
+                getdatos.replace(idSala, listos);
+            }
         }
-        
+        else{
+         getdatos.putIfAbsent(idSala, 1);
+        }
     }
     
     

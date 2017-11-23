@@ -227,5 +227,15 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
     public List<Room> getAllRooms() throws CamposDeGuerraNotFoundException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public Room getRoom(Integer idSala) throws CamposDeGuerraNotFoundException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void deleteRoom(Integer idSala) throws CamposDeGuerraNotFoundException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

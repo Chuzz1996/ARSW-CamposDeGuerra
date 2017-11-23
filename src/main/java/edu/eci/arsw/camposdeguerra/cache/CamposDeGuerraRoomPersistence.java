@@ -152,4 +152,8 @@ public interface CamposDeGuerraRoomPersistence {
      */
     public List<Integer> obtenerScorer(Integer room) throws CamposDeGuerraNotFoundException;
 
+    public Room getRoom(Integer idSala) throws CamposDeGuerraNotFoundException ;
+    
+    public void deleteRoom(Integer idSala) throws CamposDeGuerraNotFoundException ;
+
 }

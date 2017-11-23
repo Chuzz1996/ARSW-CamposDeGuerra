@@ -230,5 +230,23 @@ public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoom
     public List<Room> getAllRooms() throws CamposDeGuerraNotFoundException {
         return new ArrayList<>(rooms.values());
     }
+
+    @Override
+    public Room getRoom(Integer idSala) throws CamposDeGuerraNotFoundException  {
+         if(!rooms.contains(idSala)){
+            return rooms.get(idSala);
+        }else{
+            throw new  CamposDeGuerraNotFoundException ("el identificador de la sala no existe");
+        }
+    }
+
+    @Override
+    public void deleteRoom(Integer idSala) throws CamposDeGuerraNotFoundException {
+         if(rooms.contains(idSala)){
+            rooms.remove(idSala);
+        }else{
+            throw new  CamposDeGuerraNotFoundException ("el identificador de la sala no existe");
+        }
+    }
     
 }

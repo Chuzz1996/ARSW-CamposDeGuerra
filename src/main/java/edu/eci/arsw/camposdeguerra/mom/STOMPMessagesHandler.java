@@ -33,7 +33,7 @@ public class STOMPMessagesHandler {
         Integer pos=l.listoParaJugar(estado, idSala);
         msgt.convertAndSend("/topic/sala." + idSala + "/pos",pos);
         if (l.roomFull(idSala)) {
-            msgt.convertAndSend("/topic/sala." + idSala, "Pueden comensar");
+            msgt.convertAndSend("/topic/sala." + idSala, "Pueden comenzar");
             msgt.convertAndSend("/topic/sala." + idSala + "/tiempo", l.getTime(idSala));
         }
     }
@@ -56,7 +56,11 @@ public class STOMPMessagesHandler {
     
     @MessageMapping("/sala.{idSala}/endGame")
     public void reportarEndGame(String ans,@DestinationVariable Integer idSala) throws Exception {
-        l.gameEnded(idSala);
         msgt.convertAndSend("/topic/sala." + idSala + "/endGame", "ok");
+    }
+    
+    @MessageMapping("/sala.{idSala}/datos")
+    public void reportarGetDatos(String ans,@DestinationVariable Integer idSala) throws Exception {
+        l.getDatos(idSala);
     }
 }
