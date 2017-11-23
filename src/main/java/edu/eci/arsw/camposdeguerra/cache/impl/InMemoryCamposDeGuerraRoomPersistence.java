@@ -219,7 +219,7 @@ public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoom
 
     @Override
     public void addRoom(Room room) throws CamposDeGuerraPersistenceException {
-        if(!rooms.contains(room.getId())){
+        if(!rooms.containsKey(room.getId())){
             rooms.putIfAbsent(room.getId(), room);
         }else{
             throw new CamposDeGuerraPersistenceException("el identificador de la sala ya esta");
@@ -233,7 +233,7 @@ public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoom
 
     @Override
     public Room getRoom(Integer idSala) throws CamposDeGuerraNotFoundException  {
-         if(!rooms.contains(idSala)){
+         if(rooms.containsKey(idSala)){
             return rooms.get(idSala);
         }else{
             throw new  CamposDeGuerraNotFoundException ("el identificador de la sala no existe");
@@ -242,7 +242,7 @@ public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoom
 
     @Override
     public void deleteRoom(Integer idSala) throws CamposDeGuerraNotFoundException {
-         if(rooms.contains(idSala)){
+         if(rooms.containsKey(idSala)){
             rooms.remove(idSala);
         }else{
             throw new  CamposDeGuerraNotFoundException ("el identificador de la sala no existe");

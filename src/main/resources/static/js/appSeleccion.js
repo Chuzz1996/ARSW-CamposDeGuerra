@@ -26,7 +26,7 @@ var appSeleccion = (function () {
     }
 
     class Room {
-        constructor(id,tipoMaquina,tiempo, cantidadJugadores,potenciadores,capturasPartida) {
+        constructor(id,tipoMaquina,tiempo, cantidadJugadores,potenciadores,capturasPartida,estado) {
             this.puntajeEquipoA = 0;
             this.puntajeEquipoB = 0;
             this.equipoA=[];
@@ -41,6 +41,7 @@ var appSeleccion = (function () {
             this.cantidadJugadores=cantidadJugadores;
             this.potenciadores=potenciadores;
             this.capturasPartida=capturasPartida;
+            this.estado=estado;
         }
     }
     
@@ -178,10 +179,10 @@ var appSeleccion = (function () {
         var idSalaNew=document.getElementById("idSalaNew").value;idSalaNew=parseInt(idSalaNew);
         var tipoMaquina=document.getElementById("tipoMaquina").value;
         var tiempo=document.getElementById("tiempo").value;tiempo=parseInt(tiempo);
-        var numeroJugadores=document.getElementById("numeroJugadores").value;numeroJugadores=parseInt(numeroJugadores);
+        var cantidadJugadores=document.getElementById("numeroJugadores").value;cantidadJugadores=parseInt(cantidadJugadores);
         var tipoPotenciador=document.getElementById("tipoPotenciador").value;
         var capturas=document.getElementById("capturas").value;capturas=parseInt(capturas);
-        var tempRoom = new Room(idSalaNew, tipoMaquina, tiempo,numeroJugadores,tipoPotenciador,capturas);
+        var tempRoom = new Room(idSalaNew, tipoMaquina, tiempo,cantidadJugadores,tipoPotenciador,capturas,"No jugando");
         var postPromise = api.postRoom(tempRoom);
         postPromise.then(
                 function () {
