@@ -27,9 +27,28 @@ public class Room {
     private AtomicBoolean banderaATomada = new AtomicBoolean(false), banderaBTomada = new AtomicBoolean(false);
     private int tiempo = 180000;
     private int cantidadJugadores = 6;
-    private int potenciadores = 0;
+    private String potenciadores = "";
     private int capturasPartida = 2;
+    private String tipoMaquina="";
 
+    
+    
+    /**
+     * 
+     * @return 
+     */
+    public String getTipoMaquina() {
+        return tipoMaquina;
+    }
+    /**
+     * 
+     * @param tipoMaquina 
+     */
+    public void setTipoMaquina(String tipoMaquina) {
+        this.tipoMaquina = tipoMaquina;
+    }
+
+   
     /**
      * 
      * @return 
@@ -194,7 +213,7 @@ public class Room {
      * 
      * @return 
      */
-    public int getPotenciadores() {
+    public String getPotenciadores() {
         return potenciadores;
     }
 
@@ -202,7 +221,7 @@ public class Room {
      * 
      * @param potenciadores 
      */
-    public void setPotenciadores(int potenciadores) {
+    public void setPotenciadores(String potenciadores) {
         this.potenciadores = potenciadores;
     }
 
@@ -229,6 +248,9 @@ public class Room {
      */
     public Room(Integer id) {
         this.id = id;
+    }
+    
+    public Room(){
     }
 
     /**

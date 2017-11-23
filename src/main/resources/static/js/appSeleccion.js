@@ -25,12 +25,51 @@ var appSeleccion = (function () {
         }
     }
 
+    class Room {
+        constructor(id,tipoMaquina,tiempo, cantidadJugadores,potenciadores,capturasPartida) {
+            this.puntajeEquipoA = 0;
+            this.puntajeEquipoB = 0;
+            this.equipoA=[];
+            this.equipoB=[];
+            this.id = id;
+            this.banderaA="";
+            this.banderaB="";
+            this.tipoMaquina=tipoMaquina;
+            this.banderaATomada=false;
+            this.banderaBTomada=false;
+            this.tiempo=tiempo;
+            this.cantidadJugadores=cantidadJugadores;
+            this.potenciadores=potenciadores;
+            this.capturasPartida=capturasPartida;
+        }
+    }
+    
     class Bullet {
         constructor(x, y, direction) {
             this.x = x;
             this.y = y;
             this.direction = direction;
         }
+    }
+    
+    
+    var createRoom = function(){
+        var countDown_overlay = 'position:absolute;top:50%;left:50%;background-color:black;z-index:1002;overflow:auto;width:400px;text-align:center;height:400px;margin-left:-200px;margin-top:-200px';
+        var temp= '<div id="overLay" style="' + countDown_overlay + '"> <p>Id Sala</p> <input id="idSalaNew" type="number" min="0" max=totalSalas/>  <p><strong>Maquina Disponible</strong> <select id="tipoMaquina"><option value="Destructora">Destructora</option><option value="Protectora">Protectora</option><option value="Veloz">Veloz</option></select> <p>  <strong>Tiempo de juego</strong> <input id="tiempo" type="number" min="0" max=totalSalas/> <p><strong>Cantidad de jugadores</strong> <select id="numeroJugadores"><option value="2">2</option><option value="4">4</option><option value="6">6</option></select> <p><strong>Potenciadores disponibles</strong> <select id="tipoPotenciador"><option value="Velocidad">Velocidad</option><option value="Vida">Vida</option><option value="Daño">Daño</option></select>  <p><strong>Capturas de bandera para ganar</strong> <input id="capturas" type="number" min="0" max=totalSalas/> <button onclick="appSeleccion.crearSala()" class=btn btn-outline-primary >Create Match</button> </div>';
+        $('body').append(temp);
+        console.info("supuestamente agrego overlay");
+    }
+    
+    var joinRoom = function(){
+        var getPromise = api.getAllRooms(function(data){
+            var totalSalas = parseInt(data.length);
+            var countDown_overlay = 'position:absolute;top:50%;left:50%;background-color:black;z-index:1002;overflow:auto;width:400px;text-align:center;height:400px;margin-left:-200px;margin-top:-200px';
+            $('body').append('<div id="overLay" style="' + countDown_overlay + '"><span id="time" style="color:white" >Salas disponibles</span></br><table id="table1"  style="width:100%"><tr><th>ID Sala</th><th>Cantidad de Jugadores</th></tr></table> <input id="idSala" type="number" min="0" max=totalSalas/> <button onclick="appSeleccion.updateIdSala()" class=btn btn-outline-primary >Join Match</button></div>');
+            for(var i=0;i<data.length;i++){
+                var cant =parseInt(data[i].equipoA.length)+ parseInt(data[i].equipoB.length);
+                $('#table1').append("<tr> <th>" + data[i].id + "</th> <th>" + cant +"/"+data[i].cantidadJugadores + "</th> </tr>");
+            }
+        });
     }
 
     var deleteUser = function () {
@@ -135,21 +174,25 @@ var appSeleccion = (function () {
         return getPromise;
     };
     
-    var createRoom = function(){
-    }
-    
-    var joinRoom = function(){
-        var getPromise = api.getAllRooms(function(data){
-            var totalSalas = parseInt(data.length);
-            var countDown_overlay = 'position:absolute;top:50%;left:50%;background-color:black;z-index:1002;overflow:auto;width:400px;text-align:center;height:400px;margin-left:-200px;margin-top:-200px';
-            $('body').append('<div id="overLay" style="' + countDown_overlay + '"><span id="time" style="color:white" >Salas disponibles</span></br><table id="table1"  style="width:100%"><tr><th>ID Sala</th><th>Cantidad de Jugadores</th></tr></table> <input id="idSala" type="number" min="0" max=totalSalas/> <button class=btn btn-outline-primary >Join Match</button></div>');
-            console.info(data.length);
-            for(var i=0;i<data.length;i++){
-                var cant =parseInt(data[i].equipoA.length)+ parseInt(data[i].equipoB.length);
-                $('#table1').append("<tr> <th>" + data[i].id + "</th> <th>" + cant +"/"+data[i].cantidadJugadores + "</th> </tr>");
-            }
-        });
-    }
+    var postRoom = function () {
+        var idSalaNew=document.getElementById("idSalaNew").value;idSalaNew=parseInt(idSalaNew);
+        var tipoMaquina=document.getElementById("tipoMaquina").value;
+        var tiempo=document.getElementById("tiempo").value;tiempo=parseInt(tiempo);
+        var numeroJugadores=document.getElementById("numeroJugadores").value;numeroJugadores=parseInt(numeroJugadores);
+        var tipoPotenciador=document.getElementById("tipoPotenciador").value;
+        var capturas=document.getElementById("capturas").value;capturas=parseInt(capturas);
+        var tempRoom = new Room(idSalaNew, tipoMaquina, tiempo,numeroJugadores,tipoPotenciador,capturas);
+        var postPromise = api.postRoom(tempRoom);
+        postPromise.then(
+                function () {
+                    console.info("Success,the Room was created correctly");
+                },
+                function () {
+                    console.info("Sorry,there was a problem with the Room");
+                }
+        );
+        return postPromise;
+    };
 
     var counter = 10;
 
@@ -166,10 +209,31 @@ var appSeleccion = (function () {
             getRamdonRoom().then(getUser).then(postUserRoom).then(getMyTeam).then(conectar);
         },
         nuevaPartida: function () {
-            
+            createRoom();
         },
         unirExistente: function () {
             joinRoom();
+        },
+        updateIdSala: function () {
+            idRoom=document.getElementById("idSala").value;
+            if(idRoom!==""){
+                getUser().then(postUserRoom).then(getMyTeam).then(conectar);
+            }
+            else{
+                alert("Ingrese una sala valida");
+            }
+        },
+        crearSala:function (){
+            idRoom=document.getElementById("idSalaNew").value;
+            if(idRoom!==""){
+                getUser().then(postRoom).then(postUserRoom).then(getMyTeam).then(conectar);
+            }
+            else{
+                alert("Ingrese una sala valida");
+            }
+            
+            
+            
         }
     };
 

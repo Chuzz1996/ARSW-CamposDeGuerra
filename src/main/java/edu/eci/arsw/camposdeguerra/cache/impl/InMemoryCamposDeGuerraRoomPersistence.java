@@ -219,7 +219,7 @@ public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoom
 
     @Override
     public void addRoom(Room room) throws CamposDeGuerraPersistenceException {
-        if(rooms.contains(room.getId())){
+        if(!rooms.contains(room.getId())){
             rooms.putIfAbsent(room.getId(), room);
         }else{
             throw new CamposDeGuerraPersistenceException("el identificador de la sala ya esta");
