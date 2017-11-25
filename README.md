@@ -4,7 +4,7 @@
 [![Heroku](https://wmpics.pics/di-D9YP.png)](https://camposdeguerra.herokuapp.com/)
 
 # Collaborative Game CamposDeGuerra
-# System engineering - Escuela Colombiana de ingenieria Julio Garavito
+# Computer engineering - Escuela Colombiana de ingenieria Julio Garavito
 * Subject - period - Name Teacher:
 
   Software Architecture - 2017-2 - Hector Fabio Cadavid

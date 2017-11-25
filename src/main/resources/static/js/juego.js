@@ -1,4 +1,4 @@
-/* global  updateBullets, graficarBalas, graficarBalaOponente, actualizarTrayectoriaBalas, send, graficarExplosion, graficarBala, updateOponents, updateAliados, graficarBandera, checkBandera, checkSoltarBandera, checkPostPoint, checkGetBandera, getscorer, startTime, updateVidaOtherUser */
+/* global  updateBullets, graficarBalas, graficarBalaOponente, actualizarTrayectoriaBalas, send, graficarExplosion, graficarBala, updateOponents, updateAliados, graficarBandera, checkBandera, checkSoltarBandera, checkPostPoint, checkGetBandera, getscorer, startTime, updateVidaOtherUser, graficarObstaculos */
 
 var juego = (function () {
 
@@ -60,11 +60,13 @@ var juego = (function () {
 
         }
     }
+    
 
     var myroom;
     var myGamePiece;
     var oponents = [];
     var aliados = [];
+    var obstaculos = [];
     var myBandera;
     var enemyBandera;
     var myGameArea;
@@ -75,6 +77,7 @@ var juego = (function () {
     var directionImageTank = "/images/tank";
     var directionImageShoot = "/images/bullet";
     var directionBandera = "/images/bandera";
+    var directionObstaculo = "/images/obstaculo";
     var directionShoot = 1;
     var puntos;
     var bala;
@@ -138,7 +141,7 @@ var juego = (function () {
             dx = -15;
             dy = 0;
         }
-        if (bullet.equipo !== myteam && myGamePiece.crashWith(bullet, h, w)) {
+        if (bullet.equipo !== myteam && myGamePiece.crashWith(bullet, h, w,"bullet")) {
             myGameArea.context.fillStyle = "#A9A9A9";
             myGameArea.context.fillRect(bullet.x + sx + dx, bullet.y + sy + dy, w, h);
             var temp2 = new Explocion(myGamePiece.x, myGamePiece.y);
@@ -148,6 +151,15 @@ var juego = (function () {
             myGameArea.context.fillStyle = "#A9A9A9";
             myGameArea.context.fillRect(bullet.x +sx+dx, bullet.y +sy+dy, w, h);
             myGameArea.context.drawImage(bala, bullet.x + sx, bullet.y + sy, w, h);
+        }
+        for(var i=0;i<obstaculos.length;i++){
+            if(obstaculos[i].alive){
+                var crash=obstaculos[i].crashWith(bullet,h,w,"bullet");
+                if(crash){
+                    var temp3 = new Explocion(obstaculos[i].x, obstaculos[i].y);
+                    graficarExplosion(temp3);
+                }
+            }
         }
         setTimeout(function(){actualizarTrayectoriaBalas(bullet);}, 10);
     };
@@ -212,6 +224,14 @@ var juego = (function () {
             myGameArea.context.drawImage(enemyBandera.image, enemyBandera.x, enemyBandera.y, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.04));
         }
     };
+    
+    var graficarObstaculos = function () {
+        for(var i=0;i<obstaculos.length;i++){
+            if(obstaculos[i].alive){
+                myGameArea.context.drawImage(obstaculos[i].image, obstaculos[i].x, obstaculos[i].y, obstaculos[i].width,obstaculos[i].height);
+            }
+        }
+    };
 
     var graficarExplosion = function (explosion) {
         myGameArea.context.fillStyle = "#A9A9A9";
@@ -221,6 +241,7 @@ var juego = (function () {
         myGameArea.context.drawImage(image, explosion.x, explosion.y, 30, 30);
         setTimeout(function () {
             updateOponents();
+            updateAliados();
         }, 5000);
         setTimeout(function () {
             myGamePiece.update();
@@ -342,6 +363,45 @@ var juego = (function () {
         this.y = y;
     }
     ;
+    
+    function Obstaculo(width, height, color, x, y, tipo, vida,id) {
+        this.gamearea = myGameArea;
+        this.image = new Image();
+        this.image.src = color;
+        this.vida = vida;
+        this.width = width;
+        this.height = height;
+        this.x = x;
+        this.y = y;
+        this.tipo=tipo;
+        this.alive=true;
+        this.id=id;
+
+        this.crashWith = function (otherobj, h, w,tipo) {
+            var myleft = this.x;
+            var myright = this.x + (this.width);
+            var mytop = this.y;
+            var mybottom = this.y + (this.height);
+            var otherleft = otherobj.x;
+            var otherright = otherobj.x + w;
+            var othertop = otherobj.y;
+            var otherbottom = otherobj.y + h;
+            var crash = true;
+            if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+                crash = false;
+            }
+            if(crash && tipo==="bullet"){
+                this.vida-=1;
+                if(this.vida<=0){
+                    this.alive=false;
+                    myGameArea.context.fillStyle = "#A9A9A9";
+                    myGameArea.context.fillRect(this.x, this.y, this.width, this.height);
+                }
+            }
+            return crash;
+        };
+    }
+    ;
 
 
 
@@ -369,7 +429,7 @@ var juego = (function () {
             myGameArea.context.fillRect(this.x, this.y, 50, 80);
             this.x += this.speedX;
             this.y += this.speedY;
-            if (this.crashWith(enemyBandera, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.04)) && this.hasban === false) {
+            if (this.crashWith(enemyBandera, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.04),"enemyBandera") && this.hasban === false) {
                 checkGetBandera();
             }
             if (this.hasban) {
@@ -378,11 +438,21 @@ var juego = (function () {
                 enemyBandera.x = this.x - 20;
                 enemyBandera.y = this.y - 20;
             }
-            if (this.hasban && this.crashWith(myBandera, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.04))) {
+            if (this.hasban && this.crashWith(myBandera, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.04),"myBandera")) {
                 checkPostPoint().then(checkSoltarBandera);
             }
+            for(var i=0;i<obstaculos.length;i++){
+                if (obstaculos[i].alive) {
+                    if(obstaculos[i].crashWith(this, this.width,this.height,"jugador")){
+                        this.x -= this.speedX;
+                        this.y -= this.speedY;
+                    }
+                }
+            }
+            graficarObstaculos();
             graficarBandera(myteam);
             graficarBandera(enemyteam);
+            
 
         };
 
@@ -397,8 +467,9 @@ var juego = (function () {
             }
             graficarBandera(myteam);
             graficarBandera(enemyteam);
+            
         };
-        this.crashWith = function (otherobj, h, w) {
+        this.crashWith = function (otherobj, h, w,tipo) {
             var myleft = this.x;
             var myright = this.x + (this.width);
             var mytop = this.y;
@@ -411,7 +482,7 @@ var juego = (function () {
             if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
                 crash = false;
             }
-            if(crash && otherobj !== myBandera && otherobj !== enemyBandera){this.vida-=1;}
+            if(crash && tipo==="bullet"){this.vida-=1;}
             return crash;
         };
     }
@@ -548,6 +619,11 @@ var juego = (function () {
                 enemyteam = "A";
                 myteam = "B";
             }
+            for(var i=0;i<30;i++){
+                if(i<=10){obstaculos.push(new Obstaculo(50,50,directionObstaculo+"1.png",i*20,i*20,"pasto",200,i));}
+                else if(i>10 && i<=20){obstaculos.push(new Obstaculo(50,50,directionObstaculo+"2.png",i*40,i*40,"ladrillo",500,i));}
+                else{obstaculos.push(new Obstaculo(50,50,directionObstaculo+"3.png",i*60,i*60,"metal",1000,i));}
+            }
             myroom = sessionStorage.getItem("idRoom");
             var socket = new SockJS('/stompendpoint');
             stompClient = Stomp.over(socket);
@@ -667,6 +743,7 @@ var juego = (function () {
                 enemyBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.10), Math.round(myGameArea.canvas.height * 0.50), enemyteam);
             }
             setTimeout(function () {
+                graficarObstaculos();
                 graficarBandera(myteam);
                 graficarBandera(enemyteam);
                 getscorer().then(send);
