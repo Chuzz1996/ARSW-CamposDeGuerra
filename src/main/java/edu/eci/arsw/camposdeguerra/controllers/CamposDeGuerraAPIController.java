@@ -134,13 +134,27 @@ public class CamposDeGuerraAPIController {
         }
     }
     
+    
+    
+    @RequestMapping(path = "/Rooms/{room}/Users",method = RequestMethod.GET)
+    public ResponseEntity<?> getAllUsersRoom(@PathVariable Integer room) {
+        try {
+            //Obtener dato
+            return new ResponseEntity<>(cdg.getAllUsuariosFromRoom(room),HttpStatus.CREATED);
+        } catch (CamposDeGuerraNotFoundException ex) {
+            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+        }
+
+    }
+    
     /**
      * 
      * @param u
      * @param room
      * @return 
      */
-    @RequestMapping(path = "/Rooms/{room}",method = RequestMethod.POST)
+    @RequestMapping(path = "/Rooms/{room}/Users",method = RequestMethod.POST)
     public ResponseEntity<?> addUserToRoom(@RequestBody Usuario u,@PathVariable Integer room) {
         try {
             //Registrar dato
@@ -159,10 +173,10 @@ public class CamposDeGuerraAPIController {
      * @return 
      */
     @RequestMapping(path = "/Rooms/{room}",method = RequestMethod.GET)
-    public ResponseEntity<?> getAllUsuariosFromRoom(@PathVariable Integer room) {
+    public ResponseEntity<?> getRoom(@PathVariable Integer room) {
         try {
             //Obtener datos
-            return new ResponseEntity<>(cdg.getAllUsuariosFromRoom(room), HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(cdg.getRoom(room), HttpStatus.ACCEPTED);
         } catch (CamposDeGuerraNotFoundException ex) {
             Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
@@ -174,7 +188,7 @@ public class CamposDeGuerraAPIController {
      * @param room
      * @return 
      */
-    @RequestMapping(path = "/Rooms/{room}/TeamA",method = RequestMethod.GET)
+    @RequestMapping(path = "/Rooms/{room}/Users/TeamA",method = RequestMethod.GET)
     public ResponseEntity<?> getAllUsuariosFromTeamARoom(@PathVariable Integer room) {
         try {
             //Obtener datos
@@ -190,7 +204,7 @@ public class CamposDeGuerraAPIController {
      * @param room
      * @return 
      */
-    @RequestMapping(path = "/Rooms/{room}/TeamB",method = RequestMethod.GET)
+    @RequestMapping(path = "/Rooms/{room}/Users/TeamB",method = RequestMethod.GET)
     public ResponseEntity<?> getAllUsuariosFromTeamBRoom(@PathVariable Integer room) {
         try {
             //Obtener datos
@@ -224,8 +238,8 @@ public class CamposDeGuerraAPIController {
      * @param room
      * @return 
      */
-    @RequestMapping(path = "/Rooms/{room}/user",method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteUsuarioFromRoom(@RequestBody Usuario user,@PathVariable Integer room ) {
+    @RequestMapping(path = "/Rooms/{room}/Users/{user}",method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteUsuarioFromRoom(@PathVariable String user,@PathVariable Integer room ) {
         try {
             //Borrar dato
             cdg.deleteUsuarioFromRoom(user, room);
@@ -241,7 +255,7 @@ public class CamposDeGuerraAPIController {
      * @param room
      * @return 
      */
-    @RequestMapping(path = "/Rooms/{room}",method = RequestMethod.DELETE)
+    @RequestMapping(path = "/Rooms/{room}/Users",method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteAllUsuariosFromRoom(@PathVariable Integer room ) {
         try {
             //Borrar dato

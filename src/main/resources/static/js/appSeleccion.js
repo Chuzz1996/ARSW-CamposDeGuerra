@@ -8,11 +8,12 @@ var appSeleccion = (function () {
     var idRoom;
 
     class Usuario {
-        constructor(tipoMaquina, userName, puntaje, equipo) {
+        constructor(tipoMaquina, userName, puntaje,vida, equipo) {
             this.tipoMaquina = tipoMaquina;
             this.userName = userName;
             this.puntaje = puntaje;
             this.equipo = equipo;
+            this.vida=vida;
         }
     }
 
@@ -24,6 +25,7 @@ var appSeleccion = (function () {
             this.bullets = bullets;
         }
     }
+    
 
     class Room {
         constructor(id,tipoMaquina,tiempo, cantidadJugadores,potenciadores,capturasPartida,estado) {
@@ -105,7 +107,7 @@ var appSeleccion = (function () {
     };
 
     var postUserRoom = function () {
-        var tempUser = new Usuario(myUser.tipoMaquina, myUser.userName, myUser.puntaje, myUser.equipo);
+        var tempUser = new Usuario(myUser.tipoMaquina, myUser.userName, myUser.puntaje,myUser.vida, myUser.equipo);
         var postPromise = api.postUserRoom(idRoom, tempUser);
         postPromise.then(
                 function () {
@@ -140,16 +142,8 @@ var appSeleccion = (function () {
         console.info('Connecting to WS...');
         var socket = new SockJS('/stompendpoint');
         stompClient = Stomp.over(socket);
-        sessionStorage.setItem("pos", "noactualizado");
+        
         stompClient.connect({}, function (frame) {
-            stompClient.subscribe('/topic/sala.' + sessionStorage.getItem("idRoom") + "/pos", function (eventbody) {
-                var object = eventbody.body;
-                if (sessionStorage.getItem("pos") === "noactualizado") {
-                    sessionStorage.setItem("pos", object);
-                } else {
-                    console.info("NO ASIGNO POSICION");
-                }
-            });
             stompClient.subscribe('/topic/sala.' + sessionStorage.getItem("idRoom"), function (eventbody) {
                 var newURL = window.location.protocol + "//" + window.location.host + "/" + "juego.html";
                 setTimeout(function (){window.location.replace(newURL);stompClient.disconnect();}, 4000);

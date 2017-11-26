@@ -30,8 +30,6 @@ public class STOMPMessagesHandler {
 
     @MessageMapping("/sala.{idSala}")
     public void listoParaJugar(String estado, @DestinationVariable Integer idSala) throws Exception {
-        Integer pos=l.listoParaJugar(estado, idSala);
-        msgt.convertAndSend("/topic/sala." + idSala + "/pos",pos);
         if (l.roomFull(idSala)) {
             msgt.convertAndSend("/topic/sala." + idSala, "Pueden comenzar");
             msgt.convertAndSend("/topic/sala." + idSala + "/tiempo", l.getTime(idSala));

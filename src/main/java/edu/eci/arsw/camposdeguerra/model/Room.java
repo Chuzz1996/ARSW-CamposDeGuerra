@@ -22,28 +22,27 @@ public class Room {
     private AtomicInteger puntajeEquipoB = new AtomicInteger(0);
     private ConcurrentLinkedQueue<Usuario> equipoA = new ConcurrentLinkedQueue<>();
     private ConcurrentLinkedQueue<Usuario> equipoB = new ConcurrentLinkedQueue<>();
-    private Integer id;
+    private Integer id = 0;
     private String banderaA = "", banderaB = "";
     private AtomicBoolean banderaATomada = new AtomicBoolean(false), banderaBTomada = new AtomicBoolean(false);
     private int tiempo = 180000;
     private int cantidadJugadores = 6;
     private String potenciadores = "";
     private int capturasPartida = 2;
-    private String tipoMaquina="";
-    private String estado="No jugando";
+    private String tipoMaquina = "Destructora";
+    private String estado = "No jugando";
 
-    
-    
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public String getTipoMaquina() {
         return tipoMaquina;
     }
+
     /**
-     * 
-     * @param tipoMaquina 
+     *
+     * @param tipoMaquina
      */
     public void setTipoMaquina(String tipoMaquina) {
         this.tipoMaquina = tipoMaquina;
@@ -56,201 +55,198 @@ public class Room {
     public void setEstado(String estado) {
         this.estado = estado;
     }
-    
 
-   
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public AtomicInteger getPuntajeEquipoA() {
         return puntajeEquipoA;
     }
 
     /**
-     * 
-     * @param puntajeEquipoA 
+     *
+     * @param puntajeEquipoA
      */
     public void setPuntajeEquipoA(AtomicInteger puntajeEquipoA) {
         this.puntajeEquipoA = puntajeEquipoA;
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public AtomicInteger getPuntajeEquipoB() {
         return puntajeEquipoB;
     }
 
     /**
-     * 
-     * @param puntajeEquipoB 
+     *
+     * @param puntajeEquipoB
      */
     public void setPuntajeEquipoB(AtomicInteger puntajeEquipoB) {
         this.puntajeEquipoB = puntajeEquipoB;
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public ConcurrentLinkedQueue<Usuario> getEquipoA() {
         return equipoA;
     }
 
     /**
-     * 
-     * @param equipoA 
+     *
+     * @param equipoA
      */
     public void setEquipoA(ConcurrentLinkedQueue<Usuario> equipoA) {
         this.equipoA = equipoA;
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public ConcurrentLinkedQueue<Usuario> getEquipoB() {
         return equipoB;
     }
 
     /**
-     * 
-     * @param equipoB 
+     *
+     * @param equipoB
      */
     public void setEquipoB(ConcurrentLinkedQueue<Usuario> equipoB) {
         this.equipoB = equipoB;
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public String getBanderaA() {
         return banderaA;
     }
 
     /**
-     * 
-     * @param banderaA 
+     *
+     * @param banderaA
      */
     public void setBanderaA(String banderaA) {
         this.banderaA = banderaA;
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public String getBanderaB() {
         return banderaB;
     }
 
     /**
-     * 
-     * @param banderaB 
+     *
+     * @param banderaB
      */
     public void setBanderaB(String banderaB) {
         this.banderaB = banderaB;
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public AtomicBoolean getBanderaATomada() {
         return banderaATomada;
     }
 
     /**
-     * 
-     * @param banderaATomada 
+     *
+     * @param banderaATomada
      */
     public void setBanderaATomada(AtomicBoolean banderaATomada) {
         this.banderaATomada = banderaATomada;
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public AtomicBoolean getBanderaBTomada() {
         return banderaBTomada;
     }
 
     /**
-     * 
-     * @param banderaBTomada 
+     *
+     * @param banderaBTomada
      */
     public void setBanderaBTomada(AtomicBoolean banderaBTomada) {
         this.banderaBTomada = banderaBTomada;
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public int getTiempo() {
         return tiempo;
     }
 
     /**
-     * 
-     * @param tiempo 
+     *
+     * @param tiempo
      */
     public void setTiempo(int tiempo) {
         this.tiempo = tiempo;
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public int getCantidadJugadores() {
         return cantidadJugadores;
     }
 
     /**
-     * 
-     * @param cantidadJugadores 
+     *
+     * @param cantidadJugadores
      */
     public void setCantidadJugadores(int cantidadJugadores) {
         this.cantidadJugadores = cantidadJugadores;
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public String getPotenciadores() {
         return potenciadores;
     }
 
     /**
-     * 
-     * @param potenciadores 
+     *
+     * @param potenciadores
      */
     public void setPotenciadores(String potenciadores) {
         this.potenciadores = potenciadores;
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public int getCapturasPartida() {
         return capturasPartida;
     }
 
     /**
-     * 
-     * @param capturasPartida 
+     *
+     * @param capturasPartida
      */
     public void setCapturasPartida(int capturasPartida) {
         this.capturasPartida = capturasPartida;
     }
-    
 
     /**
      *
@@ -259,8 +255,8 @@ public class Room {
     public Room(Integer id) {
         this.id = id;
     }
-    
-    public Room(){
+
+    public Room() {
     }
 
     /**
@@ -289,12 +285,12 @@ public class Room {
         }
         return agregoUser;
     }
-    
+
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return equipoA.size() + equipoB.size() == 0;
     }
 
@@ -311,15 +307,25 @@ public class Room {
      * @param us
      * @return
      */
-    public boolean deleteUser(Usuario us) {
-        boolean borroUser = true;
-        if (equipoA.contains(us)) {
-            equipoA.remove(us);
-        } else if (equipoB.contains(us)) {
-            equipoB.remove(us);
-        } else {
-            borroUser = false;
+    public boolean deleteUser(String us) {
+        boolean borroUser = false;
+        ArrayList<Usuario> temp = new ArrayList<>(equipoA);
+        ArrayList<Usuario> temp2 = new ArrayList<>(equipoB);
+        for (Usuario u : temp) {
+            if (u.getUserName().equals(us)) {
+                equipoA.remove(u);
+                borroUser = true;
+            }
         }
+        if (!borroUser) {
+            for (Usuario u : temp2) {
+                if (u.getUserName().equals(us)) {
+                    equipoB.remove(u);
+                    borroUser = true;
+                }
+            }
+        }
+
         return borroUser;
     }
 
@@ -467,8 +473,8 @@ public class Room {
 
         return ans;
     }
-    
-    public List<Integer> obtenerScorer(){
+
+    public List<Integer> obtenerScorer() {
         ArrayList<Integer> ans = new ArrayList<>();
         ans.add(puntajeEquipoA.get());
         ans.add(puntajeEquipoB.get());

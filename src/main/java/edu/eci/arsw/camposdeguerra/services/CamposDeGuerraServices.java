@@ -145,7 +145,7 @@ public class CamposDeGuerraServices {
      * @param room
      * @throws CamposDeGuerraNotFoundException 
      */
-    public void deleteUsuarioFromRoom(Usuario us, Integer room) throws CamposDeGuerraNotFoundException {
+    public void deleteUsuarioFromRoom(String us, Integer room) throws CamposDeGuerraNotFoundException {
         cdgr.deleteUsuarioFromRoom(us, room);
     }
 
@@ -255,6 +255,16 @@ public class CamposDeGuerraServices {
      */
     public void addRoom(Room room)throws CamposDeGuerraPersistenceException{
         cdgr.addRoom(room);
+    }
+    
+    /**
+     * 
+     * @param idRoom 
+     * @return  
+     * @throws edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException 
+     */
+    public Room getRoom(Integer idRoom)throws CamposDeGuerraNotFoundException{
+        return cdgr.getRoom(idRoom);
     }
     
 }

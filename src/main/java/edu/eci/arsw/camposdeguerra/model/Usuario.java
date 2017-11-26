@@ -21,11 +21,10 @@ package edu.eci.arsw.camposdeguerra.model;
 public class Usuario {
     
     private Maquina tipoMaquina;
-    
     private String userName="";
     private int puntaje=0;
-    private int vida;
-    private String equipo;
+    private int vida=0;
+    private String equipo="";
 
     
     public Usuario() {

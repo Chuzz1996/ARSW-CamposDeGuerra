@@ -69,7 +69,7 @@ public interface CamposDeGuerraRoomPersistence {
      * @param room
      * @throws CamposDeGuerraNotFoundException 
      */
-    public void deleteUsuarioFromRoom(Usuario us, Integer room) throws CamposDeGuerraNotFoundException;
+    public void deleteUsuarioFromRoom(String us, Integer room) throws CamposDeGuerraNotFoundException;
     
     
     /**
@@ -151,9 +151,21 @@ public interface CamposDeGuerraRoomPersistence {
      * @throws CamposDeGuerraNotFoundException 
      */
     public List<Integer> obtenerScorer(Integer room) throws CamposDeGuerraNotFoundException;
-
+    
+    
+    /**
+     * 
+     * @param idSala
+     * @return
+     * @throws CamposDeGuerraNotFoundException 
+     */
     public Room getRoom(Integer idSala) throws CamposDeGuerraNotFoundException ;
     
+    /**
+     * 
+     * @param idSala
+     * @throws CamposDeGuerraNotFoundException 
+     */
     public void deleteRoom(Integer idSala) throws CamposDeGuerraNotFoundException ;
 
 }

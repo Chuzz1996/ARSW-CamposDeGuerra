@@ -6,26 +6,29 @@ var appIndex = (function () {
     var api = apiclient;
 
     class Usuario {
-        constructor(tipoMaquina, userName, puntaje,equipo) {
+        constructor(tipoMaquina, userName, puntaje,vida,equipo) {
             this.tipoMaquina = tipoMaquina;
             this.userName = userName;
             this.puntaje = puntaje;
             this.equipo = equipo;
+            this.vida=vida;
         }
     }
 
     class Maquina {
-        constructor(live, speed, attack) {
-            this.live = live;
-            this.speed = speed;
-            this.attack = attack;
+        constructor(x, y, direction, bullets) {
+            this.x = x;
+            this.y = y;
+            this.direction = direction;
+            this.bullets = bullets;
         }
     }
 
 
     var postUser = function () {
         sessionStorage.setItem("user", document.getElementById("username").value);
-        var newUsuario = new Usuario(null, sessionStorage.getItem("user"), 0, 0);
+        var maquina=new Maquina(0,0,1,[]);
+        var newUsuario = new Usuario(maquina, sessionStorage.getItem("user"),0,0,"Ninguno");
         var postPromise = api.postUser(newUsuario);
         postPromise.then(
                 function () {

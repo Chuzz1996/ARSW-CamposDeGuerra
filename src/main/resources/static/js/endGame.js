@@ -18,7 +18,7 @@ var endGame = (function () {
     
     
     var getAllUsers = function () {
-        var getPromise = apiclient.getRoom(sessionStorage.getItem("idRoom"), function (lista1) {
+        var getPromise = apiclient.getAllUsersRoom(sessionStorage.getItem("idRoom"), function (lista1) {
             reducir = function (objeto) {
                 return objeto2 = {"userName": objeto.userName, "equipo": objeto.equipo, "puntaje": objeto.puntaje};
             };

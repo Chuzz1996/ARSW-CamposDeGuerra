@@ -33,29 +33,32 @@ var apiclient = (function () {
         },
         postUserRoom: function (room,user) {
             return $.ajax({
-                url: "/CamposDeGuerra/Rooms/"+room, 
+                url: "/CamposDeGuerra/Rooms/"+room+"/Users", 
                 type: "POST", 
                 data: JSON.stringify(user), 
                 contentType: "application/json"});
         },   
         deleteUserRoom: function (room,user) {
             return $.ajax({
-                url: "/CamposDeGuerra/Rooms/"+room+"/"+user, 
+                url: "/CamposDeGuerra/Rooms/"+room+"/Users/"+user.userName, 
                 type: "DELETE"});
         },
         deleteAllUsersRoom: function (room) {
             return $.ajax({
-                url: "/CamposDeGuerra/Rooms/"+room, 
+                url: "/CamposDeGuerra/Rooms/"+room+"/Users", 
                 type: "DELETE"});
         },
         getRoom: function (room,callback) {
             return $.get("/CamposDeGuerra/Rooms/"+room,callback);
         },
+        getAllUsersRoom:function(room,callback){
+            return $.get("/CamposDeGuerra/Rooms/"+room+"/Users",callback);
+        },
         getTeamARoom: function (room,callback) {
-            return $.get("/CamposDeGuerra/Rooms/"+room+"/TeamA",callback);
+            return $.get("/CamposDeGuerra/Rooms/"+room+"/Users/TeamA",callback);
         },
         getTeamBRoom: function (room,callback) {
-            return $.get("/CamposDeGuerra/Rooms/"+room+"/TeamB",callback);
+            return $.get("/CamposDeGuerra/Rooms/"+room+"/Users/TeamB",callback);
         },
         getMyTeam: function (user,room,callback) {
             return $.get("/CamposDeGuerra/Rooms/"+room+"/Teams/"+user,callback);

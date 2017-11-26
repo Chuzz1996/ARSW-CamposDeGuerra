@@ -65,7 +65,7 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
     }
 
     @Override
-    public void deleteUsuarioFromRoom(Usuario us, Integer room) throws CamposDeGuerraNotFoundException {
+    public void deleteUsuarioFromRoom(String us, Integer room) throws CamposDeGuerraNotFoundException {
         if (rooms.containsKey(room)) {
             boolean ans=rooms.get(room).deleteUser(us);
             if(!ans){

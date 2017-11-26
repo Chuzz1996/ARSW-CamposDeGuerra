@@ -28,19 +28,7 @@ public class controlTimeAndLogical {
     private final ConcurrentHashMap<Integer, Integer> getdatos = new ConcurrentHashMap<>();
     Integer timeGame = 180000;
 
-    public Integer listoParaJugar(String estado, Integer idSala) throws Exception {
-        Integer pos = 0;
-        if (estado.equals("listo")) {
-            try {
-                Room r = null;
-                r = rp.getRoom(idSala);
-                pos = r.getAllCompetitors().size() + 1;
-            } catch (Exception e) {
-                throw new Exception("Hubo un problema asignando posicion");
-            }
-        }
-        return pos;
-    }
+   
 
     public boolean roomFull(Integer idSala) throws Exception {
         boolean ans = false;
