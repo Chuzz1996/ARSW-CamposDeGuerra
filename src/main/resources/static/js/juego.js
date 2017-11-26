@@ -8,6 +8,7 @@ var juego = (function () {
     var oponents = [];
     var aliados = [];
     var obstaculos = [];
+    var potenciadores = [];
     var myBandera;
     var enemyBandera;
     var myGameArea;
@@ -19,6 +20,7 @@ var juego = (function () {
     var directionImageShoot = "/images/bullet";
     var directionBandera = "/images/bandera";
     var directionObstaculo = "/images/obstaculo";
+    var directionPotenciador = "/images/potenciador";
     var directionShoot = 1;
     var puntos;
     var bala;
@@ -86,72 +88,81 @@ var juego = (function () {
         }
     }
 
+    class Potenciador {
+        constructor(x,y,ran,tipo,tiempo) {
+            this.x = x;
+            this.y = y;
+            this.tipo=tipo;
+            this.tiempo=tiempo;
+            this.image = new Image();
+            this.image.src = directionPotenciador+ + ran + ".png";
+
+        }
+    }
 
     var cargarPartida = function () {
         var currentRoom = sessionStorage.getItem("idRoom");
         var getPromise = api.getRoom(currentRoom, function (data) {
-            tiempoRoom=data.tiempo;
+            tiempoRoom = data.tiempo;
             var x, y, dir;
             puntos = new Score(0, 0);
             bala = new Image();
             var velocidad, dano;
-            if(data.tipoMaquina === "Veloz"){
+            if (data.tipoMaquina === "Veloz") {
                 velocidad = 20;
                 dano = 3;
                 vida = 400;
                 directionImageTank = "/images/veloz"
-            }else if(data.tipoMaquina === "Protectora"){
+            } else if (data.tipoMaquina === "Protectora") {
                 velocidad = 10;
                 dano = 5;
                 vida = 1000;
                 directionImageTank = "/images/protectora";
-            }else{
+            } else {
                 velocidad = 15;
                 dano = 10;
                 vida = 500;
                 directionImageTank = "/images/destructora";
             }
-            
+
             if (myteam === "A") {
                 x = 30;
                 dir = "1";
                 y = Math.round(myGameArea.canvas.height * 0.30);
-                
-            
+
+
                 for (var i = 0; i < data.equipoA.length; i++) {
                     if (data.equipoA[i].userName !== sessionStorage.getItem("user")) {
-                        aliados.push(new Component(50, 50, directionImageTank + dir + myteam + ".png", x, (i+1)*y, "image", [], dir, data.equipoA[i].userName, "A", vida, velocidad, dano));
-                    }
-                    else{
-                        myGamePiece = new Component(50, 50, directionImageTank + dir + myteam + ".png", x, (i+1)*y, "image", [], 1, sessionStorage.getItem("user"), myteam, vida, velocidad, dano);
+                        aliados.push(new Component(50, 50, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], dir, data.equipoA[i].userName, "A", vida, velocidad, dano));
+                    } else {
+                        myGamePiece = new Component(50, 50, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], 1, sessionStorage.getItem("user"), myteam, vida, velocidad, dano);
                     }
                 }
                 x = myGameArea.canvas.width - 30;
                 for (var i = 0; i < data.equipoB.length; i++) {
                     if (data.equipoB[i].userName !== sessionStorage.getItem("user")) {
-                        oponents.push(new Component(50, 50, directionImageTank + "2" + "B" + ".png", x, (i+1)*y, "image", [], "2", data.equipoB[i].userName, "B", vida, velocidad, dano));
+                        oponents.push(new Component(50, 50, directionImageTank + "2" + "B" + ".png", x, (i + 1) * y, "image", [], "2", data.equipoB[i].userName, "B", vida, velocidad, dano));
                     }
                 }
             } else {
                 x = myGameArea.canvas.width - 30;
                 dir = "2";
                 y = Math.round(myGameArea.canvas.height * 0.30);
-                
+
                 for (var i = 0; i < data.equipoB.length; i++) {
                     if (data.equipoB[i].userName !== sessionStorage.getItem("user")) {
-                        aliados.push(new Component(50, 50, directionImageTank + dir + myteam + ".png",x, (i+1)*y, "image", [], dir, data.equipoB[i].userName, myteam, vida, velocidad, dano));
-                    }
-                    else{
-                        myGamePiece = new Component(50, 50, directionImageTank + dir + myteam + ".png", x, (i+1)*y, "image", [], 2, sessionStorage.getItem("user"), myteam, vida, velocidad, dano);
+                        aliados.push(new Component(50, 50, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], dir, data.equipoB[i].userName, myteam, vida, velocidad, dano));
+                    } else {
+                        myGamePiece = new Component(50, 50, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], 2, sessionStorage.getItem("user"), myteam, vida, velocidad, dano);
                     }
                 }
-                x=30;
+                x = 30;
                 for (var i = 0; i < data.equipoA.length; i++) {
                     if (data.equipoA[i].userName !== sessionStorage.getItem("user")) {
-                        oponents.push(new Component(50, 50, directionImageTank + "1" + "A" + ".png", x, (i+1)*y, "image", [], "1", data.equipoA[i].userName, "A", vida, velocidad, dano));
+                        oponents.push(new Component(50, 50, directionImageTank + "1" + "A" + ".png", x, (i + 1) * y, "image", [], "1", data.equipoA[i].userName, "A", vida, velocidad, dano));
                     }
                 }
-                
+
             }
             for (var i = 0; i < 30; i++) {
                 if (i <= 10) {
@@ -162,7 +173,7 @@ var juego = (function () {
                     obstaculos.push(new Obstaculo(50, 50, directionObstaculo + "3.png", i * 60, i * 60, "metal", 1000, i));
                 }
             }
-            
+
         });
         getPromise.then(
                 function () {
@@ -182,6 +193,9 @@ var juego = (function () {
             min = Math.floor(totalSeconds / 60);
             sec = totalSeconds - min * 60;
             sec++;
+            for (var item in potenciadores) {
+                item.tiempo -= 1000;
+            }
             if (sec === 60) {
                 sec = 0;
                 min++;
@@ -193,7 +207,22 @@ var juego = (function () {
             if (mili === tiempoRoom) {
                 stompClient.send('/app/sala.' + myroom + "/endGame", {}, 'end');
             }
+            var potenciador;
+            if (mili % 30000 === 0) {
+                var Poten = Math.floor((Math.random() * 3) + 1);
+                var xPonte = Math.floor((Math.random() * myGameArea.canvas.width) + 1);
+                var yPonte = Math.floor((Math.random() * myGameArea.canvas.height) + 1);
+                if (Poten === 1) {
+                    potenciador = new Potenciador(xPonte, yPonte, Poten, "vida", 10000);
+                } else if (Poten === 2) {
+                    potenciador = new Potenciador(xPonte, yPonte, Poten, "vida", 10000);
+                } else {
+                    potenciador = new Potenciador(xPonte, yPonte, Poten, "vida", 10000);
+                }
+                stompClient.send('/topic/sala.' + myroom + "/potenciador", {}, JSON.stringify(potenciador));
+            }
             document.getElementById("Segundos").innerHTML = (min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec);
+
         };
         setInterval(handler, 1000);
     };
@@ -322,6 +351,12 @@ var juego = (function () {
             if (obstaculos[i].alive) {
                 myGameArea.context.drawImage(obstaculos[i].image, obstaculos[i].x, obstaculos[i].y, obstaculos[i].width, obstaculos[i].height);
             }
+        }
+    };
+
+    var graficarPoteciadores=function (){
+        for (var p in potenciadores) {
+            myGameArea.context.drawImage(p.image, p.x, p.y, 30, 30);
         }
     };
 
@@ -456,6 +491,7 @@ var juego = (function () {
     }
     ;
 
+
     function Obstaculo(width, height, color, x, y, tipo, vida, id) {
         this.gamearea = myGameArea;
         this.image = new Image();
@@ -543,6 +579,11 @@ var juego = (function () {
                     }
                 }
             }
+            for (var i = 0; i < potenciadores.length; i++) {
+                if (potenciadores[i].alive) {
+                    potenciadores[i].crashWith(this, this.width, this.height, "jugador")
+                }
+            }
             graficarObstaculos();
             graficarBandera(myteam);
             graficarBandera(enemyteam);
@@ -578,6 +619,12 @@ var juego = (function () {
             }
             if (crash && tipo === "bullet") {
                 this.vida -= this.dano;
+            } else if (crash && tipo === "vida") {
+                this.vida += 100;
+            } else if (crash && tipo === "velocidad") {
+                this.velocidad += 15;
+            } else if (crash && tipo === "ataque") {
+                this.dano += 10;
             }
             return crash;
         };
@@ -716,11 +763,11 @@ var juego = (function () {
                 myteam = "B";
             }
             myroom = sessionStorage.getItem("idRoom");
-            
+
             var socket = new SockJS('/stompendpoint');
             stompClient = Stomp.over(socket);
             stompClient.connect({}, function (frame) {
-                
+
                 //ENDGAME
                 stompClient.subscribe("/topic/sala." + myroom + "/endGame", function (evenbody) {
                     sessionStorage.setItem("PuntosA", puntos.scoreA);
@@ -729,7 +776,7 @@ var juego = (function () {
                     var newURL = window.location.protocol + "//" + window.location.host + "/" + "endgame.html";
                     window.location.replace(newURL);
                 });
-                
+
                 //ALIADOS
                 stompClient.subscribe('/topic/sala.' + myroom + "/" + myteam, function (eventbody) {
                     var object = JSON.parse(eventbody.body);
@@ -750,7 +797,7 @@ var juego = (function () {
                     updateAliados();
                     myGamePiece.update();
                 });
-                
+
                 //ENEMIGOS
                 stompClient.subscribe('/topic/sala.' + myroom + "/" + enemyteam, function (eventbody) {
                     var object = JSON.parse(eventbody.body);
@@ -771,19 +818,19 @@ var juego = (function () {
                     updateOponents();
                     myGamePiece.update();
                 });
-                
+
                 //BALAS
                 stompClient.subscribe('/topic/sala.' + myroom + "/bullets", function (eventbody) {
                     var object = JSON.parse(eventbody.body);
                     graficarBala(object);
                 });
-                
+
                 //EXPLOCION
                 stompClient.subscribe('/topic/sala.' + myroom + "/explocion", function (eventbody) {
                     var object = JSON.parse(eventbody.body);
                     graficarExplosion(object);
                 });
-                
+
                 //BANDERA
                 stompClient.subscribe('/topic/sala.' + myroom + "/bandera", function (eventbody) {
                     var object = JSON.parse(eventbody.body);
@@ -800,22 +847,38 @@ var juego = (function () {
                     }
                     graficarBandera(object.team);
                 });
-                
+
                 //PUNTAJE
                 stompClient.subscribe('/topic/sala.' + myroom + "/puntaje", function (eventbody) {
                     getscorer().then(function () {
                         document.getElementById("Puntaje").innerHTML = "Puntaje: " + puntos.scoreA + "-" + puntos.scoreB;
                     });
                 });
-                
+
                 //TIEMPO
                 stompClient.subscribe('/topic/sala.' + myroom + "/tiempo", function (eventbody) {
                     var object = eventbody.body;
                     mili = object;
                 });
+
+                //POTENCIADOR
+                stompClient.subscribe('/topic/sala.' + myroom + "/potenciador", function (eventbody) {
+                    var object = JSON.parse(eventbody.body);
+                    var banderaP = false;
+                    for (var p in potenciadores) {
+                        if (p.x === object.x && p.y === object.y) {
+                            p.tiempo = 0;
+                            banderaP = true;
+                        }
+                    }
+                    if (!banderaP) {
+                        potenciadores.push(object);
+                    }
+                    setTimeout(graficarPoteciadores, 10000);
+                });
             });
-            
-            
+
+
             myGameArea.start();
             myBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.10), Math.round(myGameArea.canvas.height * 0.50), myteam);
             enemyBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.90), Math.round(myGameArea.canvas.height * 0.50), enemyteam);
