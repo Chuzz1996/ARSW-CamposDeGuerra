@@ -36,7 +36,7 @@ public class controlTimeAndLogical {
         try {
             Room r = rp.getRoom(idSala);
             Integer cj = r.getAllCompetitors().size();
-            if (cj % 2 == 0 && cj > 0 && cj <= r.getCantidadMaximaJugadores()&& r.getEstado().equals("No jugando")) {
+            if (cj % 2 == 0 && cj > 0 && cj <= r.getCantidadMaximaJugadores()&& r.getEstado().equals("Nojugando")) {
                 ans = true;
                 r.setEstado("Jugando");
                 tiempoSalas.putIfAbsent(idSala, 0);
