@@ -7,6 +7,7 @@ package edu.eci.arsw.camposdeguerra.mom;
 
 import edu.eci.arsw.camposdeguerra.cache.CamposDeGuerraRoomPersistence;
 import edu.eci.arsw.camposdeguerra.model.Room;
+import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -35,7 +36,7 @@ public class controlTimeAndLogical {
         try {
             Room r = rp.getRoom(idSala);
             Integer cj = r.getAllCompetitors().size();
-            if (cj % 2 == 0 && cj > 0 && cj <= r.getCantidadJugadores() && r.getEstado().equals("No jugando")) {
+            if (cj % 2 == 0 && cj > 0 && cj <= r.getCantidadMaximaJugadores()&& r.getEstado().equals("No jugando")) {
                 ans = true;
                 r.setEstado("Jugando");
                 tiempoSalas.putIfAbsent(idSala, 0);
@@ -56,11 +57,11 @@ public class controlTimeAndLogical {
                 }, 0, 1000);
                 controlTiempo.putIfAbsent(idSala, temp);
 
-            } else if (cj % 2 == 0 && cj > 0 && cj <= r.getCantidadJugadores() && r.getEstado().equals("Jugando")) {
+            } else if (cj % 2 == 0 && cj > 0 && cj <= r.getCantidadMaximaJugadores() && r.getEstado().equals("Jugando")) {
                 ans = true;
             }
 
-        } catch (Exception e) {
+        } catch (CamposDeGuerraNotFoundException e) {
         }
 
         return ans;

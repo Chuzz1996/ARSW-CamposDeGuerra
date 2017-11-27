@@ -26,11 +26,12 @@ public class Room {
     private String banderaA = "", banderaB = "";
     private AtomicBoolean banderaATomada = new AtomicBoolean(false), banderaBTomada = new AtomicBoolean(false);
     private int tiempo = 180000;
-    private int cantidadJugadores = 6;
+    private int cantidadMaximaJugadores = 6;
+    private int cantidadActualJugadores = 0;
     private String potenciadores = "";
-    private int capturasPartida = 2;
+    private int capturasParaGanar = 2;
     private String tipoMaquina = "Destructora";
-    private String estado = "No jugando";
+    private String estado = "Nojugando";
 
     /**
      *
@@ -204,17 +205,27 @@ public class Room {
      *
      * @return
      */
-    public int getCantidadJugadores() {
-        return cantidadJugadores;
+    public int getCantidadMaximaJugadores() {
+        return cantidadMaximaJugadores;
     }
 
     /**
      *
-     * @param cantidadJugadores
+     * @param cantidadMaximaJugadores
      */
-    public void setCantidadJugadores(int cantidadJugadores) {
-        this.cantidadJugadores = cantidadJugadores;
+    public void setCantidadMaximaJugadores(int cantidadMaximaJugadores) {
+        this.cantidadMaximaJugadores = cantidadMaximaJugadores;
     }
+
+    public int getCantidadActualJugadores() {
+        return cantidadActualJugadores;
+    }
+
+    public void setCantidadActualJugadores(int cantidadActualJugadores) {
+        this.cantidadActualJugadores = cantidadActualJugadores;
+    }
+    
+
 
     /**
      *
@@ -236,16 +247,16 @@ public class Room {
      *
      * @return
      */
-    public int getCapturasPartida() {
-        return capturasPartida;
+    public int getCapturasParaGanar() {
+        return capturasParaGanar;
     }
 
     /**
      *
-     * @param capturasPartida
+     * @param capturasParaGanar
      */
-    public void setCapturasPartida(int capturasPartida) {
-        this.capturasPartida = capturasPartida;
+    public void setCapturasParaGanar(int capturasParaGanar) {
+        this.capturasParaGanar = capturasParaGanar;
     }
 
     /**
