@@ -442,7 +442,7 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
             temp.setBanderaBTomada((AtomicBoolean) template.opsForHash().get("room:" + s, "banderaBTomada"));
             temp.setTiempo((Integer) template.opsForHash().get("room:" + s, "tiempo"));
             temp.setCantidadMaximaJugadores((Integer) template.opsForHash().get("room:" + s, "cantidadMaximaJugadores"));
-            temp.setCantidadActualJugadores((Integer) template.opsForHash().get("room:" + s, "cantidadActualJugadores"));
+            temp.setCantidadActualJugadores((AtomicInteger) template.opsForHash().get("room:" + s, "cantidadActualJugadores"));
             temp.setPotenciadores((String) template.opsForHash().get("room:" + s, "potenciadores"));
             temp.setCapturasParaGanar((Integer) template.opsForHash().get("room:" + s, "capturasParaGanar"));
             temp.setTipoMaquina((String) template.opsForHash().get("room:" + s, "tipoMaquina"));
