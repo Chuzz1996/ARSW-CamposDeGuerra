@@ -11,11 +11,15 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraUsuarioPersistence;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
 import java.util.Set;
+import org.bson.Document;
 import org.springframework.stereotype.Service;
 
 
@@ -33,15 +37,15 @@ public  abstract class MongoDBCamposDeGuerraUsuarioPersistence implements Campos
         
         MongoClientURI uri = new MongoClientURI("mongodb://root:root@ds121896.mlab.com:21896/camposdeguerra");
         MongoClient client = new MongoClient(uri);
-        DB db = client.getDB("camposdeguerra");
-        DBCollection coll = db.getCollection("Users");
+        MongoDatabase db = client.getDatabase("camposdeguerra");
+        MongoCollection<Document> coll =db.getCollection("Users");
         BasicDBObject searchQuery = new BasicDBObject().append("id", u.getId());
-        DBCursor cursor = coll.find(searchQuery);
-        while (cursor.hasNext()) {
+        FindIterable<Document> cursor = coll.find(searchQuery);
+        while (cursor!=null) {
             throw new CamposDeGuerraPersistenceException("Player found!");
         }
-        BasicDBObject user = new BasicDBObject("id", u.getId()).append("tipoMaquina", u.getTipoMaquina()).append("puntaje", u.getPuntaje()).append("vida", u.getVida()).append("equipo", u.getEquipo());
-        coll.insert(user);
+        Document user = new Document("id", u.getId()).append("tipoMaquina", u.getTipoMaquina()).append("puntaje", u.getPuntaje()).append("vida", u.getVida()).append("equipo", u.getEquipo());
+        coll.insertOne(user);
         client.close();
     }
 
