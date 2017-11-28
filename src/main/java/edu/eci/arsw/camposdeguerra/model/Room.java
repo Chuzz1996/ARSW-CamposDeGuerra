@@ -27,7 +27,7 @@ public class Room {
     private AtomicBoolean banderaATomada = new AtomicBoolean(false), banderaBTomada = new AtomicBoolean(false);
     private int tiempo = 180000;
     private int cantidadMaximaJugadores = 6;
-    private int cantidadActualJugadores = 0;
+    private AtomicInteger cantidadActualJugadores = new AtomicInteger(0);
     private String potenciadores = "Todos";
     private int capturasParaGanar = 2;
     private String tipoMaquina = "Destructora";
@@ -219,11 +219,11 @@ public class Room {
         this.cantidadMaximaJugadores = cantidadMaximaJugadores;
     }
 
-    public int getCantidadActualJugadores() {
+    public AtomicInteger getCantidadActualJugadores() {
         return cantidadActualJugadores;
     }
 
-    public void setCantidadActualJugadores(int cantidadActualJugadores) {
+    public void setCantidadActualJugadores(AtomicInteger cantidadActualJugadores) {
         this.cantidadActualJugadores = cantidadActualJugadores;
     }
     
@@ -290,9 +290,11 @@ public class Room {
         if (equipoB.size() >= equipoA.size() && equipoA.size() < 3) {
             equipoA.add(us);
             us.setEquipo("A");
+            cantidadActualJugadores.addAndGet(1);
         } else if (equipoA.size() >= equipoB.size() && equipoB.size() < 3) {
             equipoB.add(us);
             us.setEquipo("B");
+            cantidadActualJugadores.addAndGet(1);
         } else {
             agregoUser = false;
         }

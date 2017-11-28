@@ -9,6 +9,7 @@ import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraUsuarioPersistence;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Set;

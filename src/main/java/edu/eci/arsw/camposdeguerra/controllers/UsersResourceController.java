@@ -41,7 +41,7 @@ public class UsersResourceController {
      * @param user
      * @return 
      */
-    @RequestMapping(path = "/Usuarios/{user}",method = RequestMethod.GET)
+    @RequestMapping(path = "/{user}",method = RequestMethod.GET)
     public ResponseEntity<?> getUsuario(@PathVariable String user) {
         try {
             //Obtener datos
@@ -56,7 +56,7 @@ public class UsersResourceController {
      * 
      * @return 
      */
-    @RequestMapping(path = "/Usuarios",method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<?> getAllUsuarios() {
         try {
             //Obtener datos
@@ -73,7 +73,7 @@ public class UsersResourceController {
      * @param u
      * @return 
      */
-    @RequestMapping(path = "/Usuarios",method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> addUsuario(@RequestBody Usuario u) {
         try {
             //Registrar dato
@@ -91,7 +91,7 @@ public class UsersResourceController {
      * @param u
      * @return 
      */
-    @RequestMapping(path = "/Usuarios",method = RequestMethod.PUT)
+    @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<?> updateUsuario(@RequestBody Usuario u) {
         try {
             //Actualizar dato
@@ -108,7 +108,7 @@ public class UsersResourceController {
      * @param user
      * @return 
      */
-    @RequestMapping(path = "/Usuarios/{user}",method = RequestMethod.DELETE)
+    @RequestMapping(path = "/{user}",method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteUsuario(@PathVariable String user) {
         try {
             //Borrar dato

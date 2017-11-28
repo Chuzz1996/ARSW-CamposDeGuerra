@@ -34,7 +34,7 @@ public class controlTimeAndLogical {
         boolean ans = false;
         try {
             Room r = rp.getRoom(idSala);
-            Integer cj = r.getAllCompetitors().size();
+            Integer cj = r.getCantidadActualJugadores().get();
             if (cj % 2 == 0 && cj > 0 && cj <= r.getCantidadMaximaJugadores()&& r.getEstado().equals("Nojugando")) {
                 ans = true;
                 r.setEstado("Jugando");
