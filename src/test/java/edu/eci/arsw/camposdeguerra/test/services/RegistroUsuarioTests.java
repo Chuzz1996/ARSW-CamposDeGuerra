@@ -33,7 +33,7 @@ public class RegistroUsuarioTests {
             Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
-            assertNotNull("Loading a previously stored user.", icgp.getUsuario(u.getUserName()));
+            assertNotNull("Loading a previously stored user.", icgp.findById(u.getId()));
         } catch (CamposDeGuerraNotFoundException ex) {
             Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -76,7 +76,7 @@ public class RegistroUsuarioTests {
         } catch (CamposDeGuerraNotFoundException ex) {
             Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        assertEquals(temp.get(0).getUserName(), u.getUserName());
+        assertEquals(temp.get(0).getId(), u.getId());
     }
 
     @Test

@@ -7,8 +7,8 @@ package edu.eci.arsw.camposdeguerra.persistence.impl;
 
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
-import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraUsuarioPersistence;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
+import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraUsuarioPersistence;
 import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Set;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public  class InMemoryCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUsuarioPersistence {
+public  class InMemoryCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUsuarioPersistence{
     
     private final ConcurrentHashMap<String, Usuario> users = new ConcurrentHashMap<>();
 
@@ -35,31 +35,34 @@ public  class InMemoryCamposDeGuerraUsuarioPersistence implements CamposDeGuerra
     
     @Override
     public void saveUsuario(Usuario u) throws CamposDeGuerraPersistenceException {
-        if(!users.containsKey(u.getUserName())){users.putIfAbsent(u.getUserName(), u);}
+        if(!users.containsKey(u.getId())){users.putIfAbsent(u.getId(), u);}
         else{throw new CamposDeGuerraPersistenceException("El nombre de usuario ya se encuentra registrado,elija otro nombre");}
     }
 
-    @Override
-    public Usuario getUsuario(String user) throws CamposDeGuerraNotFoundException {
-        if(users.containsKey(user)){return users.get(user);}
-        else{throw new CamposDeGuerraNotFoundException("El usuario "+user+" no existe.");}
-    }
 
-    @Override
-    public Set<Usuario> getAllUsuarios() throws CamposDeGuerraNotFoundException {
-        return new HashSet<>(users.values());
-    }
+
 
     @Override
     public void updateUsuario(Usuario u) throws CamposDeGuerraPersistenceException {
-        if(users.containsKey(u.getUserName())){users.replace(u.getUserName(),u);}
-        else{users.putIfAbsent(u.getUserName(), u);}
+        if(users.containsKey(u.getId())){users.replace(u.getId(),u);}
+        else{users.putIfAbsent(u.getId(), u);}
     }
 
     @Override
     public void deleteUsuario(String user) throws CamposDeGuerraPersistenceException {
         if(users.containsKey(user)){users.remove(user);}
         else{throw new CamposDeGuerraPersistenceException("El usuario "+user+" no puede ser borrado porque no existe.");}
+    }
+
+    @Override
+    public Usuario findById(String id) throws CamposDeGuerraNotFoundException {
+        if(users.containsKey(id)){return users.get(id);}
+        else{throw new CamposDeGuerraNotFoundException("El usuario "+id+" no existe.");}
+    }
+
+    @Override
+    public Set<Usuario> getAllUsers() throws CamposDeGuerraNotFoundException {
+        return new HashSet<>(users.values());
     }
 
 }

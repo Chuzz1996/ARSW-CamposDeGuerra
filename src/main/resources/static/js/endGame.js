@@ -20,7 +20,7 @@ var endGame = (function () {
     var getAllUsers = function () {
         var getPromise = apiclient.getAllUsersRoom(sessionStorage.getItem("idRoom"), function (lista1) {
             reducir = function (objeto) {
-                return objeto2 = {"userName": objeto.userName, "equipo": objeto.equipo, "puntaje": objeto.puntaje};
+                return objeto2 = {"id": objeto.id, "equipo": objeto.equipo, "puntaje": objeto.puntaje};
             };
             $("#table1").find("tr:gt(0)").remove();
             lista = lista1.map(reducir);
@@ -28,19 +28,19 @@ var endGame = (function () {
                 $(document).ready(function () {
                     if (sessionStorage.getItem("PuntosA") > sessionStorage.getItem("PuntosB")) {
                         if (objeto.equipo === "A") {
-                            $('#table1').append("<tr class='success' ><th>" + objeto.userName + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
+                            $('#table1').append("<tr class='success' ><th>" + objeto.id + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
                         } else {
-                            $('#table1').append("<tr class='danger' ><th>" + objeto.userName + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
+                            $('#table1').append("<tr class='danger' ><th>" + objeto.id + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
                         }
 
                     } else if (sessionStorage.getItem("PuntosA") < sessionStorage.getItem("PuntosB")) {
                         if (objeto.equipo === "B") {
-                            $('#table1').append("<tr class='success' ><th>" + objeto.userName + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
+                            $('#table1').append("<tr class='success' ><th>" + objeto.id + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
                         } else {
-                            $('#table1').append("<tr class='danger' ><th>" + objeto.userName + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
+                            $('#table1').append("<tr class='danger' ><th>" + objeto.id + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
                         }
                     } else {
-                        $('#table1').append("<tr class='warning' ><th>" + objeto.userName + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
+                        $('#table1').append("<tr class='warning' ><th>" + objeto.id + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
                     }
 
                 });

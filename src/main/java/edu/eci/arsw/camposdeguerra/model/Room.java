@@ -28,7 +28,7 @@ public class Room {
     private int tiempo = 180000;
     private int cantidadMaximaJugadores = 6;
     private int cantidadActualJugadores = 0;
-    private String potenciadores = "";
+    private String potenciadores = "Todos";
     private int capturasParaGanar = 2;
     private String tipoMaquina = "Destructora";
     private String estado = "Nojugando";
@@ -72,6 +72,8 @@ public class Room {
     public void setPuntajeEquipoA(AtomicInteger puntajeEquipoA) {
         this.puntajeEquipoA = puntajeEquipoA;
     }
+    
+    
 
     /**
      *
@@ -323,14 +325,14 @@ public class Room {
         ArrayList<Usuario> temp = new ArrayList<>(equipoA);
         ArrayList<Usuario> temp2 = new ArrayList<>(equipoB);
         for (Usuario u : temp) {
-            if (u.getUserName().equals(us)) {
+            if (u.getId().equals(us)) {
                 equipoA.remove(u);
                 borroUser = true;
             }
         }
         if (!borroUser) {
             for (Usuario u : temp2) {
-                if (u.getUserName().equals(us)) {
+                if (u.getId().equals(us)) {
                     equipoB.remove(u);
                     borroUser = true;
                 }
@@ -362,12 +364,12 @@ public class Room {
     public String TeamOfUser(String us) {
         String team = "Ninguno";
         for (Usuario u : equipoA) {
-            if (u.getUserName().equals(us)) {
+            if (u.getId().equals(us)) {
                 team = "A";
             }
         }
         for (Usuario u : equipoB) {
-            if (u.getUserName().equals(us)) {
+            if (u.getId().equals(us)) {
                 team = "B";
             }
         }
@@ -436,7 +438,7 @@ public class Room {
              * else{puntuacionesEquipoA.putIfAbsent(user,1);}*
              */
             for (Usuario u : equipoA) {
-                if (u.getUserName().equals(user)) {
+                if (u.getId().equals(user)) {
                     u.setPuntaje(u.getPuntaje() + 1);
                 }
             }
@@ -454,7 +456,7 @@ public class Room {
              * else{puntuacionesEquipoB.putIfAbsent(user,1);}*
              */
             for (Usuario u : equipoB) {
-                if (u.getUserName().equals(user)) {
+                if (u.getId().equals(user)) {
                     u.setPuntaje(u.getPuntaje() + 1);
                 }
             }

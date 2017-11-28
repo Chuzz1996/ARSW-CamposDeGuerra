@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.eci.arsw.camposdeguerra.mom;
+package edu.eci.arsw.camposdeguerra.logic;
 
 import edu.eci.arsw.camposdeguerra.cache.CamposDeGuerraRoomPersistence;
 import edu.eci.arsw.camposdeguerra.model.Room;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,7 +70,7 @@ public class controlTimeAndLogical {
         return tiempoSalas.get(idSala);
     }
 
-    void getDatos(Integer idSala) throws Exception {
+    public void getDatos(Integer idSala) throws Exception {
 
         if (getdatos.containsKey(idSala)) {
             Integer listos = getdatos.get(idSala);

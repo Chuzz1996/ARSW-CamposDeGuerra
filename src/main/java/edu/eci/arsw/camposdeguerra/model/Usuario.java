@@ -17,11 +17,16 @@
 
 package edu.eci.arsw.camposdeguerra.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document(collection = "users")
 public class Usuario {
+
+    @Id
+    private String id="";
     
     private Maquina tipoMaquina;
-    private String userName="";
     private int puntaje=0;
     private int vida=0;
     private String equipo="";
@@ -36,8 +41,8 @@ public class Usuario {
      * @param tipoMaquina
      * @param puntaje
      */
-    public Usuario(String userName,Maquina tipoMaquina,int puntaje,int vida, String equipo) {
-        this.userName=userName;
+    public Usuario(String id,Maquina tipoMaquina,int puntaje,int vida, String equipo) {
+        this.id=id;
         this.tipoMaquina=tipoMaquina;
         this.puntaje=puntaje;
         this.vida = vida;
@@ -64,16 +69,16 @@ public class Usuario {
      * 
      * @return 
      */
-    public String getUserName() {
-        return userName;
+    public String getId() {
+        return id;
     }
 
     /**
      * 
      * @param userName 
      */
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setId(String id) {
+        this.id = id;
     }
 
     /**
@@ -126,7 +131,7 @@ public class Usuario {
     
     @Override
     public String toString(){
-        return "Usuario{" + "Username:" + userName + ", Puntaje:" + puntaje + ", Maquina:" + tipoMaquina.describe() + '}';
+        return "Usuario{" + "Username:" + id + ", Puntaje:" + puntaje + ", Maquina:" + tipoMaquina.describe() + '}';
     }
     
     

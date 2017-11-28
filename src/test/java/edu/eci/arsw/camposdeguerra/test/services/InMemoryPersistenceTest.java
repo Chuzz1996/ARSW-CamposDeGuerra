@@ -28,7 +28,7 @@ public class InMemoryPersistenceTest {
             Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
-            assertNotNull("Loading a previously stored user.", icgp.getUsuario(u.getUserName()));
+            assertNotNull("Loading a previously stored user.", icgp.findById(u.getId()));
         } catch (CamposDeGuerraNotFoundException ex) {
             Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -66,11 +66,11 @@ public class InMemoryPersistenceTest {
 
         Usuario temp = null;
         try {
-            temp = icgp.getUsuario("test1");
+            temp = icgp.findById("test1");
         } catch (CamposDeGuerraNotFoundException ex) {
             Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        assertEquals(temp.getUserName(), u.getUserName());
+        assertEquals(temp.getId(), u.getId());
     }
 
     @Test
@@ -93,7 +93,7 @@ public class InMemoryPersistenceTest {
         }
         Usuario temp = new Usuario();
         try {
-            temp = icgp.getUsuario("test1");
+            temp = icgp.findById("test1");
         } catch (CamposDeGuerraNotFoundException ex) {
             Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -119,7 +119,7 @@ public class InMemoryPersistenceTest {
         }
 
         try {
-            icgp.getUsuario("test1");
+            icgp.findById("test1");
         } catch (CamposDeGuerraNotFoundException ex) {
             //Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
             assertEquals(ex.getMessage(), "El usuario test1 no existe.");

@@ -68,7 +68,7 @@ public class CamposDeGuerraServices {
      * @throws CamposDeGuerraNotFoundException 
      */
     public Set<Usuario> getAllUsuarios() throws CamposDeGuerraNotFoundException{
-        return cdg.getAllUsuarios();
+        return cdg.getAllUsers();
     }
     
     /**
@@ -78,7 +78,7 @@ public class CamposDeGuerraServices {
      * @throws CamposDeGuerraNotFoundException 
      */
     public Usuario getUsuario(String user) throws CamposDeGuerraNotFoundException{
-        return cdg.getUsuario(user);
+        return cdg.findById(user);
     }
   
     /**
@@ -119,25 +119,7 @@ public class CamposDeGuerraServices {
         return cdgr.getAllUsuariosFromRoom(room);
     }
 
-    /**
-     * 
-     * @param room
-     * @return
-     * @throws CamposDeGuerraNotFoundException 
-     */
-    public Set<Usuario> getAllUsuariosFromTeamARoom(Integer room) throws CamposDeGuerraNotFoundException {
-        return cdgr.getAllUsuariosFromTeamARoom(room);
-    }
-    
-    /**
-     * 
-     * @param room
-     * @return
-     * @throws CamposDeGuerraNotFoundException 
-     */
-    public Set<Usuario> getAllUsuariosFromTeamBRoom(Integer room) throws CamposDeGuerraNotFoundException {
-        return cdgr.getAllUsuariosFromTeamBRoom(room);
-    }
+ 
 
     /**
      * 

@@ -5,7 +5,6 @@
  */
 package edu.eci.arsw.camposdeguerra.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
 import java.util.LinkedList;
 
@@ -34,7 +33,7 @@ public class Maquina {
     
     /**
      * 
-     * @param damage
+     * @param attack
      * @throws CamposDeGuerraPersistenceException 
      */
     public void changeAttack(int attack)throws CamposDeGuerraPersistenceException{

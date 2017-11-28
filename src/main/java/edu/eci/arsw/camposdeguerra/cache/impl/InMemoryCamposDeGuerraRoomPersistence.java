@@ -86,27 +86,7 @@ public class InMemoryCamposDeGuerraRoomPersistence implements CamposDeGuerraRoom
         }
     }
 
-    @Override
-    public Set<Usuario> getAllUsuariosFromTeamARoom(Integer room) throws CamposDeGuerraNotFoundException {
-        HashSet<Usuario> ans = new HashSet<>();
-        if (rooms.containsKey(room)) {
-            ans=rooms.get(room).getAllCompetitorsTeamA();
-        } else {
-            throw  new CamposDeGuerraNotFoundException("La Room ingresada no existe!");
-        }
-        return ans;
-    }
-
-    @Override
-    public Set<Usuario> getAllUsuariosFromTeamBRoom(Integer room) throws CamposDeGuerraNotFoundException {
-        HashSet<Usuario> ans = new HashSet<>();
-        if (rooms.containsKey(room)) {
-            ans=rooms.get(room).getAllCompetitorsTeamB();
-        } else {
-            throw  new CamposDeGuerraNotFoundException("La Room ingresada no existe!");
-        }
-        return ans;
-    }
+ 
 
     @Override
     public String getTeamOfMyRoom(String user, Integer room) throws CamposDeGuerraNotFoundException {

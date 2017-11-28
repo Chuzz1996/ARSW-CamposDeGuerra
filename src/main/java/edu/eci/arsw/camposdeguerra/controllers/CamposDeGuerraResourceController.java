@@ -28,96 +28,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/CamposDeGuerra")
-public class CamposDeGuerraAPIController {
+public class CamposDeGuerraResourceController {
 
     @Autowired
     private CamposDeGuerraServices cdg;
     
-    
-    
-    /**
-     * 
-     * @param user
-     * @return 
-     */
-    @RequestMapping(path = "/Usuarios/{user}",method = RequestMethod.GET)
-    public ResponseEntity<?> getUsuario(@PathVariable String user) {
-        try {
-            //Obtener datos
-            return new ResponseEntity<>(cdg.getUsuario(user), HttpStatus.ACCEPTED);
-        } catch (CamposDeGuerraNotFoundException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
-    
-    /**
-     * 
-     * @return 
-     */
-    @RequestMapping(path = "/Usuarios",method = RequestMethod.GET)
-    public ResponseEntity<?> getAllUsuarios() {
-        try {
-            //Obtener datos
-            return new ResponseEntity<>(cdg.getAllUsuarios(), HttpStatus.ACCEPTED);
-        } catch (CamposDeGuerraNotFoundException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
-    
-    
-    /**
-     * 
-     * @param u
-     * @return 
-     */
-    @RequestMapping(path = "/Usuarios",method = RequestMethod.POST)
-    public ResponseEntity<?> addUsuario(@RequestBody Usuario u) {
-        try {
-            //Registrar dato
-            cdg.addNewUsuario(u);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (CamposDeGuerraPersistenceException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
-        }
 
-    }
-    
-    /**
-     * 
-     * @param u
-     * @return 
-     */
-    @RequestMapping(path = "/Usuarios",method = RequestMethod.PUT)
-    public ResponseEntity<?> updateUsuario(@RequestBody Usuario u) {
-        try {
-            //Actualizar dato
-            cdg.updateUsuario(u);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (CamposDeGuerraPersistenceException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
-        }
-    }
-    
-    /**
-     * 
-     * @param user
-     * @return 
-     */
-    @RequestMapping(path = "/Usuarios/{user}",method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteUsuario(@PathVariable String user) {
-        try {
-            //Borrar dato
-            cdg.deleteUsuario(user);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (CamposDeGuerraPersistenceException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
-        }
-    }
     
     /**
      * 
@@ -129,7 +45,7 @@ public class CamposDeGuerraAPIController {
             //Obtener datos
             return new ResponseEntity<>(cdg.getRoomFree(), HttpStatus.ACCEPTED);
         } catch (CamposDeGuerraNotFoundException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CamposDeGuerraResourceController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
@@ -142,7 +58,7 @@ public class CamposDeGuerraAPIController {
             //Obtener dato
             return new ResponseEntity<>(cdg.getAllUsuariosFromRoom(room),HttpStatus.CREATED);
         } catch (CamposDeGuerraNotFoundException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CamposDeGuerraResourceController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
         }
 
@@ -161,7 +77,7 @@ public class CamposDeGuerraAPIController {
             cdg.addUserToRoom(u, room);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (CamposDeGuerraPersistenceException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CamposDeGuerraResourceController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
         }
 
@@ -178,42 +94,13 @@ public class CamposDeGuerraAPIController {
             //Obtener datos
             return new ResponseEntity<>(cdg.getRoom(room), HttpStatus.ACCEPTED);
         } catch (CamposDeGuerraNotFoundException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CamposDeGuerraResourceController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
-    /**
-     * 
-     * @param room
-     * @return 
-     */
-    @RequestMapping(path = "/Rooms/{room}/Users/TeamA",method = RequestMethod.GET)
-    public ResponseEntity<?> getAllUsuariosFromTeamARoom(@PathVariable Integer room) {
-        try {
-            //Obtener datos
-            return new ResponseEntity<>(cdg.getAllUsuariosFromTeamARoom(room), HttpStatus.ACCEPTED);
-        } catch (CamposDeGuerraNotFoundException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
     
-    /**
-     * 
-     * @param room
-     * @return 
-     */
-    @RequestMapping(path = "/Rooms/{room}/Users/TeamB",method = RequestMethod.GET)
-    public ResponseEntity<?> getAllUsuariosFromTeamBRoom(@PathVariable Integer room) {
-        try {
-            //Obtener datos
-            return new ResponseEntity<>(cdg.getAllUsuariosFromTeamBRoom(room), HttpStatus.ACCEPTED);
-        } catch (CamposDeGuerraNotFoundException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
+
     
     /**
      * 
@@ -227,7 +114,7 @@ public class CamposDeGuerraAPIController {
             //Obtener datos
             return new ResponseEntity<>(cdg.getMyTeam(user, room), HttpStatus.ACCEPTED);
         } catch (CamposDeGuerraNotFoundException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CamposDeGuerraResourceController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
@@ -245,7 +132,7 @@ public class CamposDeGuerraAPIController {
             cdg.deleteUsuarioFromRoom(user, room);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (CamposDeGuerraNotFoundException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CamposDeGuerraResourceController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
@@ -262,7 +149,7 @@ public class CamposDeGuerraAPIController {
             cdg.deleteAllUsuariosFromRoom(room);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (CamposDeGuerraNotFoundException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CamposDeGuerraResourceController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
@@ -277,10 +164,10 @@ public class CamposDeGuerraAPIController {
     @RequestMapping(path = "/Rooms/{room}/Banderas/A",method = RequestMethod.POST)
     public ResponseEntity<?> setFlagARoom(@RequestBody Usuario u , @PathVariable Integer room) throws CamposDeGuerraNotFoundException {
         try {
-            cdg.setFlagARoom(u.getUserName(), room);
+            cdg.setFlagARoom(u.getId(), room);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (CamposDeGuerraNotFoundException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CamposDeGuerraResourceController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
@@ -295,10 +182,10 @@ public class CamposDeGuerraAPIController {
     @RequestMapping(path = "/Rooms/{room}/Banderas/B",method = RequestMethod.POST)
     public ResponseEntity<?> setFlagBRoom(@RequestBody Usuario u , @PathVariable Integer room) throws CamposDeGuerraNotFoundException {
          try {
-            cdg.setFlagBRoom(u.getUserName(), room);
+            cdg.setFlagBRoom(u.getId(), room);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (CamposDeGuerraNotFoundException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CamposDeGuerraResourceController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
@@ -313,10 +200,10 @@ public class CamposDeGuerraAPIController {
     @RequestMapping(path = "/Rooms/{room}/Banderas/A/Puntuaciones",method = RequestMethod.POST)
     public  ResponseEntity<?> puntuarA(@RequestBody Usuario u,@PathVariable Integer room) throws CamposDeGuerraNotFoundException{
         try {
-            cdg.puntuarA(u.getUserName(), room);
+            cdg.puntuarA(u.getId(), room);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (CamposDeGuerraNotFoundException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CamposDeGuerraResourceController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
@@ -331,10 +218,10 @@ public class CamposDeGuerraAPIController {
     @RequestMapping(path = "/Rooms/{room}/Banderas/B/Puntuaciones",method = RequestMethod.POST)
     public  ResponseEntity<?> puntuarB(@RequestBody Usuario u,@PathVariable Integer room) throws CamposDeGuerraNotFoundException{
         try {
-            cdg.puntuarB(u.getUserName(), room);
+            cdg.puntuarB(u.getId(), room);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (CamposDeGuerraNotFoundException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CamposDeGuerraResourceController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
@@ -349,10 +236,10 @@ public class CamposDeGuerraAPIController {
     @RequestMapping(path = "/Rooms/{room}/Banderas/A",method = RequestMethod.DELETE)
     public  ResponseEntity<?> soltarBanderaA(@RequestBody Usuario u,@PathVariable Integer room) throws CamposDeGuerraNotFoundException{
          try {
-            cdg.soltarBanderaA(u.getUserName(), room);
+            cdg.soltarBanderaA(u.getId(), room);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (CamposDeGuerraNotFoundException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CamposDeGuerraResourceController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
@@ -367,10 +254,10 @@ public class CamposDeGuerraAPIController {
     @RequestMapping(path = "/Rooms/{room}/Banderas/B",method = RequestMethod.DELETE)
     public  ResponseEntity<?> soltarBanderaB(@RequestBody Usuario u,@PathVariable Integer room) throws CamposDeGuerraNotFoundException{
         try {
-            cdg.soltarBanderaB(u.getUserName(), room);
+            cdg.soltarBanderaB(u.getId(), room);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (CamposDeGuerraNotFoundException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CamposDeGuerraResourceController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
@@ -386,7 +273,7 @@ public class CamposDeGuerraAPIController {
             //Obtener datos
             return new ResponseEntity<>(cdg.obtenerScorer(room), HttpStatus.ACCEPTED);
         } catch (CamposDeGuerraNotFoundException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CamposDeGuerraResourceController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
@@ -403,7 +290,7 @@ public class CamposDeGuerraAPIController {
             cdg.addRoom(room);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (CamposDeGuerraPersistenceException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CamposDeGuerraResourceController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
@@ -418,7 +305,7 @@ public class CamposDeGuerraAPIController {
             //Obtener datos
             return new ResponseEntity<>(cdg.getAllRooms(),HttpStatus.ACCEPTED);
         } catch (CamposDeGuerraNotFoundException ex) {
-            Logger.getLogger(CamposDeGuerraAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CamposDeGuerraResourceController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
     }

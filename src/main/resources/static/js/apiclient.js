@@ -11,25 +11,28 @@ var apiclient = (function () {
         
         postUser: function (user) {
             return $.ajax({
-                url: "/CamposDeGuerra/Usuarios/", 
+                url: "/Usuarios/", 
                 type: "POST", 
                 data: JSON.stringify(user), 
                 contentType: "application/json"});
         },   
         deleteUser: function (user) {
             return $.ajax({
-                url: "/CamposDeGuerra/Usuarios/"+user, 
+                url: "/Usuarios/"+user, 
                 type: "DELETE"});
         },
         putUser: function (user) {
             return $.ajax({
-                url: "/CamposDeGuerra/Usuarios/", 
+                url: "/Usuarios/", 
                 type: "PUT", 
                 data: JSON.stringify(user), 
                 contentType: "application/json"});
         },
         getUser: function (user,callback) {
-            return $.get("/CamposDeGuerra/Usuarios/"+user, callback);
+            return $.get("/Usuarios/"+user, callback);
+        },
+        getAllUser: function (user,callback) {
+            return $.get("/Usuarios", callback);
         },
         postUserRoom: function (room,user) {
             return $.ajax({

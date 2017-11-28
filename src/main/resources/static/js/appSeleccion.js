@@ -8,9 +8,9 @@ var appSeleccion = (function () {
     var idRoom;
 
     class Usuario {
-        constructor(tipoMaquina, userName, puntaje,vida, equipo) {
+        constructor(tipoMaquina, id, puntaje,vida, equipo) {
             this.tipoMaquina = tipoMaquina;
-            this.userName = userName;
+            this.id = id;
             this.puntaje = puntaje;
             this.equipo = equipo;
             this.vida=vida;
@@ -107,7 +107,7 @@ var appSeleccion = (function () {
     };
 
     var postUserRoom = function () {
-        var tempUser = new Usuario(myUser.tipoMaquina, myUser.userName, myUser.puntaje,myUser.vida, myUser.equipo);
+        var tempUser = new Usuario(myUser.tipoMaquina, myUser.id, myUser.puntaje,myUser.vida, myUser.equipo);
         var postPromise = api.postUserRoom(idRoom, tempUser);
         postPromise.then(
                 function () {

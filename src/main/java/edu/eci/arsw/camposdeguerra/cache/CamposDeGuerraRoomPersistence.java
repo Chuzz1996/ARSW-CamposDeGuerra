@@ -47,21 +47,6 @@ public interface CamposDeGuerraRoomPersistence {
      */
     public Set<Usuario> getAllUsuariosFromRoom(Integer room) throws CamposDeGuerraNotFoundException;
     
-    /**
-     * 
-     * @param room
-     * @return
-     * @throws CamposDeGuerraNotFoundException 
-     */
-    public Set<Usuario> getAllUsuariosFromTeamARoom(Integer room) throws CamposDeGuerraNotFoundException;
-    
-    /**
-     * 
-     * @param room
-     * @return
-     * @throws CamposDeGuerraNotFoundException 
-     */
-    public Set<Usuario> getAllUsuariosFromTeamBRoom(Integer room) throws CamposDeGuerraNotFoundException;
     
     /**
      * 
