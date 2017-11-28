@@ -37,9 +37,11 @@ public class Usuario {
     
     /**
      * 
-     * @param userName
+     * @param id
      * @param tipoMaquina
      * @param puntaje
+     * @param vida
+     * @param equipo
      */
     public Usuario(String id,Maquina tipoMaquina,int puntaje,int vida, String equipo) {
         this.id=id;

@@ -28,6 +28,9 @@ import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+
+
+@Service
 public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPersistence {
 
     @Autowired
