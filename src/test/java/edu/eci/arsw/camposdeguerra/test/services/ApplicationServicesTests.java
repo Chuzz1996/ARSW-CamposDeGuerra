@@ -2,6 +2,10 @@ package edu.eci.arsw.camposdeguerra.test.services;
 
 //import java.util.logging.Level;
 
+import edu.eci.arsw.camposdeguerra.logic.leerMapas;
+import org.junit.Test;
+
+
 //import java.util.logging.Logger;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
@@ -17,14 +21,10 @@ public class ApplicationServicesTests {
     
     //RestaurantOrderServicesStub ros;
 
-    /*
-    @Test
     
+    @Test
     public void contextLoads() {
-        
-        
-        
-        
-    }*/
+        leerMapas.muestraContenido(); 
+    }
 
 }

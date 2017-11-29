@@ -133,15 +133,15 @@ var juego = (function () {
 
                 for (var i = 0; i < data.equipoA.length; i++) {
                     if (data.equipoA[i].id !== sessionStorage.getItem("user")) {
-                        aliados.push(new Component(50, 50, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], dir, data.equipoA[i].id, "A", vida, velocidad, dano));
+                        aliados.push(new Component(30, 30, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], dir, data.equipoA[i].id, "A", vida, velocidad, dano));
                     } else {
-                        myGamePiece = new Component(50, 50, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], 1, sessionStorage.getItem("user"), myteam, vida, velocidad, dano);
+                        myGamePiece = new Component(30, 30, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], 1, sessionStorage.getItem("user"), myteam, vida, velocidad, dano);
                     }
                 }
                 x = myGameArea.canvas.width - 30;
                 for (var i = 0; i < data.equipoB.length; i++) {
                     if (data.equipoB[i].id !== sessionStorage.getItem("user")) {
-                        oponents.push(new Component(50, 50, directionImageTank + "2" + "B" + ".png", x, (i + 1) * y, "image", [], 2, data.equipoB[i].id, "B", vida, velocidad, dano));
+                        oponents.push(new Component(30, 30, directionImageTank + "2" + "B" + ".png", x, (i + 1) * y, "image", [], 2, data.equipoB[i].id, "B", vida, velocidad, dano));
                     }
                 }
             } else {
@@ -151,15 +151,15 @@ var juego = (function () {
 
                 for (var i = 0; i < data.equipoB.length; i++) {
                     if (data.equipoB[i].id !== sessionStorage.getItem("user")) {
-                        aliados.push(new Component(50, 50, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], dir, data.equipoB[i].id, myteam, vida, velocidad, dano));
+                        aliados.push(new Component(30, 30, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], dir, data.equipoB[i].id, myteam, vida, velocidad, dano));
                     } else {
-                        myGamePiece = new Component(50, 50, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], 2, sessionStorage.getItem("user"), myteam, vida, velocidad, dano);
+                        myGamePiece = new Component(30, 30, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], 2, sessionStorage.getItem("user"), myteam, vida, velocidad, dano);
                     }
                 }
                 x = 30;
                 for (var i = 0; i < data.equipoA.length; i++) {
                     if (data.equipoA[i].id !== sessionStorage.getItem("user")) {
-                        oponents.push(new Component(50, 50, directionImageTank + "1" + "A" + ".png", x, (i + 1) * y, "image", [], 1, data.equipoA[i].id, "A", vida, velocidad, dano));
+                        oponents.push(new Component(30, 30, directionImageTank + "1" + "A" + ".png", x, (i + 1) * y, "image", [], 1, data.equipoA[i].id, "A", vida, velocidad, dano));
                     }
                 }
 
@@ -786,12 +786,12 @@ var juego = (function () {
                             myGameArea.context.fillStyle = "#A9A9A9";
                             myGameArea.context.fillRect(aliados[i].x, aliados[i].y, 50, 80);
                             ban = 1;
-                            var a = new Component(50, 50, directionImageTank + object.tipoMaquina.direction + myteam + ".png", object.tipoMaquina.x, object.tipoMaquina.y, "image", [], object.tipoMaquina.direction, object.id, myteam, object.vida, object.velocidad, object.dano);
+                            var a = new Component(30, 30, directionImageTank + object.tipoMaquina.direction + myteam + ".png", object.tipoMaquina.x, object.tipoMaquina.y, "image", [], object.tipoMaquina.direction, object.id, myteam, object.vida, object.velocidad, object.dano);
                             aliados[i] = a;
                         }
                     }
                     if (ban === 0 && object.equipo === myteam && object.id !== sessionStorage.getItem("user")) {
-                        var a = new Component(50, 50, directionImageTank + object.tipoMaquina.direction + myteam + ".png", object.tipoMaquina.x, object.tipoMaquina.y, "image", [], object.tipoMaquina.direction, object.id, myteam, object.vida, object.velocidad, object.dano);
+                        var a = new Component(30, 30, directionImageTank + object.tipoMaquina.direction + myteam + ".png", object.tipoMaquina.x, object.tipoMaquina.y, "image", [], object.tipoMaquina.direction, object.id, myteam, object.vida, object.velocidad, object.dano);
                         aliados.push(a);
                     }
                     updateAliados();
@@ -807,12 +807,12 @@ var juego = (function () {
                             myGameArea.context.fillStyle = "#A9A9A9";
                             myGameArea.context.fillRect(oponents[i].x, oponents[i].y, 50, 80);
                             ban = 1;
-                            var o = new Component(50, 50, directionImageTank + object.tipoMaquina.direction + enemyteam + ".png", object.tipoMaquina.x, object.tipoMaquina.y, "image", [], object.tipoMaquina.direction, object.id, enemyteam, object.vida, object.velocidad, object.dano);
+                            var o = new Component(30, 30, directionImageTank + object.tipoMaquina.direction + enemyteam + ".png", object.tipoMaquina.x, object.tipoMaquina.y, "image", [], object.tipoMaquina.direction, object.id, enemyteam, object.vida, object.velocidad, object.dano);
                             oponents[i] = o;
                         }
                     }
                     if (ban === 0 && object.equipo !== myteam && object.id !== sessionStorage.getItem("user")) {
-                        var o = new Component(50, 50, directionImageTank + object.tipoMaquina.direction + enemyteam + ".png", object.tipoMaquina.x, object.tipoMaquina.y, "image", [], object.tipoMaquina.direction, object.id, enemyteam, object.vida, object.velocidad, object.dano);
+                        var o = new Component(30, 30, directionImageTank + object.tipoMaquina.direction + enemyteam + ".png", object.tipoMaquina.x, object.tipoMaquina.y, "image", [], object.tipoMaquina.direction, object.id, enemyteam, object.vida, object.velocidad, object.dano);
                         oponents.push(o);
                     }
                     updateOponents();

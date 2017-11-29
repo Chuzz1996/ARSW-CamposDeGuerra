@@ -13,6 +13,7 @@ import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraUsuarioPersistence;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
 import edu.eci.arsw.camposdeguerra.model.Room;
+import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraMapsPersistence;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class CamposDeGuerraServices {
     private CamposDeGuerraUsuarioPersistence cdg;
     @Autowired
     private CamposDeGuerraRoomPersistence cdgr;
+    
+    @Autowired
+    private CamposDeGuerraMapsPersistence cdgm;
     
     /**
      * 
@@ -247,6 +251,10 @@ public class CamposDeGuerraServices {
      */
     public Room getRoom(Integer idRoom)throws CamposDeGuerraNotFoundException{
         return cdgr.getRoom(idRoom);
+    }
+    
+    public String[][] getMap(String idMap)throws CamposDeGuerraNotFoundException{
+        return cdgm.findMap(idMap);
     }
     
 }
