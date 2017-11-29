@@ -164,15 +164,33 @@ var juego = (function () {
                 }
 
             }
-            for (var i = 0; i < 30; i++) {
-                if (i <= 10) {
-                    obstaculos.push(new Obstaculo(50, 50, directionObstaculo + "1.png", i * 20, i * 20, "pasto", 200, i));
-                } else if (i > 10 && i <= 20) {
-                    obstaculos.push(new Obstaculo(50, 50, directionObstaculo + "2.png", i * 40, i * 40, "ladrillo", 500, i));
-                } else {
-                    obstaculos.push(new Obstaculo(50, 50, directionObstaculo + "3.png", i * 60, i * 60, "metal", 1000, i));
-                }
-            }
+            api.getMap(1,function(data){
+               for(var i = 0; i < data.length; i++){
+                   for(var j = 0; j < data[i].length; j++){
+                       if(data[i][j]==="P"){
+                           obstaculos.push(new Obstaculo(30, 30, directionObstaculo + "1.png", j * 30, i * 30, "pasto", 200, i));
+                       }else if(data[i][j]==="L"){
+                           obstaculos.push(new Obstaculo(30, 30, directionObstaculo + "2.png", j * 30, i * 30, "ladrillo", 500, i));
+                       }else if(data[i][j]==="M"){
+                           obstaculos.push(new Obstaculo(30, 30, directionObstaculo + "3.png", j * 30, i * 30, "metal", 1000, i));
+                       }else if(data[i][j]==="I"){
+                           obstaculos.push(new Obstaculo(30, 30, directionObstaculo + "2.png", j * 30, i * 30, "ladrillo", 1000000, i));
+                       }else if(data[i][j]==="A"){
+                           if(myTeam="A"){
+                                myBandera = new Bandera(j*30, i*30, myteam);
+                            }else{
+                                enemyBandera = new Bandera(j*30, i*30, enemyteam);
+                            }
+                       }else if(data[i][j]==="R"){
+                           if(myTeam="B"){
+                                myBandera = new Bandera(j*30, i*30, myteam);
+                            }else{
+                                enemyBandera = new Bandera(j*30, i*30, enemyteam);
+                            }
+                       }
+                   }
+               }
+            });
 
         });
         getPromise.then(
@@ -659,8 +677,8 @@ var juego = (function () {
         start: function () {
             var w = window.innerWidth;
             var h = window.innerHeight;
-            this.canvas.width = w - 200;
-            this.canvas.height = h - 200;
+            this.canvas.width = 990;
+            this.canvas.height = 600;
             this.context = this.canvas.getContext("2d");
             this.context.fillStyle = "#A9A9A9";
             this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -878,8 +896,7 @@ var juego = (function () {
                 });
             });
 
-            myBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.10), Math.round(myGameArea.canvas.height * 0.50), myteam);
-            enemyBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.90), Math.round(myGameArea.canvas.height * 0.50), enemyteam);
+            
             cargarPartida().then(getscorer).then(graficarObstaculos);
             startTime();
             myGameArea.start();

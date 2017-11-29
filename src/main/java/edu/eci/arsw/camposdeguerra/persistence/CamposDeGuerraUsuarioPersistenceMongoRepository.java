@@ -17,7 +17,7 @@ public interface CamposDeGuerraUsuarioPersistenceMongoRepository extends MongoRe
     
     public Usuario findById(String id) throws CamposDeGuerraNotFoundException;   
     
-    @Query("{}")
+    //@Query("{}")
     public Set<Usuario> getAllUsers() throws CamposDeGuerraNotFoundException;
     
 }
