@@ -27,14 +27,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUsuarioPersistence {
     
-    //@Autowired CamposDeGuerraUsuarioPersistenceMongoRepository me;
+    @Autowired CamposDeGuerraUsuarioPersistenceMongoRepository me;
     
     public MongoDBCamposDeGuerraUsuarioPersistence() {
     }
     
     @Override
     public void saveUsuario(Usuario u) throws CamposDeGuerraPersistenceException {
-        
+        //me.save(u);
         MongoClientURI uri = new MongoClientURI("mongodb://root:root@ds121896.mlab.com:21896/camposdeguerra");
         MongoClient client = new MongoClient(uri);
         DB db = client.getDB("camposdeguerra");
@@ -53,7 +53,6 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
 
     @Override
     public void updateUsuario(Usuario u) throws CamposDeGuerraPersistenceException {
-        
         MongoClientURI uri = new MongoClientURI("mongodb://root:root@ds121896.mlab.com:21896/camposdeguerra");
         MongoClient client = new MongoClient(uri);
         DB db = client.getDB("camposdeguerra");
@@ -66,7 +65,7 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
 
     @Override
     public void deleteUsuario(String user) throws CamposDeGuerraPersistenceException {
-        
+        //me.delete("_"+u.getId());
         MongoClientURI uri = new MongoClientURI("mongodb://root:root@ds121896.mlab.com:21896/camposdeguerra");
         MongoClient client = new MongoClient(uri);
         DB db = client.getDB("camposdeguerra");
@@ -84,8 +83,8 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
      */
     @Override
     public  Usuario findById(String id) throws CamposDeGuerraNotFoundException{
-        //System.out.println("NFDJFDSNBJGFBDJG");
-        
+
+        /*
         MongoClientURI uri = new MongoClientURI("mongodb://root:root@ds121896.mlab.com:21896/camposdeguerra");
         MongoClient client = new MongoClient(uri);
         DB db = client.getDB("camposdeguerra");
@@ -98,11 +97,10 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
             DBObject getPlayer = cursor.next();
             return new Usuario(getPlayer.get("_id").toString(), new Maquina(), Integer.parseInt(getPlayer.get("puntaje").toString()),Integer.parseInt(getPlayer.get("vida").toString()), getPlayer.get("equipo").toString());
         }
-        
-        //Usuario u = me.findById(id);
-        //if(u==null){throw new CamposDeGuerraNotFoundException("Player not found!");}
-        throw new CamposDeGuerraNotFoundException("Player not found!");
-        
+        */
+        Usuario u = me.findById(id);
+        if(u==null){throw new CamposDeGuerraNotFoundException("Player not found!");}
+        return u;
     }
     
     
@@ -113,9 +111,8 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
      */
     @Override
     public  Set<Usuario> getAllUsers() throws CamposDeGuerraNotFoundException{
-         
         Set<Usuario> players = new HashSet<>();
-        
+        /*
         MongoClientURI uri = new MongoClientURI("mongodb://root:root@ds121896.mlab.com:21896/camposdeguerra");
         MongoClient client = new MongoClient(uri);
         DB db = client.getDB("camposdeguerra");
@@ -127,11 +124,9 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
         }
 
         client.close();
+        */
         
-        
-        //players=me.getAllUsers();
+        players=me.getAllUsers();
         return players;
     }
-    
-    
 }
