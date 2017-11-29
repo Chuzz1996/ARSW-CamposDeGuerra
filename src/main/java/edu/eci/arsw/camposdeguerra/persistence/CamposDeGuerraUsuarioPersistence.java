@@ -8,8 +8,6 @@ package edu.eci.arsw.camposdeguerra.persistence;
 
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import java.util.Set;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
-import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
 
@@ -42,7 +40,6 @@ public interface CamposDeGuerraUsuarioPersistence {
     
     public Usuario findById(String id) throws CamposDeGuerraNotFoundException;   
     
-    @Query("{}")
     public Set<Usuario> getAllUsers() throws CamposDeGuerraNotFoundException;
     
 }

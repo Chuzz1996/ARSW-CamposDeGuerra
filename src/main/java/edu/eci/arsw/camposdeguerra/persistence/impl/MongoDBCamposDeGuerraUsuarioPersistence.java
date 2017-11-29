@@ -9,26 +9,23 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import edu.eci.arsw.camposdeguerra.model.Maquina;
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraUsuarioPersistence;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
+import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraUsuarioPersistenceMongoRepository;
 import java.util.HashSet;
 import java.util.Set;
-import org.bson.Document;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUsuarioPersistence {
-   
+    
+    @Autowired CamposDeGuerraUsuarioPersistenceMongoRepository me;
     
     public MongoDBCamposDeGuerraUsuarioPersistence() {
     }
@@ -49,19 +46,6 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
         BasicDBObject doc = new BasicDBObject("_id", u.getId()).append("tipoMaquina", "").append("puntaje", u.getPuntaje()).append("vida", u.getVida()).append("equipo", u.getEquipo());
         coll.insert(doc);
         client.close();
-             
-        //MongoClientURI uri = new MongoClientURI("mongodb://root:root@ds121896.mlab.com:21896/camposdeguerra");
-        //MongoClient client = new MongoClient(uri);
-        //MongoDatabase db = client.getDatabase("camposdeguerra");
-        //MongoCollection<Document> coll =db.getCollection("Users");
-        //BasicDBObject searchQuery = new BasicDBObject().append("id", u.getId());
-        //FindIterable<Document> cursor = coll.find(searchQuery);
-        //while (cursor!=null) {
-          //  throw new CamposDeGuerraPersistenceException("Player found!");
-        //}
-        //Document user = new Document("id", u.getId()).append("tipoMaquina", u.getTipoMaquina()).append("puntaje", u.getPuntaje()).append("vida", u.getVida()).append("equipo", u.getEquipo());
-        //coll.insertOne(user);
-        //client.close();
     }
 
 
@@ -98,7 +82,8 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
      */
     @Override
     public  Usuario findById(String id) throws CamposDeGuerraNotFoundException{
-        
+        System.out.println("NFDJFDSNBJGFBDJG");
+        /*
         MongoClientURI uri = new MongoClientURI("mongodb://root:root@ds121896.mlab.com:21896/camposdeguerra");
         MongoClient client = new MongoClient(uri);
         DB db = client.getDB("camposdeguerra");
@@ -111,10 +96,10 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
             DBObject getPlayer = cursor.next();
             return new Usuario(getPlayer.get("_id").toString(), new Maquina(), Integer.parseInt(getPlayer.get("puntaje").toString()),Integer.parseInt(getPlayer.get("vida").toString()), getPlayer.get("equipo").toString());
         }
-        
-        throw new CamposDeGuerraNotFoundException("Player not found!");
-        
-        
+        */
+        Usuario u = me.findById(id);
+        if(u==null){throw new CamposDeGuerraNotFoundException("Player not found!");}
+        return u;
     }
     
     
@@ -127,6 +112,7 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
     public  Set<Usuario> getAllUsers() throws CamposDeGuerraNotFoundException{
          
         Set<Usuario> players = new HashSet<>();
+        /*
         MongoClientURI uri = new MongoClientURI("mongodb://root:root@ds121896.mlab.com:21896/camposdeguerra");
         MongoClient client = new MongoClient(uri);
         DB db = client.getDB("camposdeguerra");
@@ -138,7 +124,9 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
         }
 
         client.close();
-
+        */
+        
+        players=me.getAllUsers();
         return players;
     }
     
