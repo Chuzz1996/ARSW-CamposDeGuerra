@@ -9,8 +9,10 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import edu.eci.arsw.camposdeguerra.model.Maquina;
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraUsuarioPersistence;
@@ -25,7 +27,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUsuarioPersistence {
     
-    @Autowired CamposDeGuerraUsuarioPersistenceMongoRepository me;
+    //@Autowired CamposDeGuerraUsuarioPersistenceMongoRepository me;
     
     public MongoDBCamposDeGuerraUsuarioPersistence() {
     }
@@ -82,8 +84,8 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
      */
     @Override
     public  Usuario findById(String id) throws CamposDeGuerraNotFoundException{
-        System.out.println("NFDJFDSNBJGFBDJG");
-        /*
+        //System.out.println("NFDJFDSNBJGFBDJG");
+        
         MongoClientURI uri = new MongoClientURI("mongodb://root:root@ds121896.mlab.com:21896/camposdeguerra");
         MongoClient client = new MongoClient(uri);
         DB db = client.getDB("camposdeguerra");
@@ -96,10 +98,11 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
             DBObject getPlayer = cursor.next();
             return new Usuario(getPlayer.get("_id").toString(), new Maquina(), Integer.parseInt(getPlayer.get("puntaje").toString()),Integer.parseInt(getPlayer.get("vida").toString()), getPlayer.get("equipo").toString());
         }
-        */
-        Usuario u = me.findById(id);
-        if(u==null){throw new CamposDeGuerraNotFoundException("Player not found!");}
-        return u;
+        
+        //Usuario u = me.findById(id);
+        //if(u==null){throw new CamposDeGuerraNotFoundException("Player not found!");}
+        throw new CamposDeGuerraNotFoundException("Player not found!");
+        
     }
     
     
@@ -112,7 +115,7 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
     public  Set<Usuario> getAllUsers() throws CamposDeGuerraNotFoundException{
          
         Set<Usuario> players = new HashSet<>();
-        /*
+        
         MongoClientURI uri = new MongoClientURI("mongodb://root:root@ds121896.mlab.com:21896/camposdeguerra");
         MongoClient client = new MongoClient(uri);
         DB db = client.getDB("camposdeguerra");
@@ -124,9 +127,9 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
         }
 
         client.close();
-        */
         
-        players=me.getAllUsers();
+        
+        //players=me.getAllUsers();
         return players;
     }
     

@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-//@ComponentScan(basePackages = {"edu.eci.arsw.camposdeguerra"})
+@ComponentScan(basePackages = {"edu.eci.arsw.camposdeguerra"})
 public class CamposDeGuerraApiApplication {
 
 	public static void main(String[] args) {
