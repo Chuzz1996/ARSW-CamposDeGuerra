@@ -2,6 +2,8 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/c653d1358b154962946629e8dec4c483)](https://www.codacy.com/app/Chuzz1996/ARSW-CamposDeGuerra?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Chuzz1996/ARSW-CamposDeGuerra&amp;utm_campaign=Badge_Grade)
 [![CircleCI](https://circleci.com/gh/Chuzz1996/ARSW-CamposDeGuerra.svg?style=svg)](https://circleci.com/gh/Chuzz1996/ARSW-CamposDeGuerra)
 [![Heroku](https://wmpics.pics/di-D9YP.png)](https://camposdeguerra.herokuapp.com/)
+[![Balanceador](https://wmpics.pics/di-2EDX.png)](34.210.184.97:8090)
+
 
 # Collaborative Game CamposDeGuerra
 # Computer engineering - Escuela Colombiana de ingenieria Julio Garavito
