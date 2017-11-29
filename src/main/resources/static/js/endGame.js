@@ -8,10 +8,10 @@ var endGame = (function () {
         var socket = new SockJS('/stompendpoint');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
-            stompClient.subscribe('/topic/sala.' + sessionStorage.getItem("idRoom") + "/datos", function (eventbody) {});
+            stompClient.subscribe('/topic/sala.' + sessionStorage.getItem("idRoom") + ".datos", function (eventbody) {});
         });
         setTimeout(function () {
-            stompClient.send("/app/sala." + sessionStorage.getItem("idRoom") + "/datos", {}, 'listo');
+            stompClient.send("/app/sala." + sessionStorage.getItem("idRoom") + ".datos", {}, 'listo');
         }, 4000);
     };
     

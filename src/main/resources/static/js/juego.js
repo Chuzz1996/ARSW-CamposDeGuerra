@@ -89,13 +89,13 @@ var juego = (function () {
     }
 
     class Potenciador {
-        constructor(x,y,ran,tipo,tiempo) {
+        constructor(x, y, ran, tipo, tiempo) {
             this.x = x;
             this.y = y;
-            this.tipo=tipo;
-            this.tiempo=tiempo;
+            this.tipo = tipo;
+            this.tiempo = tiempo;
             this.image = new Image();
-            this.image.src = directionPotenciador+ + ran + ".png";
+            this.image.src = directionPotenciador + +ran + ".png";
 
         }
     }
@@ -141,7 +141,7 @@ var juego = (function () {
                 x = myGameArea.canvas.width - 30;
                 for (var i = 0; i < data.equipoB.length; i++) {
                     if (data.equipoB[i].id !== sessionStorage.getItem("user")) {
-                        oponents.push(new Component(50, 50, directionImageTank + "2" + "B" + ".png", x, (i + 1) * y, "image", [], "2", data.equipoB[i].id, "B", vida, velocidad, dano));
+                        oponents.push(new Component(50, 50, directionImageTank + "2" + "B" + ".png", x, (i + 1) * y, "image", [], 2, data.equipoB[i].id, "B", vida, velocidad, dano));
                     }
                 }
             } else {
@@ -159,7 +159,7 @@ var juego = (function () {
                 x = 30;
                 for (var i = 0; i < data.equipoA.length; i++) {
                     if (data.equipoA[i].id !== sessionStorage.getItem("user")) {
-                        oponents.push(new Component(50, 50, directionImageTank + "1" + "A" + ".png", x, (i + 1) * y, "image", [], "1", data.equipoA[i].id, "A", vida, velocidad, dano));
+                        oponents.push(new Component(50, 50, directionImageTank + "1" + "A" + ".png", x, (i + 1) * y, "image", [], 1, data.equipoA[i].id, "A", vida, velocidad, dano));
                     }
                 }
 
@@ -205,7 +205,7 @@ var juego = (function () {
             }
             mili = ((min * 60) + sec) * 1000;
             if (mili === tiempoRoom) {
-                stompClient.send('/app/sala.' + myroom + "/endGame", {}, 'end');
+                stompClient.send('/app/sala.' + myroom + ".endGame", {}, 'end');
             }
             var potenciador;
             if (mili % 30000 === 0) {
@@ -219,7 +219,7 @@ var juego = (function () {
                 } else {
                     potenciador = new Potenciador(xPonte, yPonte, Poten, "vida", 10000);
                 }
-                stompClient.send('/topic/sala.' + myroom + "/potenciador", {}, JSON.stringify(potenciador));
+                //stompClient.send('/topic/sala.' + myroom + ".potenciador", {}, JSON.stringify(potenciador));
             }
             document.getElementById("Segundos").innerHTML = (min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec);
 
@@ -264,7 +264,7 @@ var juego = (function () {
             myGameArea.context.fillStyle = "#A9A9A9";
             myGameArea.context.fillRect(bullet.x + sx + dx, bullet.y + sy + dy, w, h);
             var temp2 = new Explocion(myGamePiece.x, myGamePiece.y);
-            stompClient.send("/topic/sala." + myroom + "/explocion", {}, JSON.stringify(temp2));
+            stompClient.send("/topic/sala." + myroom + ".explocion", {}, JSON.stringify(temp2));
             document.getElementById("live").innerHTML = "Vida: " + myGamePiece.vida;
         } else {
             myGameArea.context.fillStyle = "#A9A9A9";
@@ -354,7 +354,7 @@ var juego = (function () {
         }
     };
 
-    var graficarPoteciadores=function (){
+    var graficarPoteciadores = function () {
         for (var p in potenciadores) {
             myGameArea.context.drawImage(p.image, p.x, p.y, 30, 30);
         }
@@ -415,7 +415,7 @@ var juego = (function () {
                     } else {
                         puntos.scoreB += 1;
                     }
-                    stompClient.send("/topic/sala." + myroom + "/puntaje", {}, JSON.stringify(puntos));
+                    stompClient.send("/topic/sala." + myroom + ".puntaje", {}, JSON.stringify(puntos));
                 },
                 function () {
                     alert("Tu bandera fue robada,ve y buscala!!!");
@@ -445,7 +445,7 @@ var juego = (function () {
                         enemyBandera.x = Math.round(myGameArea.canvas.width * 0.10);
                         enemyBandera.y = Math.round(myGameArea.canvas.height * 0.50);
                     }
-                    stompClient.send("/topic/sala." + myroom + "/bandera", {}, JSON.stringify(enemyBandera));
+                    stompClient.send("/topic/sala." + myroom + ".bandera", {}, JSON.stringify(enemyBandera));
 
                 },
                 function () {
@@ -647,10 +647,10 @@ var juego = (function () {
             usuarioA = new Usuario(sessionStorage.getItem("user"), maquina, puntaje, myteam, vidaenemigo);
             usuarioB = new Usuario(sessionStorage.getItem("user"), maquina, puntaje, myteam, myGamePiece.vida);
         }
-        stompClient.send("/app/sala." + myroom + "/" + myteam, {}, JSON.stringify(usuarioA));
-        stompClient.send("/app/sala." + myroom + "/" + enemyteam, {}, JSON.stringify(usuarioB));
+        stompClient.send("/app/sala." + myroom + "." + myteam, {}, JSON.stringify(usuarioA));
+        stompClient.send("/app/sala." + myroom + "." + enemyteam, {}, JSON.stringify(usuarioB));
         if (myGamePiece.hasban) {
-            stompClient.send("/topic/sala." + myroom + "/bandera", {}, JSON.stringify(enemyBandera));
+            stompClient.send("/topic/sala." + myroom + ".bandera", {}, JSON.stringify(enemyBandera));
         }
     };
 
@@ -738,7 +738,7 @@ var juego = (function () {
                         sy = 20;
                     }
                     var temp2 = new Bulletcita(myGamePiece.x + sx, myGamePiece.y + sy, myGamePiece.direction, myteam)
-                    stompClient.send("/app/sala." + myroom + "/bullets", {}, JSON.stringify(temp2));
+                    stompClient.send("/app/sala." + myroom + ".bullets", {}, JSON.stringify(temp2));
                 }
 
             });
@@ -769,7 +769,7 @@ var juego = (function () {
             stompClient.connect({}, function (frame) {
 
                 //ENDGAME
-                stompClient.subscribe("/topic/sala." + myroom + "/endGame", function (evenbody) {
+                stompClient.subscribe("/topic/sala." + myroom + ".endGame", function (evenbody) {
                     sessionStorage.setItem("PuntosA", puntos.scoreA);
                     sessionStorage.setItem("PuntosB", puntos.scoreB);
                     stompClient.disconnect();
@@ -778,7 +778,7 @@ var juego = (function () {
                 });
 
                 //ALIADOS
-                stompClient.subscribe('/topic/sala.' + myroom + "/" + myteam, function (eventbody) {
+                stompClient.subscribe('/topic/sala.' + myroom + "." + myteam, function (eventbody) {
                     var object = JSON.parse(eventbody.body);
                     var ban = 0;
                     for (var i = 0; i < aliados.length && ban === 0; i++) {
@@ -799,7 +799,7 @@ var juego = (function () {
                 });
 
                 //ENEMIGOS
-                stompClient.subscribe('/topic/sala.' + myroom + "/" + enemyteam, function (eventbody) {
+                stompClient.subscribe('/topic/sala.' + myroom + "." + enemyteam, function (eventbody) {
                     var object = JSON.parse(eventbody.body);
                     var ban = 0;
                     for (var i = 0; i < oponents.length && ban === 0; i++) {
@@ -820,19 +820,19 @@ var juego = (function () {
                 });
 
                 //BALAS
-                stompClient.subscribe('/topic/sala.' + myroom + "/bullets", function (eventbody) {
+                stompClient.subscribe('/topic/sala.' + myroom + ".bullets", function (eventbody) {
                     var object = JSON.parse(eventbody.body);
                     graficarBala(object);
                 });
 
                 //EXPLOCION
-                stompClient.subscribe('/topic/sala.' + myroom + "/explocion", function (eventbody) {
+                stompClient.subscribe('/topic/sala.' + myroom + ".explocion", function (eventbody) {
                     var object = JSON.parse(eventbody.body);
                     graficarExplosion(object);
                 });
 
                 //BANDERA
-                stompClient.subscribe('/topic/sala.' + myroom + "/bandera", function (eventbody) {
+                stompClient.subscribe('/topic/sala.' + myroom + ".bandera", function (eventbody) {
                     var object = JSON.parse(eventbody.body);
                     if (object.team === myteam) {
                         myGameArea.context.fillStyle = "#A9A9A9";
@@ -849,20 +849,20 @@ var juego = (function () {
                 });
 
                 //PUNTAJE
-                stompClient.subscribe('/topic/sala.' + myroom + "/puntaje", function (eventbody) {
+                stompClient.subscribe('/topic/sala.' + myroom + ".puntaje", function (eventbody) {
                     getscorer().then(function () {
                         document.getElementById("Puntaje").innerHTML = "Puntaje: " + puntos.scoreA + "-" + puntos.scoreB;
                     });
                 });
 
                 //TIEMPO
-                stompClient.subscribe('/topic/sala.' + myroom + "/tiempo", function (eventbody) {
+                stompClient.subscribe('/topic/sala.' + myroom + ".tiempo", function (eventbody) {
                     var object = eventbody.body;
                     mili = object;
                 });
 
                 //POTENCIADOR
-                stompClient.subscribe('/topic/sala.' + myroom + "/potenciador", function (eventbody) {
+                stompClient.subscribe('/topic/sala.' + myroom + ".potenciador", function (eventbody) {
                     var object = JSON.parse(eventbody.body);
                     var banderaP = false;
                     for (var p in potenciadores) {
@@ -878,14 +878,14 @@ var juego = (function () {
                 });
             });
 
-
-            myGameArea.start();
             myBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.10), Math.round(myGameArea.canvas.height * 0.50), myteam);
             enemyBandera = new Bandera(Math.round(myGameArea.canvas.width * 0.90), Math.round(myGameArea.canvas.height * 0.50), enemyteam);
             cargarPartida().then(getscorer).then(graficarObstaculos);
+            startTime();
+            myGameArea.start();
             graficarBandera(myteam);
             graficarBandera(enemyteam);
-            startTime();
+
 
             /*setTimeout(function () {
              graficarObstaculos();

@@ -72,22 +72,22 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
                         } else {
                             equipo = "A";
                         }
+                        
                         operations.watch((K) ("room:" + room + "cantidadActualJugadores"));
                         operations.multi();
                         operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "id", us.getId());
-                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "vida", us.getVida());
-                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "puntaje", us.getPuntaje());
+                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "vida", Integer.toString(us.getVida()));
+                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "puntaje", Integer.toString(us.getPuntaje()));
                         operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "equipo", equipo);
-                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId() + ":maquina"), "speed", us.getTipoMaquina().getSpeed());
-                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId() + ":maquina"), "attack", us.getTipoMaquina().getAttack());
-                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId() + ":maquina"), "x", us.getTipoMaquina().getX());
-                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId() + ":maquina"), "y", us.getTipoMaquina().getY());
-                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId() + ":maquina"), "direction", us.getTipoMaquina().getDirection());
+                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId() + ":maquina"), "speed", Integer.toString(us.getTipoMaquina().getSpeed()));
+                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId() + ":maquina"), "attack", Integer.toString(us.getTipoMaquina().getAttack()));
+                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId() + ":maquina"), "x", Integer.toString(us.getTipoMaquina().getX()));
+                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId() + ":maquina"), "y", Integer.toString(us.getTipoMaquina().getY()));
+                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId() + ":maquina"), "direction", Integer.toString(us.getTipoMaquina().getDirection()));
                         operations.opsForHash().put((K) ("room:" + room + ":" + us.getId() + ":maquina"), "bullets", "");
                         operations.opsForHash().put((K) ("room:" + room + ":" + us.getId() + ":maquina"), "nombreImagen", us.getTipoMaquina().getNombreImagen());
-                        Object[] args = new Object[1];
-                        args[0] = us.getId();
-                        operations.opsForSet().add((K) ("room:" + room + ":users"), (V) args);
+                        operations.opsForSet().add((K) ("room:" + room + ":users"), (V) us.getId());
+                        operations.opsForHash().increment((K) ("room:" + room), "cantidadActualJugadores", 1);
                         return operations.exec();
                     }
                 });
@@ -108,16 +108,16 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
             for (String s : value2) {
                 Usuario temp = new Usuario();
                 temp.setId((String) template.opsForHash().get("room:" + room + ":" + s, "id"));
-                temp.setVida((Integer) template.opsForHash().get("room:" + room + ":" + s, "vida"));
-                temp.setPuntaje((Integer) template.opsForHash().get("room:" + room + ":" + s, "puntaje"));
+                temp.setVida(Integer.parseInt((String)template.opsForHash().get("room:" + room + ":" + s, "vida")));
+                temp.setPuntaje(Integer.parseInt((String)template.opsForHash().get("room:" + room + ":" + s, "puntaje")));
                 temp.setEquipo((String) template.opsForHash().get("room:" + room + ":" + s, "equipo"));
                 Maquina maq = new Maquina();
-                maq.setAttack((Integer) template.opsForHash().get("room:" + room + ":" + s + ":" + "maquina", "attack"));
-                maq.setDirection((Integer) template.opsForHash().get("room:" + room + ":" + s + ":" + "maquina", "direction"));
+                maq.setAttack(Integer.parseInt((String)template.opsForHash().get("room:" + room + ":" + s + ":" + "maquina", "attack")));
+                maq.setDirection(Integer.parseInt((String)template.opsForHash().get("room:" + room + ":" + s + ":" + "maquina", "direction")));
                 maq.setNombreImagen((String) template.opsForHash().get("room:" + room + ":" + s + ":" + "maquina", "nombreImagen"));
-                maq.setSpeed((Integer) template.opsForHash().get("room:" + room + ":" + s + ":" + "maquina", "speed"));
-                maq.setX((Integer) template.opsForHash().get("room:" + room + ":" + s + ":" + "maquina", "x"));
-                maq.setY((Integer) template.opsForHash().get("room:" + room + ":" + s + ":" + "maquina", "y"));
+                maq.setSpeed(Integer.parseInt((String)template.opsForHash().get("room:" + room + ":" + s + ":" + "maquina", "speed")));
+                maq.setX(Integer.parseInt((String)template.opsForHash().get("room:" + room + ":" + s + ":" + "maquina", "x")));
+                maq.setY(Integer.parseInt((String)template.opsForHash().get("room:" + room + ":" + s + ":" + "maquina", "y")));
                 temp.setTipoMaquina(maq);
                 ans.add(temp);
             }
@@ -380,8 +380,8 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
     @Override
     public List<Integer> obtenerScorer(Integer room) throws CamposDeGuerraNotFoundException {
         List<Integer> ans = new ArrayList<>();
-        Integer value = (Integer) template.opsForHash().get("room:" + room, "puntajeEquipoA");
-        Integer value2 = (Integer) template.opsForHash().get("room:" + room, "puntajeEquipoB");
+        Integer value = Integer.parseInt((String) template.opsForHash().get("room:" + room, "puntajeEquipoA"));
+        Integer value2 = Integer.parseInt((String)template.opsForHash().get("room:" + room, "puntajeEquipoB"));
         if (value != null) {
             ans.add(value);
             ans.add(value2);
@@ -398,18 +398,18 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
         if (value != null) {
             throw new CamposDeGuerraPersistenceException("el identificador de la sala ya esta");
         } else {
-            template.opsForHash().put("room:" + room.getId(), "id", room.getId());
-            template.opsForHash().put("room:" + room.getId(), "puntajeEquipoA", 0);
-            template.opsForHash().put("room:" + room.getId(), "puntajeEquipoB", 0);
+            template.opsForHash().put("room:" + room.getId(), "id",Integer.toString(room.getId()));
+            template.opsForHash().put("room:" + room.getId(), "puntajeEquipoA", Integer.toString(0));
+            template.opsForHash().put("room:" + room.getId(), "puntajeEquipoB", Integer.toString(0));
             template.opsForHash().put("room:" + room.getId(), "banderaA", "");
             template.opsForHash().put("room:" + room.getId(), "banderaB", "");
-            template.opsForHash().put("room:" + room.getId(), "banderaATomada", false);
-            template.opsForHash().put("room:" + room.getId(), "banderaBTomada", false);
-            template.opsForHash().put("room:" + room.getId(), "tiempo", room.getTiempo());
-            template.opsForHash().put("room:" + room.getId(), "cantidadMaximaJugadores", room.getCantidadMaximaJugadores());
-            template.opsForHash().put("room:" + room.getId(), "cantidadActualJugadores", 0);
+            template.opsForHash().put("room:" + room.getId(), "banderaATomada", Boolean.toString(false));
+            template.opsForHash().put("room:" + room.getId(), "banderaBTomada", Boolean.toString(false));
+            template.opsForHash().put("room:" + room.getId(), "tiempo", Integer.toString(room.getTiempo()));
+            template.opsForHash().put("room:" + room.getId(), "cantidadMaximaJugadores", Integer.toString(room.getCantidadMaximaJugadores()));
+            template.opsForHash().put("room:" + room.getId(), "cantidadActualJugadores", Integer.toString(0));
             template.opsForHash().put("room:" + room.getId(), "potenciadores", room.getPotenciadores());
-            template.opsForHash().put("room:" + room.getId(), "capturasParaGanar", room.getCapturasParaGanar());
+            template.opsForHash().put("room:" + room.getId(), "capturasParaGanar", Integer.toString(room.getCapturasParaGanar()));
             template.opsForHash().put("room:" + room.getId(), "tipoMaquina", room.getTipoMaquina());
             template.opsForHash().put("room:" + room.getId(), "estado", "Nojugando");
             String[] args = new String[1];
@@ -422,7 +422,9 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
     public List<Room> getAllRooms() throws CamposDeGuerraNotFoundException {
         List<Room> asn = new ArrayList<>();
         Set<String> value2 = template.opsForSet().members("rooms");
+        System.out.println("value2: "+value2);
         for (String s : value2) {
+            System.out.println(s);
             asn.add(getRoom(Integer.parseInt(s)));
         }
         return asn;
@@ -437,17 +439,17 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
             throw new CamposDeGuerraNotFoundException("La sala no existe");
         }
         else{
-            temp.setPuntajeEquipoA((AtomicInteger) template.opsForHash().get("room:" + s, "puntajeEquipoA"));
-            temp.setPuntajeEquipoA((AtomicInteger) template.opsForHash().get("room:" + s, "puntajeEquipoB"));
+            temp.setPuntajeEquipoA(new AtomicInteger(Integer.parseInt((String)template.opsForHash().get("room:" + s, "puntajeEquipoA"))));
+            temp.setPuntajeEquipoB(new AtomicInteger(Integer.parseInt((String)template.opsForHash().get("room:" + s, "puntajeEquipoB"))));
             temp.setBanderaA((String) template.opsForHash().get("room:" + s, "banderaA"));
             temp.setBanderaB((String) template.opsForHash().get("room:" + s, "banderaB"));
-            temp.setBanderaATomada((AtomicBoolean) template.opsForHash().get("room:" + s, "banderaATomada"));
-            temp.setBanderaBTomada((AtomicBoolean) template.opsForHash().get("room:" + s, "banderaBTomada"));
-            temp.setTiempo((Integer) template.opsForHash().get("room:" + s, "tiempo"));
-            temp.setCantidadMaximaJugadores((Integer) template.opsForHash().get("room:" + s, "cantidadMaximaJugadores"));
-            temp.setCantidadActualJugadores((AtomicInteger) template.opsForHash().get("room:" + s, "cantidadActualJugadores"));
+            temp.setBanderaATomada(new AtomicBoolean(Boolean.getBoolean((String) template.opsForHash().get("room:" + s, "banderaATomada"))));
+            temp.setBanderaBTomada(new AtomicBoolean(Boolean.getBoolean((String) template.opsForHash().get("room:" + s, "banderaBTomada"))));
+            temp.setTiempo(Integer.parseInt((String)template.opsForHash().get("room:" + s, "tiempo")));
+            temp.setCantidadMaximaJugadores(Integer.parseInt((String)template.opsForHash().get("room:" + s, "cantidadMaximaJugadores")));
+            temp.setCantidadActualJugadores(new AtomicInteger(Integer.parseInt((String)template.opsForHash().get("room:" + s, "cantidadActualJugadores"))));
             temp.setPotenciadores((String) template.opsForHash().get("room:" + s, "potenciadores"));
-            temp.setCapturasParaGanar((Integer) template.opsForHash().get("room:" + s, "capturasParaGanar"));
+            temp.setCapturasParaGanar(Integer.parseInt((String)template.opsForHash().get("room:" + s, "capturasParaGanar")));
             temp.setTipoMaquina((String) template.opsForHash().get("room:" + s, "tipoMaquina"));
             temp.setEstado((String) template.opsForHash().get("room:" + s, "estado"));
             Set<Usuario> temp2 = getAllUsuariosFromRoom(s);

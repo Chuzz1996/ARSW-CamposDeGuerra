@@ -33,32 +33,32 @@ public class STOMPMessagesHandler {
     public void listoParaJugar(String estado, @DestinationVariable Integer idSala) throws Exception {
         if (l.roomFull(idSala)) {
             msgt.convertAndSend("/topic/sala." + idSala, "Pueden comenzar");
-            msgt.convertAndSend("/topic/sala." + idSala + "/tiempo", l.getTime(idSala));
+            msgt.convertAndSend("/topic/sala." + idSala + ".tiempo", l.getTime(idSala));
         }
     }
 
-    @MessageMapping("/sala.{idSala}/bullets")
+    @MessageMapping("/sala.{idSala}.bullets")
     public void reportarBala(Bullet b, @DestinationVariable Integer idSala) throws Exception {
-        msgt.convertAndSend("/topic/sala." + idSala + "/bullets", b);
+        msgt.convertAndSend("/topic/sala." + idSala + ".bullets", b);
     }
 
-    @MessageMapping("/sala.{idSala}/A")
+    @MessageMapping("/sala.{idSala}.A")
     public void reportarInfoTeamA(Usuario u, @DestinationVariable Integer idSala) throws Exception {
-        msgt.convertAndSend("/topic/sala." + idSala + "/A", u);
+        msgt.convertAndSend("/topic/sala." + idSala + ".A", u);
     }
 
-    @MessageMapping("/sala.{idSala}/B")
+    @MessageMapping("/sala.{idSala}.B")
     public void reportarInfoTeamB(Usuario u, @DestinationVariable Integer idSala) throws Exception {
-        msgt.convertAndSend("/topic/sala." + idSala + "/B", u);
+        msgt.convertAndSend("/topic/sala." + idSala + ".B", u);
     }
     
     
-    @MessageMapping("/sala.{idSala}/endGame")
+    @MessageMapping("/sala.{idSala}.endGame")
     public void reportarEndGame(String ans,@DestinationVariable Integer idSala) throws Exception {
-        msgt.convertAndSend("/topic/sala." + idSala + "/endGame", "ok");
+        msgt.convertAndSend("/topic/sala." + idSala + ".endGame", "ok");
     }
     
-    @MessageMapping("/sala.{idSala}/datos")
+    @MessageMapping("/sala.{idSala}.datos")
     public void reportarGetDatos(String ans,@DestinationVariable Integer idSala) throws Exception {
         l.getDatos(idSala);
     }
