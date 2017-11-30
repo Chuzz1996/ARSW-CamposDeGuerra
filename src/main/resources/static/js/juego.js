@@ -28,6 +28,10 @@ var juego = (function () {
     var sec = 0;
     var mili = 0;
     var tiempoRoom;
+    var banderaAzulX;
+    var banderaAzulY;
+    var banderaRojaX;
+    var banderaRojaY;
 
     class Usuario {
         constructor(id, tipoMaquina, puntaje, equipo, vida) {
@@ -138,14 +142,14 @@ var juego = (function () {
                         myGamePiece = new Component(30, 30, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], 1, sessionStorage.getItem("user"), myteam, vida, velocidad, dano);
                     }
                 }
-                x = myGameArea.canvas.width - 30;
+                x = myGameArea.canvas.width - 60;
                 for (var i = 0; i < data.equipoB.length; i++) {
                     if (data.equipoB[i].id !== sessionStorage.getItem("user")) {
                         oponents.push(new Component(30, 30, directionImageTank + "2" + "B" + ".png", x, (i + 1) * y, "image", [], 2, data.equipoB[i].id, "B", vida, velocidad, dano));
                     }
                 }
             } else {
-                x = myGameArea.canvas.width - 30;
+                x = myGameArea.canvas.width - 60;
                 dir = "2";
                 y = Math.round(myGameArea.canvas.height * 0.30);
 
@@ -168,25 +172,19 @@ var juego = (function () {
                for(var i = 0; i < data.length; i++){
                    for(var j = 0; j < data[i].length; j++){
                        if(data[i][j]==="P"){
-                           obstaculos.push(new Obstaculo(30, 30, directionObstaculo + "1.png", j * 30, i * 30, "pasto", 200, i));
+                           obstaculos.push(new Obstaculo(30, 30, directionObstaculo + "1.png", j * 30, i * 30, "pasto", 10, i));
                        }else if(data[i][j]==="L"){
-                           obstaculos.push(new Obstaculo(30, 30, directionObstaculo + "2.png", j * 30, i * 30, "ladrillo", 500, i));
+                           obstaculos.push(new Obstaculo(30, 30, directionObstaculo + "2.png", j * 30, i * 30, "ladrillo", 20, i));
                        }else if(data[i][j]==="M"){
-                           obstaculos.push(new Obstaculo(30, 30, directionObstaculo + "3.png", j * 30, i * 30, "metal", 1000, i));
+                           obstaculos.push(new Obstaculo(30, 30, directionObstaculo + "3.png", j * 30, i * 30, "metal", 50, i));
                        }else if(data[i][j]==="I"){
                            obstaculos.push(new Obstaculo(30, 30, directionObstaculo + "2.png", j * 30, i * 30, "ladrillo", 1000000, i));
                        }else if(data[i][j]==="A"){
-                           if(myTeam="A"){
-                                myBandera = new Bandera(j*30, i*30, myteam);
-                            }else{
-                                enemyBandera = new Bandera(j*30, i*30, enemyteam);
-                            }
+                           banderaAzulX = j*30;
+                           banderaAzulY = i*30;
                        }else if(data[i][j]==="R"){
-                           if(myTeam="B"){
-                                myBandera = new Bandera(j*30, i*30, myteam);
-                            }else{
-                                enemyBandera = new Bandera(j*30, i*30, enemyteam);
-                            }
+                           banderaRojaX = j*30;
+                           banderaRojaY = i*30;
                        }
                    }
                }
@@ -277,13 +275,14 @@ var juego = (function () {
             sy = 0;
             dx = -15;
             dy = 0;
-        }
+        }var pego = false;
         if (bullet.equipo !== myteam && myGamePiece.crashWith(bullet, h, w, "bullet")) {
             myGameArea.context.fillStyle = "#A9A9A9";
             myGameArea.context.fillRect(bullet.x + sx + dx, bullet.y + sy + dy, w, h);
             var temp2 = new Explocion(myGamePiece.x, myGamePiece.y);
             stompClient.send("/topic/sala." + myroom + ".explocion", {}, JSON.stringify(temp2));
             document.getElementById("live").innerHTML = "Vida: " + myGamePiece.vida;
+            pego = true;
         } else {
             myGameArea.context.fillStyle = "#A9A9A9";
             myGameArea.context.fillRect(bullet.x + sx + dx, bullet.y + sy + dy, w, h);
@@ -295,12 +294,17 @@ var juego = (function () {
                 if (crash) {
                     var temp3 = new Explocion(obstaculos[i].x, obstaculos[i].y);
                     graficarExplosion(temp3);
+                    pego = true;
                 }
             }
+        }if(pego===false){
+            setTimeout(function () {
+                actualizarTrayectoriaBalas(bullet);
+            }, 10);
+        }else{
+            myGameArea.context.fillStyle = "#A9A9A9";
+            myGameArea.context.fillRect(bullet.x + sx, bullet.y + sy, w, h);
         }
-        setTimeout(function () {
-            actualizarTrayectoriaBalas(bullet);
-        }, 10);
     };
 
     var actualizarTrayectoriaBalas = function (shoot) {
@@ -358,9 +362,9 @@ var juego = (function () {
     };
     var graficarBandera = function (banderateam) {
         if (banderateam === myteam) {
-            myGameArea.context.drawImage(myBandera.image, myBandera.x, myBandera.y, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.04));
+            myGameArea.context.drawImage(myBandera.image, myBandera.x, myBandera.y, 30, 30);
         } else {
-            myGameArea.context.drawImage(enemyBandera.image, enemyBandera.x, enemyBandera.y, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.04));
+            myGameArea.context.drawImage(enemyBandera.image, enemyBandera.x, enemyBandera.y, 30, 30);
         }
     };
 
@@ -405,7 +409,7 @@ var juego = (function () {
                     alert("Tomaste la bandera");
                     myGamePiece.hasban = true;
                     myGameArea.context.fillStyle = "#A9A9A9";
-                    myGameArea.context.fillRect(enemyBandera.x, enemyBandera.y, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.04));
+                    myGameArea.context.fillRect(enemyBandera.x, enemyBandera.y, 30, 30);
                     enemyBandera.x = myGamePiece.x - 20;
                     enemyBandera.x = myGamePiece.y - 20;
                 },
@@ -455,13 +459,13 @@ var juego = (function () {
                     alert("Como has puntuado, la bandera enemiga a vuelto a su base!!!");
                     myGamePiece.hasban = false;
                     myGameArea.context.fillStyle = "#A9A9A9";
-                    myGameArea.context.fillRect(enemyBandera.x, enemyBandera.y, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.04));
+                    myGameArea.context.fillRect(enemyBandera.x, enemyBandera.y, 30, 30);
                     if (myteam === "A") {
-                        enemyBandera.x = Math.round(myGameArea.canvas.width * 0.90);
-                        enemyBandera.y = Math.round(myGameArea.canvas.height * 0.50);
+                        enemyBandera.x = 30;
+                        enemyBandera.y = 30;
                     } else {
-                        enemyBandera.x = Math.round(myGameArea.canvas.width * 0.10);
-                        enemyBandera.y = Math.round(myGameArea.canvas.height * 0.50);
+                        enemyBandera.x = 30;
+                        enemyBandera.y = 30;
                     }
                     stompClient.send("/topic/sala." + myroom + ".bandera", {}, JSON.stringify(enemyBandera));
 
@@ -502,8 +506,8 @@ var juego = (function () {
             this.image.src = color;
         }
         this.dir = dir;
-        this.width = width;
-        this.height = height;
+        this.width = 30;
+        this.height = 30;
         this.x = x;
         this.y = y;
     }
@@ -582,7 +586,11 @@ var juego = (function () {
             }
             if (this.hasban) {
                 myGameArea.context.fillStyle = "#A9A9A9";
-                myGameArea.context.fillRect(enemyBandera.x, enemyBandera.y, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.04));
+                if(enemyteam==="A"){
+                    myGameArea.context.fillRect(enemyBandera.x, enemyBandera.y, banderaAzulX,banderaAzulY);
+                }else{
+                    myGameArea.context.fillRect(enemyBandera.x, enemyBandera.y, banderaRojaX,banderaRojaY);
+                }
                 enemyBandera.x = this.x - 20;
                 enemyBandera.y = this.y - 20;
             }
@@ -737,23 +745,23 @@ var juego = (function () {
                     if (directionShoot === 3) {
                         h = 30;
                         w = 10;
-                        sx = 20;
+                        sx = 15;
                         sy = 60;
                     } else if (directionShoot === 4) {
                         h = 30;
                         w = 10;
-                        sx = 20;
+                        sx = 15;
                         sy = -60;
                     } else if (directionShoot === 2) {
                         h = 10;
                         w = 30;
                         sx = -60;
-                        sy = 20;
+                        sy = 10;
                     } else {
                         h = 10;
                         w = 30;
                         sx = 70;
-                        sy = 20;
+                        sy = 10;
                     }
                     var temp2 = new Bulletcita(myGamePiece.x + sx, myGamePiece.y + sy, myGamePiece.direction, myteam)
                     stompClient.send("/app/sala." + myroom + ".bullets", {}, JSON.stringify(temp2));
@@ -854,12 +862,12 @@ var juego = (function () {
                     var object = JSON.parse(eventbody.body);
                     if (object.team === myteam) {
                         myGameArea.context.fillStyle = "#A9A9A9";
-                        myGameArea.context.fillRect(myBandera.x, myBandera.y, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.04));
+                        myGameArea.context.fillRect(myBandera.x, myBandera.y, 30, 30);
                         myBandera.x = object.x;
                         myBandera.y = object.y;
                     } else {
                         myGameArea.context.fillStyle = "#A9A9A9";
-                        myGameArea.context.fillRect(enemyBandera.x, enemyBandera.y, Math.round(myGameArea.canvas.width * 0.03), Math.round(myGameArea.canvas.height * 0.04));
+                        myGameArea.context.fillRect(enemyBandera.x, enemyBandera.y, 30, 30);
                         enemyBandera.x = object.x;
                         enemyBandera.y = object.y;
                     }
@@ -896,8 +904,14 @@ var juego = (function () {
                 });
             });
 
-            
             cargarPartida().then(getscorer).then(graficarObstaculos);
+            if(myteam==="A"){
+                myBandera = new Bandera(banderaAzulX, banderaAzulY, myteam);
+                enemyBandera = new Bandera(banderaRojaX, banderaRojaY, enemyteam);
+            }else{
+                myBandera = new Bandera(banderaRojaX, banderaRojaY, myteam);
+                enemyBandera = new Bandera(banderaAzulX, banderaAzulY, enemyteam);
+            }
             startTime();
             myGameArea.start();
             graficarBandera(myteam);

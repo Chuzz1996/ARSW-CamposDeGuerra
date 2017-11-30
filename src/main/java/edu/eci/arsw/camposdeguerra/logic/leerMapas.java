@@ -31,7 +31,6 @@ public class leerMapas {
             while(br.ready()){
                 String[] input = br.readLine().trim().split(" ");
                 mat = new String[Integer.parseInt(input[0])][Integer.parseInt(input[1])];
-                System.out.println(input[0]+" "+input[1]);
                 for(int i = 0; i < Integer.parseInt(input[0]); i++){
                     String file = br.readLine();
                     for (int j = 0; j < Integer.parseInt(input[1]); j++) {
