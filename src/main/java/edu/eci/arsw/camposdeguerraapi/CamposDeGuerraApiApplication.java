@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"edu.eci.arsw.camposdeguerra"})
-@EnableMongoRepositories(basePackages = "edu.eci.arsw.camposdeguerra.persistence.impl")
+@EnableMongoRepositories(basePackages = "edu.eci.arsw.camposdeguerra.persistence")
 public class CamposDeGuerraApiApplication {
 
 	public static void main(String[] args) {

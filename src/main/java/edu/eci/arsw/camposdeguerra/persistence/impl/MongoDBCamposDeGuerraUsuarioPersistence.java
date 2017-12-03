@@ -8,11 +8,8 @@ package edu.eci.arsw.camposdeguerra.persistence.impl;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
-import edu.eci.arsw.camposdeguerra.model.Maquina;
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraUsuarioPersistence;
@@ -24,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-//@Service
+@Service
 public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUsuarioPersistence {
     
     @Autowired CamposDeGuerraUsuarioPersistenceMongoRepository me;
@@ -34,8 +31,8 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
     
     @Override
     public void saveUsuario(Usuario u) throws CamposDeGuerraPersistenceException {
-        //me.save(u);
-        MongoClientURI uri = new MongoClientURI("mongodb://root:root@ds121896.mlab.com:21896/camposdeguerra");
+        me.save(u);
+        /*MongoClientURI uri = new MongoClientURI("mongodb://root:root@ds121896.mlab.com:21896/camposdeguerra");
         MongoClient client = new MongoClient(uri);
         DB db = client.getDB("camposdeguerra");
         DBCollection coll = db.getCollection("users");
@@ -47,7 +44,7 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
         }
         BasicDBObject doc = new BasicDBObject("_id", u.getId()).append("tipoMaquina", "").append("puntaje", u.getPuntaje()).append("vida", u.getVida()).append("equipo", u.getEquipo());
         coll.insert(doc);
-        client.close();
+        client.close();*/
     }
 
 
@@ -65,14 +62,14 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
 
     @Override
     public void deleteUsuario(String user) throws CamposDeGuerraPersistenceException {
-        //me.delete("_"+u.getId());
-        MongoClientURI uri = new MongoClientURI("mongodb://root:root@ds121896.mlab.com:21896/camposdeguerra");
+        me.delete(user);
+        /*MongoClientURI uri = new MongoClientURI("mongodb://root:root@ds121896.mlab.com:21896/camposdeguerra");
         MongoClient client = new MongoClient(uri);
         DB db = client.getDB("camposdeguerra");
         DBCollection coll = db.getCollection("users");
         BasicDBObject searchQuery = new BasicDBObject().append("_id", user);
         coll.remove(searchQuery);
-        
+        */
     }
     
      /**

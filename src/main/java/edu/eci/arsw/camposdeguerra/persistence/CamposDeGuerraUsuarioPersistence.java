@@ -8,7 +8,6 @@ package edu.eci.arsw.camposdeguerra.persistence;
 
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import java.util.Set;
-import org.springframework.data.mongodb.repository.Query;
 
 
 public interface CamposDeGuerraUsuarioPersistence {

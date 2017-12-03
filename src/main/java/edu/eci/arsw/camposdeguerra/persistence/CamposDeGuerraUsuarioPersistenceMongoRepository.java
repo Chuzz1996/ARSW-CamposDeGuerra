@@ -10,14 +10,15 @@ import edu.eci.arsw.camposdeguerra.model.Usuario;
 import java.util.Set;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.stereotype.Service;
 
-
+@Service
 public interface CamposDeGuerraUsuarioPersistenceMongoRepository extends MongoRepository<Usuario, String>{
     
     
     public Usuario findById(String id) throws CamposDeGuerraNotFoundException;   
     
-    //@Query("{}")
+    @Query("{}")
     public Set<Usuario> getAllUsers() throws CamposDeGuerraNotFoundException;
     
 }

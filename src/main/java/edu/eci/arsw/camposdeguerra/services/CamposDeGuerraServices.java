@@ -25,6 +25,7 @@ public class CamposDeGuerraServices {
    
     @Autowired
     private CamposDeGuerraUsuarioPersistence cdg;
+    
     @Autowired
     private CamposDeGuerraRoomPersistence cdgr;
     

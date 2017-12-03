@@ -7,12 +7,11 @@ package edu.eci.arsw.camposdeguerra.persistence;
 
 
 import edu.eci.arsw.camposdeguerra.model.Mapa;
-import edu.eci.arsw.camposdeguerra.model.Usuario;
-import java.util.Set;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
+import org.springframework.stereotype.Service;
 
 
+@Service
 public interface CamposDeGuerraMapsPersistenceMongoRepository extends MongoRepository<Mapa, String>{
     
     

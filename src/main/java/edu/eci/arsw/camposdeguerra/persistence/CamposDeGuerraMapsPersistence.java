@@ -5,6 +5,8 @@
  */
 package edu.eci.arsw.camposdeguerra.persistence;
 
+import edu.eci.arsw.camposdeguerra.model.Mapa;
+
 /**
  *
  * @author 2107713
@@ -12,5 +14,6 @@ package edu.eci.arsw.camposdeguerra.persistence;
 public interface CamposDeGuerraMapsPersistence {
     
     public String[][] findMap(String id) throws CamposDeGuerraNotFoundException;
+    public void saveMapa(Mapa m) throws CamposDeGuerraNotFoundException;
     
 }

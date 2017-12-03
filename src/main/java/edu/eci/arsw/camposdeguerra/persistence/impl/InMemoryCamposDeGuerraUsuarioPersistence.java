@@ -9,14 +9,13 @@ import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraUsuarioPersistence;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Set;
 import org.springframework.stereotype.Service;
 
 
-@Service
+//@Service
 public  class InMemoryCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUsuarioPersistence{
     
     private final ConcurrentHashMap<String, Usuario> users = new ConcurrentHashMap<>();

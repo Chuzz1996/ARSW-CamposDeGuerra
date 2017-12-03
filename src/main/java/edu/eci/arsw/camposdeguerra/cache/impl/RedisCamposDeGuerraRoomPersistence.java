@@ -30,7 +30,7 @@ import org.springframework.stereotype.Service;
 
 
 
-//@Service
+@Service
 public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPersistence {
 
     @Autowired
