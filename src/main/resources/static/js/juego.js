@@ -168,7 +168,7 @@ var juego = (function () {
                 }
 
             }
-            api.getMap(1,function(data){
+            api.getMap("mapa1",function(data){
                for(var i = 0; i < data.length; i++){
                    for(var j = 0; j < data[i].length; j++){
                        if(data[i][j]==="P"){

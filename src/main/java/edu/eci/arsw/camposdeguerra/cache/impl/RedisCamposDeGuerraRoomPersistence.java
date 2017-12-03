@@ -79,13 +79,6 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
                         operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "vida", Integer.toString(us.getVida()));
                         operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "puntaje", Integer.toString(us.getPuntaje()));
                         operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "equipo", equipo);
-                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId() + ":maquina"), "speed", Integer.toString(us.getTipoMaquina().getSpeed()));
-                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId() + ":maquina"), "attack", Integer.toString(us.getTipoMaquina().getAttack()));
-                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId() + ":maquina"), "x", Integer.toString(us.getTipoMaquina().getX()));
-                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId() + ":maquina"), "y", Integer.toString(us.getTipoMaquina().getY()));
-                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId() + ":maquina"), "direction", Integer.toString(us.getTipoMaquina().getDirection()));
-                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId() + ":maquina"), "bullets", "");
-                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId() + ":maquina"), "nombreImagen", us.getTipoMaquina().getNombreImagen());
                         operations.opsForSet().add((K) ("room:" + room + ":users"), (V) us.getId());
                         operations.opsForHash().increment((K) ("room:" + room), "cantidadActualJugadores", 1);
                         return operations.exec();
@@ -112,12 +105,6 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
                 temp.setPuntaje(Integer.parseInt((String)template.opsForHash().get("room:" + room + ":" + s, "puntaje")));
                 temp.setEquipo((String) template.opsForHash().get("room:" + room + ":" + s, "equipo"));
                 Maquina maq = new Maquina();
-                maq.setAttack(Integer.parseInt((String)template.opsForHash().get("room:" + room + ":" + s + ":" + "maquina", "attack")));
-                maq.setDirection(Integer.parseInt((String)template.opsForHash().get("room:" + room + ":" + s + ":" + "maquina", "direction")));
-                maq.setNombreImagen((String) template.opsForHash().get("room:" + room + ":" + s + ":" + "maquina", "nombreImagen"));
-                maq.setSpeed(Integer.parseInt((String)template.opsForHash().get("room:" + room + ":" + s + ":" + "maquina", "speed")));
-                maq.setX(Integer.parseInt((String)template.opsForHash().get("room:" + room + ":" + s + ":" + "maquina", "x")));
-                maq.setY(Integer.parseInt((String)template.opsForHash().get("room:" + room + ":" + s + ":" + "maquina", "y")));
                 temp.setTipoMaquina(maq);
                 ans.add(temp);
             }
@@ -141,13 +128,6 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
                 template.opsForHash().delete("room:" + room + ":" + us, "vida");
                 template.opsForHash().delete("room:" + room + ":" + us, "puntaje");
                 template.opsForHash().delete("room:" + room + ":" + us, "equipo");
-                template.opsForHash().delete("room:" + room + ":" + us + ":maquina", "x");
-                template.opsForHash().delete("room:" + room + ":" + us + ":maquina", "y");
-                template.opsForHash().delete("room:" + room + ":" + us + ":maquina", "speed");
-                template.opsForHash().delete("room:" + room + ":" + us + ":maquina", "attack");
-                template.opsForHash().delete("room:" + room + ":" + us + ":maquina", "nombreImagen");
-                template.opsForHash().delete("room:" + room + ":" + us + ":maquina", "bullets");
-                template.opsForHash().delete("room:" + room + ":" + us + ":maquina", "direction");
                 ans = true;
             }
 
@@ -172,13 +152,6 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
                 template.opsForHash().delete("room:" + room + ":" + s, "vida");
                 template.opsForHash().delete("room:" + room + ":" + s, "puntaje");
                 template.opsForHash().delete("room:" + room + ":" + s, "equipo");
-                template.opsForHash().delete("room:" + room + ":" + s + ":maquina", "x");
-                template.opsForHash().delete("room:" + room + ":" + s + ":maquina", "y");
-                template.opsForHash().delete("room:" + room + ":" + s + ":maquina", "speed");
-                template.opsForHash().delete("room:" + room + ":" + s + ":maquina", "attack");
-                template.opsForHash().delete("room:" + room + ":" + s + ":maquina", "nombreImagen");
-                template.opsForHash().delete("room:" + room + ":" + s + ":maquina", "bullets");
-                template.opsForHash().delete("room:" + room + ":" + s + ":maquina", "direction");
             }
         } else {
             throw new CamposDeGuerraNotFoundException("La Room ingresada no existe!");
@@ -422,9 +395,7 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
     public List<Room> getAllRooms() throws CamposDeGuerraNotFoundException {
         List<Room> asn = new ArrayList<>();
         Set<String> value2 = template.opsForSet().members("rooms");
-        System.out.println("value2: "+value2);
         for (String s : value2) {
-            System.out.println(s);
             asn.add(getRoom(Integer.parseInt(s)));
         }
         return asn;
@@ -495,13 +466,6 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
                 template.opsForHash().delete("room:" + idSala + ":" + s, "vida");
                 template.opsForHash().delete("room:" + idSala + ":" + s, "puntaje");
                 template.opsForHash().delete("room:" + idSala + ":" + s, "equipo");
-                template.opsForHash().delete("room:" + idSala + ":" + s + ":maquina", "x");
-                template.opsForHash().delete("room:" + idSala + ":" + s + ":maquina", "y");
-                template.opsForHash().delete("room:" + idSala + ":" + s + ":maquina", "speed");
-                template.opsForHash().delete("room:" + idSala + ":" + s + ":maquina", "attack");
-                template.opsForHash().delete("room:" + idSala + ":" + s + ":maquina", "nombreImagen");
-                template.opsForHash().delete("room:" + idSala + ":" + s + ":maquina", "bullets");
-                template.opsForHash().delete("room:" + idSala + ":" + s + ":maquina", "direction");
             }
 
         }

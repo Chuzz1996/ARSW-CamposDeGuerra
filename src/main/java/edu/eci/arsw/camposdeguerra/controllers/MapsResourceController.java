@@ -38,7 +38,7 @@ public class MapsResourceController {
     
     /**
      * 
-     * @param user
+     * @param id
      * @return 
      */
     @RequestMapping(path = "/{id}",method = RequestMethod.GET)
