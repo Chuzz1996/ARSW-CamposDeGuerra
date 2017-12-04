@@ -13,6 +13,7 @@ import edu.eci.arsw.camposdeguerra.cache.CamposDeGuerraRoomPersistence;
 import edu.eci.arsw.camposdeguerra.model.Maquina;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -22,10 +23,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
+import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.stereotype.Service;
 
 
@@ -35,8 +40,11 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
 
     @Autowired
     private StringRedisTemplate template;
-
+    
+    RedisScript<String> script;
+    
     public RedisCamposDeGuerraRoomPersistence() {
+        script = script();
     }
 
     @Override
@@ -66,21 +74,24 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
                     @SuppressWarnings("unchecked")
                     @Override
                     public < K, V> List<Object> execute(final RedisOperations< K, V> operations) throws DataAccessException {
+                        String temp2=(String) template.opsForHash().get("room:" + room, "cantidadActualJugadores");
                         String equipo = "";
-                        if (Integer.parseInt(value) + 1 % 2 == 0) {
+                        if (Integer.parseInt(temp2) + 1 % 2 == 0) {
                             equipo = "B";
                         } else {
                             equipo = "A";
                         }
-                        
+                        //Object[] args = new Object[1]; args[0] = us.getId();
                         operations.watch((K) ("room:" + room + "cantidadActualJugadores"));
                         operations.multi();
+                        //operations.execute(script,Collections.singletonList((K)("room:"+room)),args);
+                        operations.opsForHash().increment((K) ("room:" + room), "cantidadActualJugadores", 1);
                         operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "id", us.getId());
                         operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "vida", Integer.toString(us.getVida()));
                         operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "puntaje", Integer.toString(us.getPuntaje()));
                         operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "equipo", equipo);
                         operations.opsForSet().add((K) ("room:" + room + ":users"), (V) us.getId());
-                        operations.opsForHash().increment((K) ("room:" + room), "cantidadActualJugadores", 1);
+                        
                         return operations.exec();
                     }
                 });
@@ -152,6 +163,14 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
                 template.opsForHash().delete("room:" + room + ":" + s, "vida");
                 template.opsForHash().delete("room:" + room + ":" + s, "puntaje");
                 template.opsForHash().delete("room:" + room + ":" + s, "equipo");
+                template.opsForHash().put("room:" + room, "puntajeEquipoA", Integer.toString(0));
+                template.opsForHash().put("room:" + room, "puntajeEquipoB", Integer.toString(0));
+                template.opsForHash().put("room:" + room, "banderaA", "");
+                template.opsForHash().put("room:" + room, "banderaB", "");
+                template.opsForHash().put("room:" + room, "banderaATomada", Boolean.toString(false));
+                template.opsForHash().put("room:" + room, "banderaBTomada", Boolean.toString(false));
+                template.opsForHash().put("room:" + room, "cantidadActualJugadores", Integer.toString(0));
+                template.opsForHash().put("room:" + room, "estado", "Nojugando");
             }
         } else {
             throw new CamposDeGuerraNotFoundException("La Room ingresada no existe!");
@@ -424,17 +443,13 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
             temp.setTipoMaquina((String) template.opsForHash().get("room:" + s, "tipoMaquina"));
             temp.setEstado((String) template.opsForHash().get("room:" + s, "estado"));
             Set<Usuario> temp2 = getAllUsuariosFromRoom(s);
-            ConcurrentLinkedQueue<Usuario> equipoA = new ConcurrentLinkedQueue<>();
-            ConcurrentLinkedQueue<Usuario> equipoB = new ConcurrentLinkedQueue<>();
             for (Usuario u : temp2) {
                 if (u.getEquipo().equals("A")) {
-                    equipoA.add(u);
+                    temp.getEquipoA().add(u);
                 } else {
-                    equipoB.add(u);
+                    temp.getEquipoB().add(u);
                 }
             }
-            temp.setEquipoA(equipoA);
-            temp.setEquipoA(equipoB);
         }
         return temp;
     }
@@ -470,5 +485,13 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
 
         }
     }
+    
+    public RedisScript<String> script() {
+        DefaultRedisScript<String> redisScript = new DefaultRedisScript<>();
+        redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("/redis/scripts/test.lua")));
+        redisScript.setResultType(String.class);
+        return redisScript;
+    }
+    
 
 }

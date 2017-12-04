@@ -1,5 +1,5 @@
 
-/* global deleteUser, apiclient, getUser, postUserRoom, getMyTeam, conectar, getRamdonRoom */
+/* global deleteUser, apiclient, getUser, postUserRoom, getMyTeam, conectar, getRamdonRoom, createRoom, joinRoom, postRoom */
 
 var appSeleccion = (function () {
 
@@ -41,7 +41,7 @@ var appSeleccion = (function () {
             this.banderaBTomada=false;
             this.tiempo=tiempo;
             this.cantidadMaximaJugadores=cantidadMaximaJugadores;
-            this.cantidadActualJugadores=0
+            this.cantidadActualJugadores=0;
             this.potenciadores=potenciadores;
             this.capturasParaGanar=capturasParaGanar;
             this.estado=estado;
@@ -61,7 +61,7 @@ var appSeleccion = (function () {
         var countDown_overlay = 'position:absolute;top:50%;left:50%;background-color:black;z-index:1002;overflow:auto;width:400px;text-align:center;height:400px;margin-left:-200px;margin-top:-200px';
         var temp= '<div id="overLay" style="' + countDown_overlay + '"> <p>Id Sala</p> <input id="idSalaNew" type="number" min="0" max=totalSalas/>  <p><strong>Maquina Disponible</strong> <select id="tipoMaquina"><option value="Destructora">Destructora</option><option value="Protectora">Protectora</option><option value="Veloz">Veloz</option></select> <p>  <strong>Tiempo de juego</strong> <input id="tiempo" type="number" min="0" max=totalSalas/> <p><strong>Cantidad de jugadores</strong> <select id="numeroJugadores"><option value="2">2</option><option value="4">4</option><option value="6">6</option></select> <p><strong>Potenciadores disponibles</strong> <select id="tipoPotenciador"><option value="Velocidad">Velocidad</option><option value="Vida">Vida</option><option value="Daño">Daño</option></select>  <p><strong>Capturas de bandera para ganar</strong> <input id="capturas" type="number" min="0" max=totalSalas/> <button onclick="appSeleccion.crearSala()" class=btn btn-outline-primary >Create Match</button><br><br><button onclick="appSeleccion.back()" class=btn btn-outline-primary >Back</button> </div>';
         $('body').append(temp);
-    }
+    };
     
     var joinRoom = function(){
         var getPromise = api.getAllRooms(function(data){
@@ -72,7 +72,7 @@ var appSeleccion = (function () {
                 $('#table1').append("<tr> <th>" + data[i].id + "</th> <th>" + data[i].cantidadActualJugadores +"/"+data[i].cantidadMaximaJugadores + "</th> </tr>");
             }
         });
-    }
+    };
 
     var deleteUser = function () {
         var currentUser = sessionStorage.getItem("user");

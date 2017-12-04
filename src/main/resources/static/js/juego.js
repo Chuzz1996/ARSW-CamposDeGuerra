@@ -1,4 +1,4 @@
-/* global  updateBullets, graficarBalas, graficarBalaOponente, actualizarTrayectoriaBalas, send, graficarExplosion, graficarBala, updateOponents, updateAliados, graficarBandera, checkBandera, checkSoltarBandera, checkPostPoint, checkGetBandera, getscorer, startTime, updateVidaOtherUser, graficarObstaculos, apiclient, getRoom, cargarPartida */
+/* global  updateBullets, graficarBalas, graficarBalaOponente, actualizarTrayectoriaBalas, send, graficarExplosion, graficarBala, updateOponents, updateAliados, graficarBandera, checkBandera, checkSoltarBandera, checkPostPoint, checkGetBandera, getscorer, startTime, updateVidaOtherUser, graficarObstaculos, apiclient, getRoom, cargarPartida, graficarPoteciadores, cargarMapa */
 
 var juego = (function () {
 
@@ -107,6 +107,9 @@ var juego = (function () {
     var cargarPartida = function () {
         var currentRoom = sessionStorage.getItem("idRoom");
         var getPromise = api.getRoom(currentRoom, function (data) {
+            console.info(data);
+            console.info(data.equipoA);
+            console.info(data.equipoB);
             tiempoRoom = data.tiempo;
             var x, y, dir;
             puntos = new Score(0, 0);
@@ -116,7 +119,7 @@ var juego = (function () {
                 velocidad = 20;
                 dano = 3;
                 vida = 400;
-                directionImageTank = "/images/veloz"
+                directionImageTank = "/images/veloz";
             } else if (data.tipoMaquina === "Protectora") {
                 velocidad = 10;
                 dano = 5;
@@ -133,13 +136,12 @@ var juego = (function () {
                 x = 30;
                 dir = "1";
                 y = Math.round(myGameArea.canvas.height * 0.30);
-
-
                 for (var i = 0; i < data.equipoA.length; i++) {
                     if (data.equipoA[i].id !== sessionStorage.getItem("user")) {
                         aliados.push(new Component(30, 30, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], dir, data.equipoA[i].id, "A", vida, velocidad, dano));
                     } else {
-                        myGamePiece = new Component(30, 30, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], 1, sessionStorage.getItem("user"), myteam, vida, velocidad, dano);
+                        console.info("entro al creador de mygamepiece A");
+                        myGamePiece = new Component(30, 30, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], 1, sessionStorage.getItem("user"), "A", vida, velocidad, dano);
                     }
                 }
                 x = myGameArea.canvas.width - 60;
@@ -155,9 +157,10 @@ var juego = (function () {
 
                 for (var i = 0; i < data.equipoB.length; i++) {
                     if (data.equipoB[i].id !== sessionStorage.getItem("user")) {
-                        aliados.push(new Component(30, 30, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], dir, data.equipoB[i].id, myteam, vida, velocidad, dano));
+                        aliados.push(new Component(30, 30, directionImageTank + dir + "B" + ".png", x, (i + 1) * y, "image", [], 2, data.equipoB[i].id, "B", vida, velocidad, dano));
                     } else {
-                        myGamePiece = new Component(30, 30, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], 2, sessionStorage.getItem("user"), myteam, vida, velocidad, dano);
+                        console.info("entro al creador de mygamepiece B");
+                        myGamePiece = new Component(30, 30, directionImageTank + dir + "B" + ".png", x, (i + 1) * y, "image", [], 2, sessionStorage.getItem("user"), "B", vida, velocidad, dano);
                     }
                 }
                 x = 30;
@@ -168,7 +171,20 @@ var juego = (function () {
                 }
 
             }
-            api.getMap("mapa1",function(data){
+        });
+        getPromise.then(
+                function () {
+                    console.info("Cargo datos correctamente");
+                },
+                function () {
+                    console.info("ERROR! No cargo los datos");
+                }
+        );
+        return getPromise;
+    };
+    
+    var cargarMapa = function () {
+        var getPromise = api.getMap("mapa1",function(data){
                for(var i = 0; i < data.length; i++){
                    for(var j = 0; j < data[i].length; j++){
                        if(data[i][j]==="P"){
@@ -189,8 +205,6 @@ var juego = (function () {
                    }
                }
             });
-
-        });
         getPromise.then(
                 function () {
                     console.info("Cargo datos correctamente");
@@ -201,6 +215,7 @@ var juego = (function () {
         );
         return getPromise;
     };
+    
 
 
     var startTime = function () {
@@ -607,7 +622,7 @@ var juego = (function () {
             }
             for (var i = 0; i < potenciadores.length; i++) {
                 if (potenciadores[i].alive) {
-                    potenciadores[i].crashWith(this, this.width, this.height, "jugador")
+                    potenciadores[i].crashWith(this, this.width, this.height, "jugador");
                 }
             }
             graficarObstaculos();
@@ -763,7 +778,7 @@ var juego = (function () {
                         sx = 70;
                         sy = 10;
                     }
-                    var temp2 = new Bulletcita(myGamePiece.x + sx, myGamePiece.y + sy, myGamePiece.direction, myteam)
+                    var temp2 = new Bulletcita(myGamePiece.x + sx, myGamePiece.y + sy, myGamePiece.direction, myteam);
                     stompClient.send("/app/sala." + myroom + ".bullets", {}, JSON.stringify(temp2));
                 }
 
@@ -904,27 +919,25 @@ var juego = (function () {
                 });
             });
 
-            cargarPartida().then(getscorer).then(graficarObstaculos);
-            if(myteam==="A"){
+            cargarPartida().then(cargarMapa).then(getscorer).then(function(){
+                myGameArea.start();
+            }).then(function(){
+                if(myteam==="A"){
                 myBandera = new Bandera(banderaAzulX, banderaAzulY, myteam);
                 enemyBandera = new Bandera(banderaRojaX, banderaRojaY, enemyteam);
             }else{
                 myBandera = new Bandera(banderaRojaX, banderaRojaY, myteam);
                 enemyBandera = new Bandera(banderaAzulX, banderaAzulY, enemyteam);
-            }
-            startTime();
-            myGameArea.start();
-            graficarBandera(myteam);
-            graficarBandera(enemyteam);
+            }   
+            }).then(function(){
+                graficarBandera(myteam);
+                graficarBandera(enemyteam);
+                graficarObstaculos();
+                updateOponents();
+                updateAliados();
+                myGamePiece.update();
+            }).then(startTime);
 
-
-            /*setTimeout(function () {
-             graficarObstaculos();
-             graficarBandera(myteam);
-             graficarBandera(enemyteam);
-             getscorer().then(send);
-             startTime();
-             }, 5000);*/
         }
     };
 }());

@@ -32,19 +32,6 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
     @Override
     public void saveUsuario(Usuario u) throws CamposDeGuerraPersistenceException {
         me.save(u);
-        /*MongoClientURI uri = new MongoClientURI("mongodb://root:root@ds121896.mlab.com:21896/camposdeguerra");
-        MongoClient client = new MongoClient(uri);
-        DB db = client.getDB("camposdeguerra");
-        DBCollection coll = db.getCollection("users");
-        BasicDBObject whereQuery = new BasicDBObject();
-        whereQuery.put("_id", u.getId());
-        DBCursor cursor = coll.find(whereQuery);
-        while (cursor.hasNext()) {
-            throw new CamposDeGuerraPersistenceException("Player found!");
-        }
-        BasicDBObject doc = new BasicDBObject("_id", u.getId()).append("tipoMaquina", "").append("puntaje", u.getPuntaje()).append("vida", u.getVida()).append("equipo", u.getEquipo());
-        coll.insert(doc);
-        client.close();*/
     }
 
 
@@ -63,13 +50,6 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
     @Override
     public void deleteUsuario(String user) throws CamposDeGuerraPersistenceException {
         me.delete(user);
-        /*MongoClientURI uri = new MongoClientURI("mongodb://root:root@ds121896.mlab.com:21896/camposdeguerra");
-        MongoClient client = new MongoClient(uri);
-        DB db = client.getDB("camposdeguerra");
-        DBCollection coll = db.getCollection("users");
-        BasicDBObject searchQuery = new BasicDBObject().append("_id", user);
-        coll.remove(searchQuery);
-        */
     }
     
      /**
@@ -80,21 +60,6 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
      */
     @Override
     public  Usuario findById(String id) throws CamposDeGuerraNotFoundException{
-
-        /*
-        MongoClientURI uri = new MongoClientURI("mongodb://root:root@ds121896.mlab.com:21896/camposdeguerra");
-        MongoClient client = new MongoClient(uri);
-        DB db = client.getDB("camposdeguerra");
-        DBCollection coll = db.getCollection("users");
-        BasicDBObject whereQuery = new BasicDBObject();
-        whereQuery.put("_id", id);
-        DBCursor cursor = coll.find(whereQuery);
-
-        while (cursor.hasNext()) {
-            DBObject getPlayer = cursor.next();
-            return new Usuario(getPlayer.get("_id").toString(), new Maquina(), Integer.parseInt(getPlayer.get("puntaje").toString()),Integer.parseInt(getPlayer.get("vida").toString()), getPlayer.get("equipo").toString());
-        }
-        */
         Usuario u = me.findById(id);
         if(u==null){throw new CamposDeGuerraNotFoundException("Player not found!");}
         return u;
@@ -109,20 +74,6 @@ public class MongoDBCamposDeGuerraUsuarioPersistence implements CamposDeGuerraUs
     @Override
     public  Set<Usuario> getAllUsers() throws CamposDeGuerraNotFoundException{
         Set<Usuario> players = new HashSet<>();
-        /*
-        MongoClientURI uri = new MongoClientURI("mongodb://root:root@ds121896.mlab.com:21896/camposdeguerra");
-        MongoClient client = new MongoClient(uri);
-        DB db = client.getDB("camposdeguerra");
-        DBCollection coll = db.getCollection("users");
-        DBCursor cursor = coll.find();
-        while (cursor.hasNext()) {
-            DBObject getPlayer = cursor.next();
-            players.add(new Usuario(getPlayer.get("id").toString(), new Maquina(), Integer.parseInt(getPlayer.get("puntaje").toString()),Integer.parseInt(getPlayer.get("vida").toString()), getPlayer.get("equipo").toString()));
-        }
-
-        client.close();
-        */
-        
         players=me.getAllUsers();
         return players;
     }

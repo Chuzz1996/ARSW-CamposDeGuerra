@@ -1,4 +1,4 @@
-/* global apiclient */
+/* global apiclient, Stomp */
 
 var endGame = (function () {
     

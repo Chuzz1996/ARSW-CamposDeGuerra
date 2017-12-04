@@ -125,7 +125,7 @@ var apiclient = (function () {
         },
         getMap: function (id, callback) {
             return $.get("/Mapas/" + id, callback);
-        },
+        }
     };
 
 }());
