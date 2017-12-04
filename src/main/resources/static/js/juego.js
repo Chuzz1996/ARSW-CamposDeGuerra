@@ -100,7 +100,6 @@ var juego = (function () {
             this.tiempo = tiempo;
             this.image = new Image();
             this.image.src = directionPotenciador + +ran + ".png";
-
         }
     }
 
@@ -250,7 +249,7 @@ var juego = (function () {
                 } else {
                     potenciador = new Potenciador(xPonte, yPonte, Poten, "vida", 10000);
                 }
-                //stompClient.send('/topic/sala.' + myroom + ".potenciador", {}, JSON.stringify(potenciador));
+                stompClient.send('/topic/sala.' + myroom + ".potenciador", {}, JSON.stringify(potenciador));
             }
             document.getElementById("Segundos").innerHTML = (min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec);
 
@@ -568,7 +567,14 @@ var juego = (function () {
     }
     ;
 
-
+    function potenciadorPlay(x,y,tipo,tiempo,color){
+        this.x = x;
+        this.y = y;
+        this.tipo = tipo;
+        this.tiempo = tiempo;
+        this.image = new Image();
+        this.image.src = color;
+    }
 
     function Component(width, height, color, x, y, type, bullets, direction, propietario, equipo, vida, velocidad, dano) {
         this.gamearea = myGameArea;
@@ -811,6 +817,7 @@ var juego = (function () {
 
                 //ENDGAME
                 stompClient.subscribe("/topic/sala." + myroom + ".endGame", function (evenbody) {
+                    api.deleteAllUsersRoom(myroom);
                     sessionStorage.setItem("PuntosA", puntos.scoreA);
                     sessionStorage.setItem("PuntosB", puntos.scoreB);
                     stompClient.disconnect();
@@ -904,6 +911,7 @@ var juego = (function () {
 
                 //POTENCIADOR
                 stompClient.subscribe('/topic/sala.' + myroom + ".potenciador", function (eventbody) {
+                    console.info("LLEGO");
                     var object = JSON.parse(eventbody.body);
                     var banderaP = false;
                     for (var p in potenciadores) {
@@ -911,11 +919,11 @@ var juego = (function () {
                             p.tiempo = 0;
                             banderaP = true;
                         }
-                    }
+                    }console.info(object);
                     if (!banderaP) {
-                        potenciadores.push(object);
+                        potenciadores.push(new potenciadorPlay(object.x,object.y,object.tipo,object.tiempo,object.image));
                     }
-                    setTimeout(graficarPoteciadores, 10000);
+                    setTimeout(graficarPoteciadores(), 2000);
                 });
             });
 

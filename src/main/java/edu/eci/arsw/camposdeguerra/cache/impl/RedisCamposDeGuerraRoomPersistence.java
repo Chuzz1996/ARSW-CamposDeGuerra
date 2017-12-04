@@ -13,6 +13,7 @@ import edu.eci.arsw.camposdeguerra.cache.CamposDeGuerraRoomPersistence;
 import edu.eci.arsw.camposdeguerra.model.Maquina;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -50,11 +51,14 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
     @Override
     public Integer getRoomFree() throws CamposDeGuerraNotFoundException {
         Integer ans = -1;
-        for (int i = 0; i < 4; i++) {
-            String value = (String) template.opsForHash().get("room:" + i, "cantidadActualJugadores");
-            String value2 = (String) template.opsForHash().get("room:" + i, "cantidadMaximaJugadores");
-            if (Integer.parseInt(value) < Integer.parseInt(value2)) {
-                ans = i;
+        List<Room> asn = new ArrayList<>();
+        Set<String> value2 = template.opsForSet().members("rooms");
+        for (String s : value2) {
+            String value = (String) template.opsForHash().get("room:" + s, "cantidadActualJugadores");
+            String value3 = (String) template.opsForHash().get("room:" + s, "cantidadMaximaJugadores");
+            if (Integer.parseInt(value) < Integer.parseInt(value3)) {
+                ans = Integer.parseInt(s);
+                break;
             }
         }
         if (ans == -1) {
@@ -210,7 +214,7 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
                         operations.watch((K) ("room:" + room + " banderaA"));
                         operations.multi();
                         operations.opsForHash().put((K) ("room:" + room), "banderaA", us);
-                        operations.opsForHash().put((K) ("room:" + room), "banderaATomada", true);
+                        operations.opsForHash().put((K) ("room:" + room), "banderaATomada", Boolean.toString(true));
                         return operations.exec();
                     }
                 });
@@ -238,7 +242,7 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
                         operations.watch((K) ("room:" + room + " banderaB"));
                         operations.multi();
                         operations.opsForHash().put((K) ("room:" + room), "banderaB", us);
-                        operations.opsForHash().put((K) ("room:" + room), "banderaBTomada", true);
+                        operations.opsForHash().put((K) ("room:" + room), "banderaBTomada", Boolean.toString(true));
                         return operations.exec();
                     }
                 });
@@ -260,8 +264,8 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
             String teamuser = getTeamOfMyRoom(us, room);
             String value3 = (String) template.opsForHash().get("room:" + room, "banderaA");
             String value2 = (String) template.opsForHash().get("room:" + room, "banderaB");
-            Integer value4 = (Integer) template.opsForHash().get("room:" + room + ":" + us, "puntaje");
-            Integer value5 = (Integer) template.opsForHash().get("room:" + room, "puntajeEquipoA");
+            Integer value4 = Integer.parseInt((String)template.opsForHash().get("room:" + room + ":" + us, "puntaje"));
+            Integer value5 = Integer.parseInt((String)template.opsForHash().get("room:" + room, "puntajeEquipoA"));
             if (teamuser.equals("A") && value3.equals("") && value2.equals(us)) {
                 template.execute(new SessionCallback< List< Object>>() {
                     @SuppressWarnings("unchecked")
@@ -269,8 +273,8 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
                     public < K, V> List<Object> execute(final RedisOperations< K, V> operations) throws DataAccessException {
                         operations.watch((K) ("room:" + room + " banderaA"));
                         operations.multi();
-                        operations.opsForHash().put((K) ("room:" + room + ":" + us), "puntaje", value4 + 1);
-                        operations.opsForHash().put((K) ("room:" + room), "puntajeEquipoA", value5 + 1);
+                        operations.opsForHash().put((K) ("room:" + room + ":" + us), "puntaje", Integer.toString(value4 + 1));
+                        operations.opsForHash().put((K) ("room:" + room), "puntajeEquipoA", Integer.toString(value5 + 1));
                         return operations.exec();
                     }
                 });
@@ -291,9 +295,9 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
         if (value != null) {
             String teamuser = getTeamOfMyRoom(us, room);
             String value3 = (String) template.opsForHash().get("room:" + room, "banderaB");
-            Integer value4 = (Integer) template.opsForHash().get("room:" + room + ":" + us, "puntaje");
+            Integer value4 = Integer.parseInt((String)template.opsForHash().get("room:" + room + ":" + us, "puntaje"));
             String value2 = (String) template.opsForHash().get("room:" + room, "banderaA");
-            Integer value5 = (Integer) template.opsForHash().get("room:" + room, "puntajeEquipoB");
+            Integer value5 = Integer.parseInt((String)template.opsForHash().get("room:" + room, "puntajeEquipoB"));
             if (teamuser.equals("B") && value3.equals("") && value2.equals(us)) {
                 template.execute(new SessionCallback< List< Object>>() {
                     @SuppressWarnings("unchecked")
@@ -301,8 +305,8 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
                     public < K, V> List<Object> execute(final RedisOperations< K, V> operations) throws DataAccessException {
                         operations.watch((K) ("room:" + room + " banderaB"));
                         operations.multi();
-                        operations.opsForHash().put((K) ("room:" + room + ":" + us), "puntaje", value4 + 1);
-                        operations.opsForHash().put((K) ("room:" + room), "puntajeEquipoB", value5 + 1);
+                        operations.opsForHash().put((K) ("room:" + room + ":" + us), "puntaje", Integer.toString(value4 + 1));
+                        operations.opsForHash().put((K) ("room:" + room), "puntajeEquipoB", Integer.toString(value5 + 1));
                         return operations.exec();
                     }
                 });
@@ -329,7 +333,7 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
                         operations.watch((K) ("room:" + room + " banderaB"));
                         operations.multi();
                         operations.opsForHash().put((K) ("room:" + room), "banderaB", "");
-                        operations.opsForHash().put((K) ("room:" + room), "banderaBTomada", false);
+                        operations.opsForHash().put((K) ("room:" + room), "banderaBTomada", Boolean.toString(false));
                         return operations.exec();
                     }
                 });
@@ -356,7 +360,7 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
                         operations.watch((K) ("room:" + room + " banderaA"));
                         operations.multi();
                         operations.opsForHash().put((K) ("room:" + room), "banderaA", "");
-                        operations.opsForHash().put((K) ("room:" + room), "banderaATomada", true);
+                        operations.opsForHash().put((K) ("room:" + room), "banderaATomada", Boolean.toString(true));
                         return operations.exec();
                     }
                 });
