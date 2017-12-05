@@ -20,7 +20,12 @@ var juego = (function () {
     var directionImageShoot = "/images/bullet";
     var directionBandera = "/images/bandera";
     var directionObstaculo = "/images/obstaculo";
-    var directionPotenciador = "/images/potenciador";
+    var directionPotenciadorVida = new Image();
+    directionPotenciadorVida.src = "/images/potenciador1.png";
+    var directionPotenciadorAtaque = new Image();
+    directionPotenciadorAtaque.src = "/images/potenciador2.png";
+    var directionPotenciadorVelocidad = new Image();
+    directionPotenciadorVelocidad.src = "/images/potenciador3.png";
     var directionShoot = 1;
     var puntos;
     var bala;
@@ -98,8 +103,6 @@ var juego = (function () {
             this.y = y;
             this.tipo = tipo;
             this.tiempo = tiempo;
-            this.image = new Image();
-            this.image.src = directionPotenciador + +ran + ".png";
         }
     }
 
@@ -245,9 +248,9 @@ var juego = (function () {
                 if (Poten === 1) {
                     potenciador = new Potenciador(xPonte, yPonte, Poten, "vida", 10000);
                 } else if (Poten === 2) {
-                    potenciador = new Potenciador(xPonte, yPonte, Poten, "vida", 10000);
+                    potenciador = new Potenciador(xPonte, yPonte, Poten, "ataque", 10000);
                 } else {
-                    potenciador = new Potenciador(xPonte, yPonte, Poten, "vida", 10000);
+                    potenciador = new Potenciador(xPonte, yPonte, Poten, "velocidad", 10000);
                 }
                 stompClient.send('/topic/sala.' + myroom + ".potenciador", {}, JSON.stringify(potenciador));
             }
@@ -391,8 +394,16 @@ var juego = (function () {
     };
 
     var graficarPoteciadores = function () {
-        for (var p in potenciadores) {
-            myGameArea.context.drawImage(p.image, p.x, p.y, 30, 30);
+        for (var i = 0; i < potenciadores.length; i++) {
+            if(potenciadores[i].tiempo>0){
+                if(potenciadores[i].tipo==="vida"){
+                    myGameArea.context.drawImage(directionPotenciadorVida, potenciadores[i].x, potenciadores[i].y, 30, 30);
+                }else if(potenciadores[i].tipo==="ataque"){
+                    myGameArea.context.drawImage(directionPotenciadorAtaque, potenciadores[i].x, potenciadores[i].y, 30, 30);
+                }else if(potenciadores[i].tipo==="velocidad"){
+                    myGameArea.context.drawImage(directionPotenciadorVelocidad, potenciadores[i].x, potenciadores[i].y, 30, 30);
+                }
+            }
         }
     };
 
@@ -567,13 +578,29 @@ var juego = (function () {
     }
     ;
 
-    function potenciadorPlay(x,y,tipo,tiempo,color){
+    function potenciadorPlay(x,y,tipo,tiempo){
         this.x = x;
         this.y = y;
         this.tipo = tipo;
         this.tiempo = tiempo;
-        this.image = new Image();
-        this.image.src = color;
+        this.crashWith = function (otherobj, h, w, tipo) {
+            var myleft = this.x;
+            var myright = this.x + (this.width);
+            var mytop = this.y;
+            var mybottom = this.y + (this.height);
+            var otherleft = otherobj.x;
+            var otherright = otherobj.x + w;
+            var othertop = otherobj.y;
+            var otherbottom = otherobj.y + h;
+            var crash = true;
+            if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+                crash = false;
+            }if(tipo==="jugador"){
+                this.tiempo = 0;
+                
+            }
+            return crash;
+        };
     }
 
     function Component(width, height, color, x, y, type, bullets, direction, propietario, equipo, vida, velocidad, dano) {
@@ -627,14 +654,17 @@ var juego = (function () {
                 }
             }
             for (var i = 0; i < potenciadores.length; i++) {
-                if (potenciadores[i].alive) {
-                    potenciadores[i].crashWith(this, this.width, this.height, "jugador");
+                if (potenciadores[i].tiempo>0) {
+                    if(this.crashWith(potenciadores[i], this.width, this.height, "jugador")){
+                        potenciadores[i].tiempo = 0;
+                        stompClient.send('/topic/sala.' + myroom + ".potenciador", {}, JSON.stringify(potenciadores[i]));
+                    };
                 }
             }
             graficarObstaculos();
             graficarBandera(myteam);
             graficarBandera(enemyteam);
-
+            graficarPoteciadores();
 
         };
 
@@ -666,11 +696,11 @@ var juego = (function () {
             }
             if (crash && tipo === "bullet") {
                 this.vida -= this.dano;
-            } else if (crash && tipo === "vida") {
+            } else if (crash && otherobj.tipo === "vida") {
                 this.vida += 100;
-            } else if (crash && tipo === "velocidad") {
+            } else if (crash && otherobj.tipo === "velocidad") {
                 this.velocidad += 15;
-            } else if (crash && tipo === "ataque") {
+            } else if (crash && otherobj.tipo === "ataque") {
                 this.dano += 10;
             }
             return crash;
@@ -914,16 +944,16 @@ var juego = (function () {
                     console.info("LLEGO");
                     var object = JSON.parse(eventbody.body);
                     var banderaP = false;
-                    for (var p in potenciadores) {
-                        if (p.x === object.x && p.y === object.y) {
-                            p.tiempo = 0;
+                    for (var i = 0; i < potenciadores.length; i++) {
+                        if (potenciadores[i].x === object.x && potenciadores[i].y === object.y) {
+                            potenciadores[i].tiempo = 0;
                             banderaP = true;
                         }
                     }console.info(object);
-                    if (!banderaP) {
-                        potenciadores.push(new potenciadorPlay(object.x,object.y,object.tipo,object.tiempo,object.image));
+                    if(!banderaP){
+                        potenciadores.push(new potenciadorPlay(object.x,object.y,object.tipo,object.tiempo));
                     }
-                    setTimeout(graficarPoteciadores(), 2000);
+                    graficarPoteciadores();
                 });
             });
 
