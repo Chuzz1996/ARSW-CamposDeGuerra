@@ -28,8 +28,8 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
 
-@Configuration
-@EnableWebSocketMessageBroker
+//@Configuration
+//@EnableWebSocketMessageBroker
 public class CamposDeGuerraWebSocketConfigMultiServer extends AbstractWebSocketMessageBrokerConfigurer {
 
 

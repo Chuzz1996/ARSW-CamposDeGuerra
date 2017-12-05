@@ -36,7 +36,7 @@ import org.springframework.stereotype.Service;
 
 
 
-@Service
+//@Service
 public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPersistence {
 
     @Autowired
@@ -74,10 +74,10 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
         String value2 = (String) template.opsForHash().get("room:" + room, "cantidadMaximaJugadores");
         if (value != null) {
             if (Integer.parseInt(value) < Integer.parseInt(value2)) {
-                template.execute(new SessionCallback< List< Object>>() {
+                template.execute(new SessionCallback<String>() {
                     @SuppressWarnings("unchecked")
                     @Override
-                    public < K, V> List<Object> execute(final RedisOperations< K, V> operations) throws DataAccessException {
+                    public < K, V> String execute(final RedisOperations< K, V> operations) throws DataAccessException {
                         String temp2=(String) template.opsForHash().get("room:" + room, "cantidadActualJugadores");
                         String equipo = "";
                         if (Integer.parseInt(temp2) + 1 % 2 == 0) {
@@ -85,18 +85,19 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
                         } else {
                             equipo = "A";
                         }
-                        //Object[] args = new Object[1]; args[0] = us.getId();
+                        Object[] args = new Object[3]; args[0] = us.getId();args[1] = us.getVida();args[2] = us.getPuntaje();
                         operations.watch((K) ("room:" + room + "cantidadActualJugadores"));
                         operations.multi();
-                        //operations.execute(script,Collections.singletonList((K)("room:"+room)),args);
-                        operations.opsForHash().increment((K) ("room:" + room), "cantidadActualJugadores", 1);
+                        operations.execute(script,Collections.singletonList((K)("room:"+room)),args);
+                        /**operations.opsForHash().increment((K) ("room:" + room), "cantidadActualJugadores", 1);
                         operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "id", us.getId());
                         operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "vida", Integer.toString(us.getVida()));
                         operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "puntaje", Integer.toString(us.getPuntaje()));
                         operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "equipo", equipo);
                         operations.opsForSet().add((K) ("room:" + room + ":users"), (V) us.getId());
                         
-                        return operations.exec();
+                        */
+                        return "";
                     }
                 });
             } else {

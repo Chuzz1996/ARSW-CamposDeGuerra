@@ -431,7 +431,6 @@ var juego = (function () {
         }
         obtenerBandera.then(
                 function () {
-                    alert("Tomaste la bandera");
                     myGamePiece.hasban = true;
                     myGameArea.context.fillStyle = "#A9A9A9";
                     myGameArea.context.fillRect(enemyBandera.x, enemyBandera.y, 30, 30);
@@ -439,7 +438,7 @@ var juego = (function () {
                     enemyBandera.x = myGamePiece.y - 20;
                 },
                 function () {
-                    alert("la bandera ya fue tomada por otra persona");
+                    //alert("la bandera ya fue tomada por otra persona");
                 }
         );
         return obtenerBandera;
@@ -481,22 +480,21 @@ var juego = (function () {
         }
         deleteBandera.then(
                 function () {
-                    alert("Como has puntuado, la bandera enemiga a vuelto a su base!!!");
                     myGamePiece.hasban = false;
                     myGameArea.context.fillStyle = "#A9A9A9";
                     myGameArea.context.fillRect(enemyBandera.x, enemyBandera.y, 30, 30);
                     if (myteam === "A") {
-                        enemyBandera.x = 30;
-                        enemyBandera.y = 30;
+                        enemyBandera.x = banderaRojaX;
+                        enemyBandera.y = banderaRojaY;
                     } else {
-                        enemyBandera.x = 30;
-                        enemyBandera.y = 30;
+                        enemyBandera.x = banderaAzulX;
+                        enemyBandera.y = banderaAzulY;
                     }
                     stompClient.send("/topic/sala." + myroom + ".bandera", {}, JSON.stringify(enemyBandera));
 
                 },
                 function () {
-                    alert("No se puedo soltar la bandera!!!");
+                    //alert("No se puedo soltar la bandera!!!");
                 }
         );
         return deleteBandera;
