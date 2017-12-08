@@ -5,7 +5,6 @@
  */
 package edu.eci.arsw.camposdeguerra.cache.impl;
 
-import ch.qos.logback.core.pattern.parser.Parser;
 import edu.eci.arsw.camposdeguerra.model.Room;
 import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
@@ -13,14 +12,10 @@ import edu.eci.arsw.camposdeguerra.cache.CamposDeGuerraRoomPersistence;
 import edu.eci.arsw.camposdeguerra.model.Maquina;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +26,7 @@ import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.core.script.RedisScript;
+
 import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.stereotype.Service;
 
@@ -42,10 +38,9 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
     @Autowired
     private StringRedisTemplate template;
     
-    RedisScript<String> script;
+    //RedisScript<String> script;
     
     public RedisCamposDeGuerraRoomPersistence() {
-        script = script();
     }
 
     @Override
@@ -74,32 +69,36 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
         String value2 = (String) template.opsForHash().get("room:" + room, "cantidadMaximaJugadores");
         if (value != null) {
             if (Integer.parseInt(value) < Integer.parseInt(value2)) {
-                template.execute(new SessionCallback<String>() {
-                    @SuppressWarnings("unchecked")
-                    @Override
-                    public < K, V> String execute(final RedisOperations< K, V> operations) throws DataAccessException {
-                        String temp2=(String) template.opsForHash().get("room:" + room, "cantidadActualJugadores");
-                        String equipo = "";
-                        if (Integer.parseInt(temp2) + 1 % 2 == 0) {
-                            equipo = "B";
-                        } else {
-                            equipo = "A";
-                        }
-                        Object[] args = new Object[3]; args[0] = us.getId();args[1] = us.getVida();args[2] = us.getPuntaje();
-                        operations.watch((K) ("room:" + room + "cantidadActualJugadores"));
-                        operations.multi();
-                        operations.execute(script,Collections.singletonList((K)("room:"+room)),args);
-                        /**operations.opsForHash().increment((K) ("room:" + room), "cantidadActualJugadores", 1);
-                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "id", us.getId());
-                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "vida", Integer.toString(us.getVida()));
-                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "puntaje", Integer.toString(us.getPuntaje()));
-                        operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "equipo", equipo);
-                        operations.opsForSet().add((K) ("room:" + room + ":users"), (V) us.getId());
+                Object[] args = new Object[3]; args[0] = us.getId();args[1] = Integer.toString(us.getVida());args[2] = Integer.toString(us.getPuntaje());
+                template.execute(script("redis/scripts/addUserToRoom.lua"),Collections.singletonList(("room:"+ Integer.toString(room))),args);
+                //template.execute(new SessionCallback<String>() {
+                    //@SuppressWarnings("unchecked")
+                    //@Override
+                    //public < K, V> String execute(final RedisOperations< K, V> operations) throws DataAccessException {
+                        //String temp2=(String) template.opsForHash().get("room:" + room, "cantidadActualJugadores");
+                        //String equipo = "";
+                        //if (Integer.parseInt(temp2) + 1 % 2 == 0) {
+                        //    equipo = "B";
+                        //} else {
+                        //   equipo = "A";
+                        //}
+                        //Object[] args = new Object[3]; args[0] = us.getId();args[1] = Integer.toString(us.getVida());args[2] = Integer.toString(us.getPuntaje());
+                        //operations.watch((K) ("room:"+Integer.toString(room)+" cantidadActualJugadores"));
+                        //operations.multi();
+                        //operations.execute(script("redis/scripts/addUserToRoom.lua"),Collections.singletonList((K)("room:"+Integer.toString(room))),args);
+                        //operations.exec();
+                        //operations.opsForHash().increment((K) ("room:" + room), "cantidadActualJugadores", 1);
+                        //operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "id", us.getId());
+                        //operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "vida", Integer.toString(us.getVida()));
+                        //operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "puntaje", Integer.toString(us.getPuntaje()));
+                        //operations.opsForHash().put((K) ("room:" + room + ":" + us.getId()), "equipo", equipo);
+                        //operations.opsForSet().add((K) ("room:" + room + ":users"), (V) us.getId());
                         
-                        */
-                        return "";
-                    }
-                });
+                        //return "";
+                    //}
+                //});
+                        
+                        
             } else {
                 throw new CamposDeGuerraPersistenceException("La Room ingresada se encuentre llena, Por favor intente con otra");
             }
@@ -491,9 +490,9 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
         }
     }
     
-    public RedisScript<String> script() {
-        DefaultRedisScript<String> redisScript = new DefaultRedisScript<>();
-        redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("/redis/scripts/test.lua")));
+    public RedisScript<String> script(String route) {
+        DefaultRedisScript<String> redisScript = new DefaultRedisScript<String>();
+        redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource(route)));
         redisScript.setResultType(String.class);
         return redisScript;
     }

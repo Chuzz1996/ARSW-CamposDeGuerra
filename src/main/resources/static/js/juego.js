@@ -142,7 +142,6 @@ var juego = (function () {
                     if (data.equipoA[i].id !== sessionStorage.getItem("user")) {
                         aliados.push(new Component(30, 30, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], dir, data.equipoA[i].id, "A", vida, velocidad, dano));
                     } else {
-                        console.info("entro al creador de mygamepiece A");
                         myGamePiece = new Component(30, 30, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], 1, sessionStorage.getItem("user"), "A", vida, velocidad, dano);
                     }
                 }
@@ -161,7 +160,6 @@ var juego = (function () {
                     if (data.equipoB[i].id !== sessionStorage.getItem("user")) {
                         aliados.push(new Component(30, 30, directionImageTank + dir + "B" + ".png", x, (i + 1) * y, "image", [], 2, data.equipoB[i].id, "B", vida, velocidad, dano));
                     } else {
-                        console.info("entro al creador de mygamepiece B");
                         myGamePiece = new Component(30, 30, directionImageTank + dir + "B" + ".png", x, (i + 1) * y, "image", [], 2, sessionStorage.getItem("user"), "B", vida, velocidad, dano);
                     }
                 }
