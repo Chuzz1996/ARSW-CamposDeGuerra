@@ -41,6 +41,7 @@ var endGame = (function () {
                         }
                     } else {
                         $('#table1').append("<tr class='warning' ><th>" + objeto.id + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
+                        console.info("entro por aca prro")
                     }
 
                 });

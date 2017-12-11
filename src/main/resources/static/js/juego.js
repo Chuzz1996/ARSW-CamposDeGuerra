@@ -694,6 +694,7 @@ var juego = (function () {
                 this.vida -= this.dano;
             } else if (crash && otherobj.tipo === "vida") {
                 this.vida += 100;
+                document.getElementById("live").innerHTML = "Vida: " + this.vida;
             } else if (crash && otherobj.tipo === "velocidad") {
                 this.velocidad += 15;
             } else if (crash && otherobj.tipo === "ataque") {

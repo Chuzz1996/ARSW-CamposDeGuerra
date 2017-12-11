@@ -356,6 +356,10 @@ public class Room {
         banderaBTomada.getAndSet(false);
         equipoA.clear();
         equipoB.clear();
+        cantidadActualJugadores.set(0);
+        tipoMaquina = "Destructora";
+        estado = "Nojugando";
+        
     }
 
     /**
