@@ -5,18 +5,11 @@ import edu.eci.arsw.camposdeguerra.model.Usuario;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraPersistenceException;
 import edu.eci.arsw.camposdeguerra.persistence.impl.InMemoryCamposDeGuerraUsuarioPersistence;
-import edu.eci.arsw.camposdeguerra.services.CamposDeGuerraServices;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Before;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class RegistroUsuarioTests {
    

@@ -46,7 +46,6 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
     @Override
     public Integer getRoomFree() throws CamposDeGuerraNotFoundException {
         Integer ans = -1;
-        List<Room> asn = new ArrayList<>();
         Set<String> value2 = template.opsForSet().members("rooms");
         for (String s : value2) {
             String value = (String) template.opsForHash().get("room:" + s, "cantidadActualJugadores");

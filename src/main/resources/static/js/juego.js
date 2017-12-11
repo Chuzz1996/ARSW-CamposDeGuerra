@@ -37,6 +37,7 @@ var juego = (function () {
     var banderaAzulY;
     var banderaRojaX;
     var banderaRojaY;
+    var CanvasWidth = 990;
 
     class Usuario {
         constructor(id, tipoMaquina, puntaje, equipo, vida) {
@@ -109,9 +110,6 @@ var juego = (function () {
     var cargarPartida = function () {
         var currentRoom = sessionStorage.getItem("idRoom");
         var getPromise = api.getRoom(currentRoom, function (data) {
-            console.info(data);
-            console.info(data.equipoA);
-            console.info(data.equipoB);
             tiempoRoom = data.tiempo;
             var x, y, dir;
             puntos = new Score(0, 0);
@@ -145,14 +143,14 @@ var juego = (function () {
                         myGamePiece = new Component(30, 30, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], 1, sessionStorage.getItem("user"), "A", vida, velocidad, dano);
                     }
                 }
-                x = myGameArea.canvas.width - 60;
+                x = CanvasWidth -60;
                 for (var i = 0; i < data.equipoB.length; i++) {
                     if (data.equipoB[i].id !== sessionStorage.getItem("user")) {
                         oponents.push(new Component(30, 30, directionImageTank + "2" + "B" + ".png", x, (i + 1) * y, "image", [], 2, data.equipoB[i].id, "B", vida, velocidad, dano));
                     }
                 }
             } else {
-                x = myGameArea.canvas.width - 60;
+                x = CanvasWidth -60;
                 dir = "2";
                 y = Math.round(myGameArea.canvas.height * 0.30);
 
@@ -733,14 +731,14 @@ var juego = (function () {
         start: function () {
             var w = window.innerWidth;
             var h = window.innerHeight;
-            this.canvas.width = 990;
+            this.canvas.width = CanvasWidth; 
             this.canvas.height = 600;
             this.context = this.canvas.getContext("2d");
             this.context.fillStyle = "#A9A9A9";
             this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
             document.getElementById("Game").appendChild(this.canvas);
             window.addEventListener("keydown", function (e) {
-
+                if(myGamePiece.vida>0){
                 myGameArea.key = e.keyCode;
 
                 //THE A KEY
@@ -814,6 +812,7 @@ var juego = (function () {
                     var temp2 = new Bulletcita(myGamePiece.x + sx, myGamePiece.y + sy, myGamePiece.direction, myteam);
                     stompClient.send("/app/sala." + myroom + ".bullets", {}, JSON.stringify(temp2));
                 }
+            }
 
             });
             window.addEventListener("keyup", function (e) {
@@ -938,7 +937,6 @@ var juego = (function () {
 
                 //POTENCIADOR
                 stompClient.subscribe('/topic/sala.' + myroom + ".potenciador", function (eventbody) {
-                    console.info("LLEGO");
                     var object = JSON.parse(eventbody.body);
                     var banderaP = false;
                     for (var i = 0; i < potenciadores.length; i++) {
@@ -946,7 +944,7 @@ var juego = (function () {
                             potenciadores[i].tiempo = 0;
                             banderaP = true;
                         }
-                    }console.info(object);
+                    }
                     if(!banderaP){
                         potenciadores.push(new potenciadorPlay(object.x,object.y,object.tipo,object.tiempo));
                     }
