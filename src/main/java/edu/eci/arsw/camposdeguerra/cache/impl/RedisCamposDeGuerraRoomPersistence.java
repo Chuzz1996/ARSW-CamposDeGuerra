@@ -32,7 +32,7 @@ import org.springframework.stereotype.Service;
 
 
 
-@Service
+//@Service
 public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPersistence {
 
     @Autowired
@@ -160,7 +160,6 @@ public class RedisCamposDeGuerraRoomPersistence implements CamposDeGuerraRoomPer
         if (value != null) {
             boolean ans = false;
             Set<String> value2 = template.opsForSet().members("room:" + room + ":users");
-            System.out.println("BORRO");
             for (String s : value2) {
                 template.opsForSet().remove("room:" + room + ":users", s);
                 template.opsForHash().delete("room:" + room + ":" + s, "id");

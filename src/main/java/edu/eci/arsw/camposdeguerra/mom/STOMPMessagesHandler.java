@@ -59,6 +59,6 @@ public class STOMPMessagesHandler {
     
     @MessageMapping("/sala.{idSala}.datos")
     public void reportarGetDatos(String ans,@DestinationVariable Integer idSala) throws Exception {
-        l.getDatos(idSala);
+        msgt.convertAndSend("/topic/sala." + idSala + ".datos", l.getDatos(idSala));
     }
 }

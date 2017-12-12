@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
  *
  * @author 2107713
  */
-//@Service
+@Service
 public class InMemoryCamposDeGuerraMapsPersistence implements CamposDeGuerraMapsPersistence{
     
     private final ConcurrentHashMap<String, Mapa> mapas = new ConcurrentHashMap<>();

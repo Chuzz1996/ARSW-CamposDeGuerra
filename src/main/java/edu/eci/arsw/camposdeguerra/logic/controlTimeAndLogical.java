@@ -10,6 +10,7 @@ import edu.eci.arsw.camposdeguerra.model.Room;
 import edu.eci.arsw.camposdeguerra.persistence.CamposDeGuerraNotFoundException;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ public class controlTimeAndLogical {
     
     private final ConcurrentHashMap<Integer, Timer> controlTiempo = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, Integer> tiempoSalas = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<Integer, Integer> getdatos = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Integer, AtomicInteger> getdatos = new ConcurrentHashMap<>();
     Integer timeGame = 180000;
 
    
@@ -70,11 +71,11 @@ public class controlTimeAndLogical {
         return tiempoSalas.get(idSala);
     }
 
-    public void getDatos(Integer idSala) throws Exception {
-
+    public Integer getDatos(Integer idSala) throws Exception {
+        AtomicInteger listos = new AtomicInteger(0);
         if (getdatos.containsKey(idSala)) {
-            Integer listos = getdatos.get(idSala);
-            if (listos == rp.getRoom(idSala).getAllCompetitors().size() - 1) {
+            listos = getdatos.get(idSala);
+            if (listos.get() == rp.getRoom(idSala).getAllCompetitors().size() - 1) {
                 if (idSala < 4) {
                     rp.deleteAllUsuariosFromRoom(idSala);
                 } else {
@@ -82,12 +83,13 @@ public class controlTimeAndLogical {
                 }
                 getdatos.remove(idSala);
             } else {
-                listos = listos + 1;
+                listos.addAndGet(1);
                 getdatos.replace(idSala, listos);
             }
         } else {
-            getdatos.putIfAbsent(idSala, 1);
+            getdatos.putIfAbsent(idSala,new AtomicInteger(1));
         }
+        return listos.get();
     }
 
 }

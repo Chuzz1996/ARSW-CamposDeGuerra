@@ -1,24 +1,35 @@
 /* global apiclient, Stomp */
 
 var endGame = (function () {
+    var listos=0;
+    var cantidadjugadores=0;
+    var api = apiclient;
     
     var conectar = function () {
-        
         console.info('Connecting to WS...');
         var socket = new SockJS('/stompendpoint');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
-            stompClient.subscribe('/topic/sala.' + sessionStorage.getItem("idRoom") + ".datos", function (eventbody) {});
-        });
-        setTimeout(function () {
+            
+            stompClient.subscribe('/topic/sala.' + sessionStorage.getItem("idRoom") + ".datos", function (eventbody) {
+                console.info(eventbody.body + " listos");
+                console.info(cantidadjugadores+" cantidad jugadores");
+                if(eventbody.body===cantidadjugadores){
+                    api.deleteAllUsersRoom(sessionStorage.getItem("idRoom"));
+                }
+            });
+            setTimeout(function () {
             stompClient.send("/app/sala." + sessionStorage.getItem("idRoom") + ".datos", {}, 'listo');
-        }, 4000);
+            }, 4000);
+        });
+        
     };
     
     
     
     var getAllUsers = function () {
         var getPromise = apiclient.getAllUsersRoom(sessionStorage.getItem("idRoom"), function (lista1) {
+            cantidadjugadores=lista1.length;
             reducir = function (objeto) {
                 return objeto2 = {"id": objeto.id, "equipo": objeto.equipo, "puntaje": objeto.puntaje};
             };
@@ -41,7 +52,6 @@ var endGame = (function () {
                         }
                     } else {
                         $('#table1').append("<tr class='warning' ><th>" + objeto.id + "</th><th>" + objeto.equipo + "</th><th>" + objeto.puntaje + "</th></tr>");
-                        console.info("entro por aca prro")
                     }
 
                 });
