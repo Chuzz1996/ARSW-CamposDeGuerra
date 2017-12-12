@@ -357,7 +357,12 @@ var juego = (function () {
             }
             ctx.fillStyle = gradient;
             ctx.fillText(o.propietario, o.x, o.y + o.height + 10);
-            ctx.fillText(o.vida, o.x, o.y + o.height + 20);
+            if(o.equipo===myteam){
+                ctx.fillText(o.vida, o.x, o.y + o.height + 20);
+            }
+            else{
+                ctx.fillText("999", o.x, o.y + o.height + 20);
+            }
         }
     };
 
@@ -717,20 +722,9 @@ var juego = (function () {
         var usuarioA;
         var usuarioB;
         var vidaenemigo;
-        if (myGamePiece.vida > 0) {
-            vidaenemigo = 999;
-        } else {
-            vidaenemigo = 0;
-        }
-        if (myteam === "A") {
-            usuarioA = new Usuario(sessionStorage.getItem("user"), maquina, puntaje, myteam, myGamePiece.vida);
-            usuarioB = new Usuario(sessionStorage.getItem("user"), maquina, puntaje, myteam, vidaenemigo);
-        } else {
-            usuarioA = new Usuario(sessionStorage.getItem("user"), maquina, puntaje, myteam, vidaenemigo);
-            usuarioB = new Usuario(sessionStorage.getItem("user"), maquina, puntaje, myteam, myGamePiece.vida);
-        }
+        usuarioA = new Usuario(sessionStorage.getItem("user"), maquina, puntaje, myteam, myGamePiece.vida);
         stompClient.send("/app/sala." + myroom + "." + myteam, {}, JSON.stringify(usuarioA));
-        stompClient.send("/app/sala." + myroom + "." + enemyteam, {}, JSON.stringify(usuarioB));
+        stompClient.send("/app/sala." + myroom + "." + enemyteam, {}, JSON.stringify(usuarioA));
         if (myGamePiece.hasban) {
             stompClient.send("/topic/sala." + myroom + ".bandera", {}, JSON.stringify(enemyBandera));
         }
@@ -838,6 +832,16 @@ var juego = (function () {
 
     return{
         comienzo: function () {
+            
+            if (sessionStorage.getItem("myTeam") === "A") {
+                enemyteam = "B";
+                myteam = "A";
+            } else {
+                enemyteam = "A";
+                myteam = "B";
+            }
+            myroom = sessionStorage.getItem("idRoom");
+            
             var countDown_overlay = 'position:absolute;top:50%;left:50%;background-color:black;z-index:1002;overflow:auto;width:400px;text-align:center;height:400px;margin-left:-200px;margin-top:-200px';
             $('body').append('<div id="overLay" style="' + countDown_overlay + '"><span id="time" style="color:white" >Esperando más jugadores ... </span> <img src="/images/loading.gif" class="position: absolute; left: 0; top: 0; right: 0; bottom: 0; margin: auto;"></div>');
             
@@ -860,7 +864,6 @@ var juego = (function () {
 
                 //ENDGAME
                 stompClient.subscribe("/topic/sala." + myroom + ".endGame", function (evenbody) {
-                    api.deleteAllUsersRoom(myroom);
                     sessionStorage.setItem("PuntosA", puntos.scoreA);
                     sessionStorage.setItem("PuntosB", puntos.scoreB);
                     stompClient.disconnect();
@@ -966,15 +969,6 @@ var juego = (function () {
 
         },
         movimiento: function () {
-            if (sessionStorage.getItem("myTeam") === "A") {
-                enemyteam = "B";
-                myteam = "A";
-            } else {
-                enemyteam = "A";
-                myteam = "B";
-            }
-            myroom = sessionStorage.getItem("idRoom");
-
             cargarPartida().then(cargarMapa).then(getscorer).then(function () {
                 myGameArea.start();
             }).then(function () {
@@ -988,10 +982,10 @@ var juego = (function () {
             }).then(function () {
                 graficarBandera(myteam);
                 graficarBandera(enemyteam);
-                graficarObstaculos();
                 updateOponents();
                 updateAliados();
                 myGamePiece.update();
+                graficarObstaculos();
             });
         }
     };
