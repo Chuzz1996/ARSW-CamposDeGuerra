@@ -1,4 +1,4 @@
-/* global  updateBullets, graficarBalas, graficarBalaOponente, actualizarTrayectoriaBalas, send, graficarExplosion, graficarBala, updateOponents, updateAliados, graficarBandera, checkBandera, checkSoltarBandera, checkPostPoint, checkGetBandera, getscorer, startTime, updateVidaOtherUser, graficarObstaculos, apiclient, getRoom, cargarPartida, graficarPoteciadores, cargarMapa */
+/* global  updateBullets, graficarBalas, graficarBalaOponente, actualizarTrayectoriaBalas, send, graficarExplosion, graficarBala, updateOponents, updateAliados, graficarBandera, checkBandera, checkSoltarBandera, checkPostPoint, checkGetBandera, getscorer, startTime, updateVidaOtherUser, graficarObstaculos, apiclient, getRoom, cargarPartida, graficarPoteciadores, cargarMapa, muereItem, loadPotenciador */
 
 var juego = (function () {
 
@@ -143,14 +143,14 @@ var juego = (function () {
                         myGamePiece = new Component(30, 30, directionImageTank + dir + myteam + ".png", x, (i + 1) * y, "image", [], 1, sessionStorage.getItem("user"), "A", vida, velocidad, dano);
                     }
                 }
-                x = CanvasWidth -60;
+                x = CanvasWidth - 60;
                 for (var i = 0; i < data.equipoB.length; i++) {
                     if (data.equipoB[i].id !== sessionStorage.getItem("user")) {
                         oponents.push(new Component(30, 30, directionImageTank + "2" + "B" + ".png", x, (i + 1) * y, "image", [], 2, data.equipoB[i].id, "B", vida, velocidad, dano));
                     }
                 }
             } else {
-                x = CanvasWidth -60;
+                x = CanvasWidth - 60;
                 dir = "2";
                 y = Math.round(myGameArea.canvas.height * 0.30);
 
@@ -180,29 +180,29 @@ var juego = (function () {
         );
         return getPromise;
     };
-    
+
     var cargarMapa = function () {
-        var getPromise = api.getMap("mapa1",function(data){
-               for(var i = 0; i < data.length; i++){
-                   for(var j = 0; j < data[i].length; j++){
-                       if(data[i][j]==="P"){
-                           obstaculos.push(new Obstaculo(30, 30, directionObstaculo + "1.png", j * 30, i * 30, "pasto", 10, i));
-                       }else if(data[i][j]==="L"){
-                           obstaculos.push(new Obstaculo(30, 30, directionObstaculo + "2.png", j * 30, i * 30, "ladrillo", 20, i));
-                       }else if(data[i][j]==="M"){
-                           obstaculos.push(new Obstaculo(30, 30, directionObstaculo + "3.png", j * 30, i * 30, "metal", 50, i));
-                       }else if(data[i][j]==="I"){
-                           obstaculos.push(new Obstaculo(30, 30, directionObstaculo + "2.png", j * 30, i * 30, "ladrillo", 1000000, i));
-                       }else if(data[i][j]==="A"){
-                           banderaAzulX = j*30;
-                           banderaAzulY = i*30;
-                       }else if(data[i][j]==="R"){
-                           banderaRojaX = j*30;
-                           banderaRojaY = i*30;
-                       }
-                   }
-               }
-            });
+        var getPromise = api.getMap("mapa1", function (data) {
+            for (var i = 0; i < data.length; i++) {
+                for (var j = 0; j < data[i].length; j++) {
+                    if (data[i][j] === "P") {
+                        obstaculos.push(new Obstaculo(30, 30, directionObstaculo + "1.png", j * 30, i * 30, "pasto", 10, i));
+                    } else if (data[i][j] === "L") {
+                        obstaculos.push(new Obstaculo(30, 30, directionObstaculo + "2.png", j * 30, i * 30, "ladrillo", 20, i));
+                    } else if (data[i][j] === "M") {
+                        obstaculos.push(new Obstaculo(30, 30, directionObstaculo + "3.png", j * 30, i * 30, "metal", 50, i));
+                    } else if (data[i][j] === "I") {
+                        obstaculos.push(new Obstaculo(30, 30, directionObstaculo + "2.png", j * 30, i * 30, "ladrillo", 1000000, i));
+                    } else if (data[i][j] === "A") {
+                        banderaAzulX = j * 30;
+                        banderaAzulY = i * 30;
+                    } else if (data[i][j] === "R") {
+                        banderaRojaX = j * 30;
+                        banderaRojaY = i * 30;
+                    }
+                }
+            }
+        });
         getPromise.then(
                 function () {
                     console.info("Cargo datos correctamente");
@@ -213,18 +213,37 @@ var juego = (function () {
         );
         return getPromise;
     };
-    
 
+    var muereItem = function () {
+        for (var i = 0; i < potenciadores.length; i++) {
+            potenciadores[i].tiempo -= 1000;
+        }
+    };
+
+    var loadPotenciador = function () {
+        var potenciador;
+        if (mili % 30000 === 0) {
+            var Poten = Math.floor((Math.random() * 3) + 1);
+            var xPonte = Math.floor((Math.random() * myGameArea.canvas.width) + 1);
+            var yPonte = Math.floor((Math.random() * myGameArea.canvas.height) + 1);
+            if (Poten === 1) {
+                potenciador = new Potenciador(xPonte, yPonte, Poten, "vida", 10000);
+            } else if (Poten === 2) {
+                potenciador = new Potenciador(xPonte, yPonte, Poten, "ataque", 10000);
+            } else {
+                potenciador = new Potenciador(xPonte, yPonte, Poten, "velocidad", 10000);
+            }
+            stompClient.send('/topic/sala.' + myroom + ".potenciador", {}, JSON.stringify(potenciador));
+        }
+    };
 
     var startTime = function () {
         var handler = function () {
             var totalSeconds = Math.floor(mili / 1000);
             min = Math.floor(totalSeconds / 60);
-            sec = totalSeconds - min * 60;
+            sec = totalSeconds - (min * 60);
             sec++;
-            for (var item in potenciadores) {
-                item.tiempo -= 1000;
-            }
+            muereItem();
             if (sec === 60) {
                 sec = 0;
                 min++;
@@ -236,20 +255,7 @@ var juego = (function () {
             if (mili === tiempoRoom) {
                 stompClient.send('/app/sala.' + myroom + ".endGame", {}, 'end');
             }
-            var potenciador;
-            if (mili % 30000 === 0) {
-                var Poten = Math.floor((Math.random() * 3) + 1);
-                var xPonte = Math.floor((Math.random() * myGameArea.canvas.width) + 1);
-                var yPonte = Math.floor((Math.random() * myGameArea.canvas.height) + 1);
-                if (Poten === 1) {
-                    potenciador = new Potenciador(xPonte, yPonte, Poten, "vida", 10000);
-                } else if (Poten === 2) {
-                    potenciador = new Potenciador(xPonte, yPonte, Poten, "ataque", 10000);
-                } else {
-                    potenciador = new Potenciador(xPonte, yPonte, Poten, "velocidad", 10000);
-                }
-                stompClient.send('/topic/sala.' + myroom + ".potenciador", {}, JSON.stringify(potenciador));
-            }
+            loadPotenciador();
             document.getElementById("Segundos").innerHTML = (min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec);
 
         };
@@ -288,7 +294,8 @@ var juego = (function () {
             sy = 0;
             dx = -15;
             dy = 0;
-        }var pego = false;
+        }
+        var pego = false;
         if (bullet.equipo !== myteam && myGamePiece.crashWith(bullet, h, w, "bullet")) {
             myGameArea.context.fillStyle = "#A9A9A9";
             myGameArea.context.fillRect(bullet.x + sx + dx, bullet.y + sy + dy, w, h);
@@ -310,11 +317,12 @@ var juego = (function () {
                     pego = true;
                 }
             }
-        }if(pego===false){
+        }
+        if (pego === false) {
             setTimeout(function () {
                 actualizarTrayectoriaBalas(bullet);
             }, 10);
-        }else{
+        } else {
             myGameArea.context.fillStyle = "#A9A9A9";
             myGameArea.context.fillRect(bullet.x + sx, bullet.y + sy, w, h);
         }
@@ -391,12 +399,12 @@ var juego = (function () {
 
     var graficarPoteciadores = function () {
         for (var i = 0; i < potenciadores.length; i++) {
-            if(potenciadores[i].tiempo>0){
-                if(potenciadores[i].tipo==="vida"){
+            if (potenciadores[i].tiempo > 0) {
+                if (potenciadores[i].tipo === "vida") {
                     myGameArea.context.drawImage(directionPotenciadorVida, potenciadores[i].x, potenciadores[i].y, 30, 30);
-                }else if(potenciadores[i].tipo==="ataque"){
+                } else if (potenciadores[i].tipo === "ataque") {
                     myGameArea.context.drawImage(directionPotenciadorAtaque, potenciadores[i].x, potenciadores[i].y, 30, 30);
-                }else if(potenciadores[i].tipo==="velocidad"){
+                } else if (potenciadores[i].tipo === "velocidad") {
                     myGameArea.context.drawImage(directionPotenciadorVelocidad, potenciadores[i].x, potenciadores[i].y, 30, 30);
                 }
             }
@@ -572,7 +580,7 @@ var juego = (function () {
     }
     ;
 
-    function potenciadorPlay(x,y,tipo,tiempo){
+    function potenciadorPlay(x, y, tipo, tiempo) {
         this.x = x;
         this.y = y;
         this.tipo = tipo;
@@ -589,9 +597,10 @@ var juego = (function () {
             var crash = true;
             if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
                 crash = false;
-            }if(tipo==="jugador"){
+            }
+            if (tipo === "jugador") {
                 this.tiempo = 0;
-                
+
             }
             return crash;
         };
@@ -628,10 +637,10 @@ var juego = (function () {
             }
             if (this.hasban) {
                 myGameArea.context.fillStyle = "#A9A9A9";
-                if(enemyteam==="A"){
-                    myGameArea.context.fillRect(enemyBandera.x, enemyBandera.y, banderaAzulX,banderaAzulY);
-                }else{
-                    myGameArea.context.fillRect(enemyBandera.x, enemyBandera.y, banderaRojaX,banderaRojaY);
+                if (enemyteam === "A") {
+                    myGameArea.context.fillRect(enemyBandera.x, enemyBandera.y, banderaAzulX, banderaAzulY);
+                } else {
+                    myGameArea.context.fillRect(enemyBandera.x, enemyBandera.y, banderaRojaX, banderaRojaY);
                 }
                 enemyBandera.x = this.x - 20;
                 enemyBandera.y = this.y - 20;
@@ -648,11 +657,12 @@ var juego = (function () {
                 }
             }
             for (var i = 0; i < potenciadores.length; i++) {
-                if (potenciadores[i].tiempo>0) {
-                    if(this.crashWith(potenciadores[i], this.width, this.height, "jugador")){
+                if (potenciadores[i].tiempo > 0) {
+                    if (this.crashWith(potenciadores[i], this.width, this.height, "jugador")) {
                         potenciadores[i].tiempo = 0;
                         stompClient.send('/topic/sala.' + myroom + ".potenciador", {}, JSON.stringify(potenciadores[i]));
-                    };
+                    }
+                    ;
                 }
             }
             graficarObstaculos();
@@ -731,88 +741,88 @@ var juego = (function () {
         start: function () {
             var w = window.innerWidth;
             var h = window.innerHeight;
-            this.canvas.width = CanvasWidth; 
+            this.canvas.width = CanvasWidth;
             this.canvas.height = 600;
             this.context = this.canvas.getContext("2d");
             this.context.fillStyle = "#A9A9A9";
             this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
             document.getElementById("Game").appendChild(this.canvas);
             window.addEventListener("keydown", function (e) {
-                if(myGamePiece.vida>0){
-                myGameArea.key = e.keyCode;
+                if (myGamePiece.vida > 0) {
+                    myGameArea.key = e.keyCode;
 
-                //THE A KEY
-                if (myGameArea.key && myGameArea.key === 65) {
-                    myGamePiece.speedX = -myGamePiece.velocidad;
-                    myGamePiece.image.src = directionImageTank + "2" + myteam + ".png";
-                    directionShoot = 2;
-                    myGamePiece.direction = 2;
-                    myGamePiece.newPos();
-                    myGamePiece.update();
-                    send();
-                    myGamePiece.speedX = 0;
-                }
-                //THE D KEY
-                else if (myGameArea.key && myGameArea.key === 68) {
-                    myGamePiece.speedX = myGamePiece.velocidad;
-                    myGamePiece.image.src = directionImageTank + "1" + myteam + ".png";
-                    directionShoot = 1;
-                    myGamePiece.direction = 1;
-                    myGamePiece.newPos();
-                    myGamePiece.update();
-                    send();
-                    myGamePiece.speedX = 0;
-                }
-                //THE W KEY
-                else if (myGameArea.key && myGameArea.key === 87) {
-                    myGamePiece.speedY = -myGamePiece.velocidad;
-                    myGamePiece.image.src = directionImageTank + "4" + myteam + ".png";
-                    directionShoot = 4;
-                    myGamePiece.direction = 4;
-                    myGamePiece.newPos();
-                    myGamePiece.update();
-                    send();
-                    myGamePiece.speedY = 0;
-                }
-                //THE S KEY
-                else if (myGameArea.key && myGameArea.key === 83) {
-                    myGamePiece.speedY = myGamePiece.velocidad;
-                    myGamePiece.image.src = directionImageTank + "3" + myteam + ".png";
-                    directionShoot = 3;
-                    myGamePiece.direction = 3;
-                    myGamePiece.newPos();
-                    myGamePiece.update();
-                    send();
-                    myGamePiece.speedY = 0;
-                }
-                //THE SPACE KEY   
-                else if (myGameArea.key && myGameArea.key === 32 && myGamePiece.shoots.length < 11) {
-                    var h, w, sx, sy;
-                    if (directionShoot === 3) {
-                        h = 30;
-                        w = 10;
-                        sx = 15;
-                        sy = 60;
-                    } else if (directionShoot === 4) {
-                        h = 30;
-                        w = 10;
-                        sx = 15;
-                        sy = -60;
-                    } else if (directionShoot === 2) {
-                        h = 10;
-                        w = 30;
-                        sx = -60;
-                        sy = 10;
-                    } else {
-                        h = 10;
-                        w = 30;
-                        sx = 70;
-                        sy = 10;
+                    //THE A KEY
+                    if (myGameArea.key && myGameArea.key === 65) {
+                        myGamePiece.speedX = -myGamePiece.velocidad;
+                        myGamePiece.image.src = directionImageTank + "2" + myteam + ".png";
+                        directionShoot = 2;
+                        myGamePiece.direction = 2;
+                        myGamePiece.newPos();
+                        myGamePiece.update();
+                        send();
+                        myGamePiece.speedX = 0;
                     }
-                    var temp2 = new Bulletcita(myGamePiece.x + sx, myGamePiece.y + sy, myGamePiece.direction, myteam);
-                    stompClient.send("/app/sala." + myroom + ".bullets", {}, JSON.stringify(temp2));
+                    //THE D KEY
+                    else if (myGameArea.key && myGameArea.key === 68) {
+                        myGamePiece.speedX = myGamePiece.velocidad;
+                        myGamePiece.image.src = directionImageTank + "1" + myteam + ".png";
+                        directionShoot = 1;
+                        myGamePiece.direction = 1;
+                        myGamePiece.newPos();
+                        myGamePiece.update();
+                        send();
+                        myGamePiece.speedX = 0;
+                    }
+                    //THE W KEY
+                    else if (myGameArea.key && myGameArea.key === 87) {
+                        myGamePiece.speedY = -myGamePiece.velocidad;
+                        myGamePiece.image.src = directionImageTank + "4" + myteam + ".png";
+                        directionShoot = 4;
+                        myGamePiece.direction = 4;
+                        myGamePiece.newPos();
+                        myGamePiece.update();
+                        send();
+                        myGamePiece.speedY = 0;
+                    }
+                    //THE S KEY
+                    else if (myGameArea.key && myGameArea.key === 83) {
+                        myGamePiece.speedY = myGamePiece.velocidad;
+                        myGamePiece.image.src = directionImageTank + "3" + myteam + ".png";
+                        directionShoot = 3;
+                        myGamePiece.direction = 3;
+                        myGamePiece.newPos();
+                        myGamePiece.update();
+                        send();
+                        myGamePiece.speedY = 0;
+                    }
+                    //THE SPACE KEY   
+                    else if (myGameArea.key && myGameArea.key === 32 && myGamePiece.shoots.length < 11) {
+                        var h, w, sx, sy;
+                        if (directionShoot === 3) {
+                            h = 30;
+                            w = 10;
+                            sx = 15;
+                            sy = 60;
+                        } else if (directionShoot === 4) {
+                            h = 30;
+                            w = 10;
+                            sx = 15;
+                            sy = -60;
+                        } else if (directionShoot === 2) {
+                            h = 10;
+                            w = 30;
+                            sx = -60;
+                            sy = 10;
+                        } else {
+                            h = 10;
+                            w = 30;
+                            sx = 70;
+                            sy = 10;
+                        }
+                        var temp2 = new Bulletcita(myGamePiece.x + sx, myGamePiece.y + sy, myGamePiece.direction, myteam);
+                        stompClient.send("/app/sala." + myroom + ".bullets", {}, JSON.stringify(temp2));
+                    }
                 }
-            }
 
             });
             window.addEventListener("keyup", function (e) {
@@ -827,19 +837,26 @@ var juego = (function () {
 
 
     return{
-        movimiento: function () {
-            if (sessionStorage.getItem("myTeam") === "A") {
-                enemyteam = "B";
-                myteam = "A";
-            } else {
-                enemyteam = "A";
-                myteam = "B";
-            }
-            myroom = sessionStorage.getItem("idRoom");
-
+        comienzo: function () {
+            var countDown_overlay = 'position:absolute;top:50%;left:50%;background-color:black;z-index:1002;overflow:auto;width:400px;text-align:center;height:400px;margin-left:-200px;margin-top:-200px';
+            $('body').append('<div id="overLay" style="' + countDown_overlay + '"><span id="time" style="color:white" >Esperando más jugadores ... </span> <img src="/images/loading.gif" class="position: absolute; left: 0; top: 0; right: 0; bottom: 0; margin: auto;"></div>');
+            
             var socket = new SockJS('/stompendpoint');
             stompClient = Stomp.over(socket);
+            
             stompClient.connect({}, function (frame) {
+
+                //COMIENZO-TIEMPO
+                stompClient.subscribe('/topic/sala.' + sessionStorage.getItem("idRoom"), function (eventbody) {
+                    var object = eventbody.body;
+                    mili = object;
+                    startTime();
+                    document.getElementById("overLay").remove();
+                    juego.movimiento();
+                });
+                setTimeout(function () {
+                    stompClient.send("/app/sala." + sessionStorage.getItem("idRoom"), {}, 'listo');
+                }, 4000);
 
                 //ENDGAME
                 stompClient.subscribe("/topic/sala." + myroom + ".endGame", function (evenbody) {
@@ -929,11 +946,6 @@ var juego = (function () {
                     });
                 });
 
-                //TIEMPO
-                stompClient.subscribe('/topic/sala.' + myroom + ".tiempo", function (eventbody) {
-                    var object = eventbody.body;
-                    mili = object;
-                });
 
                 //POTENCIADOR
                 stompClient.subscribe('/topic/sala.' + myroom + ".potenciador", function (eventbody) {
@@ -945,32 +957,42 @@ var juego = (function () {
                             banderaP = true;
                         }
                     }
-                    if(!banderaP){
-                        potenciadores.push(new potenciadorPlay(object.x,object.y,object.tipo,object.tiempo));
+                    if (!banderaP) {
+                        potenciadores.push(new potenciadorPlay(object.x, object.y, object.tipo, object.tiempo));
                     }
                     graficarPoteciadores();
                 });
             });
 
-            cargarPartida().then(cargarMapa).then(getscorer).then(function(){
+        },
+        movimiento: function () {
+            if (sessionStorage.getItem("myTeam") === "A") {
+                enemyteam = "B";
+                myteam = "A";
+            } else {
+                enemyteam = "A";
+                myteam = "B";
+            }
+            myroom = sessionStorage.getItem("idRoom");
+
+            cargarPartida().then(cargarMapa).then(getscorer).then(function () {
                 myGameArea.start();
-            }).then(function(){
-                if(myteam==="A"){
-                myBandera = new Bandera(banderaAzulX, banderaAzulY, myteam);
-                enemyBandera = new Bandera(banderaRojaX, banderaRojaY, enemyteam);
-            }else{
-                myBandera = new Bandera(banderaRojaX, banderaRojaY, myteam);
-                enemyBandera = new Bandera(banderaAzulX, banderaAzulY, enemyteam);
-            }   
-            }).then(function(){
+            }).then(function () {
+                if (myteam === "A") {
+                    myBandera = new Bandera(banderaAzulX, banderaAzulY, myteam);
+                    enemyBandera = new Bandera(banderaRojaX, banderaRojaY, enemyteam);
+                } else {
+                    myBandera = new Bandera(banderaRojaX, banderaRojaY, myteam);
+                    enemyBandera = new Bandera(banderaAzulX, banderaAzulY, enemyteam);
+                }
+            }).then(function () {
                 graficarBandera(myteam);
                 graficarBandera(enemyteam);
                 graficarObstaculos();
                 updateOponents();
                 updateAliados();
                 myGamePiece.update();
-            }).then(startTime);
-
+            });
         }
     };
 }());

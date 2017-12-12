@@ -138,19 +138,20 @@ var appSeleccion = (function () {
     var conectar = function () {
         var countDown_overlay = 'position:absolute;top:50%;left:50%;background-color:black;z-index:1002;overflow:auto;width:400px;text-align:center;height:400px;margin-left:-200px;margin-top:-200px';
         $('body').append('<div id="overLay" style="' + countDown_overlay + '"><span id="time" style="color:white" >Esperando más jugadores ... </span> <img src="/images/loading.gif" class="position: absolute; left: 0; top: 0; right: 0; bottom: 0; margin: auto;"></div>');
-        console.info('Connecting to WS...');
-        var socket = new SockJS('/stompendpoint');
-        stompClient = Stomp.over(socket);
+        //console.info('Connecting to WS...');
+        //var socket = new SockJS('/stompendpoint');
+        //stompClient = Stomp.over(socket);
         
-        stompClient.connect({}, function (frame) {
-            stompClient.subscribe('/topic/sala.' + sessionStorage.getItem("idRoom"), function (eventbody) {
+        //stompClient.connect({}, function (frame) {
+            //stompClient.subscribe('/topic/sala.' + sessionStorage.getItem("idRoom"), function (eventbody) {
                 var newURL = window.location.protocol + "//" + window.location.host + "/" + "juego.html";
-                setTimeout(function (){window.location.replace(newURL);stompClient.disconnect();}, 4000);
-            });
-        });
-        setTimeout(function () {
-            stompClient.send("/app/sala." + sessionStorage.getItem("idRoom"), {}, 'listo');
-        }, 4000);
+                window.location.replace(newURL);
+                //setTimeout(function (){window.location.replace(newURL);stompClient.disconnect();}, 4000);
+            //});
+        //});
+        //setTimeout(function () {
+            //stompClient.send("/app/sala." + sessionStorage.getItem("idRoom"), {}, 'listo');
+        //}, 4000);
     };
 
     var getRamdonRoom = function () {
@@ -240,35 +241,3 @@ var appSeleccion = (function () {
 }());
 
 
-/*
- function Show_Countdown() {
- 
- var countDown_overlay = 'position:absolute;' +
- 'top:50%;' +
- 'left:50%;' +
- 'background-color:white;' +
- 'z-index:1002;' +
- 'overflow:auto;' +
- 'width:400px;' +
- 'text-align:center;' +
- 'height:400px;' +
- 'margin-left:-200px;' +
- 'margin-top:-200px';
- 
- $('body').append('<div id="overLay" style="' + countDown_overlay + '"><span id="time">Esperando más jugadores ... </span></div>');
- 
- var timer = setInterval(function () {
- document.getElementById("time").innerHTML = counter;
- counter = (counter - 1);
- 
- if (counter < 0)
- {
- 
- clearInterval(timer);
- document.getElementById("overLay").style.display = 'none';
- var newURL = window.location.protocol + "//" + window.location.host + "/" + "juego.html";
- window.location.replace(newURL);
- }
- }, 1000);
- }
- */
